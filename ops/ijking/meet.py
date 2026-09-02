@@ -14,9 +14,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import statistics
 import subprocess
 import sys
+import threading
 import time
 import urllib.error
 import urllib.request
@@ -38,6 +40,68 @@ def geheugen_mb() -> dict[str, int]:
         return {"totaal": int(velden[1]), "gebruikt": int(velden[2]), "vrij": int(velden[3])}
     except Exception:
         return {}
+
+
+class Tegrastats:
+    """Bemonstert RAM en GPU-bezetting met tegrastats zolang een meting loopt.
+
+    `free -m` ziet het unified memory maar niet de GPU-bezetting, en juist die laat zien
+    of de machine daadwerkelijk aan het werk is of staat te wachten. Valt stil terug als
+    tegrastats ontbreekt of niet mag draaien; de meting gaat dan gewoon door.
+    """
+
+    PATROON_RAM = re.compile(r"RAM (\d+)/(\d+)MB")
+    PATROON_GPU = re.compile(r"GR3D_FREQ (\d+)%")
+
+    def __init__(self, interval_ms: int = 1000) -> None:
+        self.interval_ms = interval_ms
+        self.proces: subprocess.Popen | None = None
+        self.monsters: list[tuple[int, int]] = []   # (ram_mb, gpu_pct)
+        self._draad: threading.Thread | None = None
+
+    def start(self) -> None:
+        try:
+            self.proces = subprocess.Popen(
+                ["tegrastats", "--interval", str(self.interval_ms)],
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True,
+            )
+        except (FileNotFoundError, PermissionError):
+            self.proces = None
+            return
+        self._draad = threading.Thread(target=self._lees, daemon=True)
+        self._draad.start()
+
+    def _lees(self) -> None:
+        assert self.proces and self.proces.stdout
+        for regel in self.proces.stdout:
+            ram = self.PATROON_RAM.search(regel)
+            gpu = self.PATROON_GPU.search(regel)
+            if ram:
+                self.monsters.append((int(ram.group(1)), int(gpu.group(1)) if gpu else -1))
+
+    def markeer(self) -> int:
+        """Huidig aantal monsters, als startpunt voor `sinds`."""
+        return len(self.monsters)
+
+    def sinds(self, mark: int) -> dict:
+        venster = self.monsters[mark:]
+        if not venster:
+            return {}
+        ram = [m[0] for m in venster]
+        gpu = [m[1] for m in venster if m[1] >= 0]
+        uit = {"monsters": len(venster), "ram_piek_mb": max(ram),
+               "ram_gemiddeld_mb": int(statistics.mean(ram))}
+        if gpu:
+            uit |= {"gpu_piek_pct": max(gpu), "gpu_gemiddeld_pct": int(statistics.mean(gpu))}
+        return uit
+
+    def stop(self) -> None:
+        if self.proces:
+            self.proces.terminate()
+            try:
+                self.proces.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                self.proces.kill()
 
 
 def een_verzoek(endpoint: str, prompt: str, max_tokens: int, timeout: int) -> dict:
@@ -94,9 +158,10 @@ def een_verzoek(endpoint: str, prompt: str, max_tokens: int, timeout: int) -> di
 
 
 def meet_niveau(endpoint: str, gelijktijdig: int, n: int, prompt: str,
-                max_tokens: int, timeout: int) -> dict:
+                max_tokens: int, timeout: int, tegra: "Tegrastats | None" = None) -> dict:
     print(f"  gelijktijdigheid {gelijktijdig}: {n} verzoeken...", flush=True)
     voor = geheugen_mb()
+    mark = tegra.markeer() if tegra else 0
     start = time.perf_counter()
 
     with ThreadPoolExecutor(max_workers=gelijktijdig) as pool:
@@ -131,6 +196,7 @@ def meet_niveau(endpoint: str, gelijktijdig: int, n: int, prompt: str,
         "doorzet_per_min": round(len(geslaagd) / wandkloktijd * 60, 1) if wandkloktijd else None,
         "geheugen_voor_mb": voor,
         "geheugen_na_mb": na,
+        "tegrastats": tegra.sinds(mark) if tegra else {},
         "fouten": [r.get("fout") for r in resultaten if not r.get("ok")][:3],
     }
 
@@ -167,16 +233,30 @@ def main() -> int:
                    help="het atelier is permanent open; 24 is de standaard")
     p.add_argument("--belasting", type=float, default=0.40,
                    help="aandeel van de capaciteit dat je durft te vullen")
+    p.add_argument("--geen-tegrastats", action="store_true",
+                   help="alleen free -m; tegrastats overslaan")
     p.add_argument("--out", default=None)
     a = p.parse_args()
 
     print(f"IJkmeting tegen {a.endpoint}")
     print(f"Geheugen vooraf: {geheugen_mb()}\n")
 
-    metingen = [
-        meet_niveau(a.endpoint, c, a.n, a.prompt, a.max_tokens, a.timeout)
-        for c in a.concurrency
-    ]
+    tegra = None
+    if not a.geen_tegrastats:
+        tegra = Tegrastats()
+        tegra.start()
+        if tegra.proces is None:
+            print("  (tegrastats niet beschikbaar; alleen free -m)\n", flush=True)
+            tegra = None
+
+    try:
+        metingen = [
+            meet_niveau(a.endpoint, c, a.n, a.prompt, a.max_tokens, a.timeout, tegra)
+            for c in a.concurrency
+        ]
+    finally:
+        if tegra:
+            tegra.stop()
 
     rapport = {
         "tijdstip": datetime.now().isoformat(timespec="seconds"),
@@ -188,12 +268,15 @@ def main() -> int:
     }
 
     print("\n" + "-" * 66)
-    print(f"{'gelijktijdig':>13} {'p50':>8} {'p95':>8} {'ttft':>8} {'tok/s':>8} {'per min':>9}")
+    print(f"{'gelijktijdig':>13} {'p50':>8} {'p95':>8} {'ttft':>8} {'tok/s':>8} "
+          f"{'per min':>9} {'gpu%':>6} {'ram MB':>8}")
     for m in metingen:
+        tg = m.get("tegrastats") or {}
         print(
             f"{m['gelijktijdig']:>13} {str(m['p50_s']):>8} {str(m['p95_s']):>8} "
             f"{str(m['ttft_mediaan_s']):>8} {str(m['tok_per_s_mediaan']):>8} "
-            f"{str(m['doorzet_per_min']):>9}"
+            f"{str(m['doorzet_per_min']):>9} {str(tg.get('gpu_gemiddeld_pct','-')):>6} "
+            f"{str(tg.get('ram_piek_mb','-')):>8}"
         )
     print("-" * 66)
     print(json.dumps(rapport["afgeleid_budget"], indent=2, ensure_ascii=False))

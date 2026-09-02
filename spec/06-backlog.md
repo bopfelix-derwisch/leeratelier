@@ -45,16 +45,23 @@ curl -s http://127.0.0.1:8792/openapi.json | python3 -c 'import json,sys; print(
 
 ## Fase 1 · IJking, ijkset en modelkeuze
 
-### [ ] WP-01 🔴 IJkmeting: wat kan deze machine werkelijk aan
+### [x] WP-01 🔴 IJkmeting: wat kan deze machine werkelijk aan
 **Doel:** het dagbudget uit §4.4 van het plan vervangen door gemeten getallen.
+**Afgerond 2026-09-02** — rapport: `ops/ijking/rapport-2026-09-02.md`.
 
 `ops/ijking/meet.py` staat er al. Draai hem tegen het showmodel bij oplopende gelijktijdigheid, meet
 p50/p95, tokens per seconde, tijd tot eerste token, en geheugen vóór en na.
 
-- [ ] meting bij 1, 2, 4 en 8 gelijktijdige verzoeken
-- [ ] geheugenmeting met `free -m` en `tegrastats` rond elke run
-- [ ] rapport naar `ops/ijking/rapport-<datum>.md`
-- [ ] `config/budget.yaml` bijstellen op basis van de uitkomst
+- [x] meting bij 1, 2, 4 en 8 gelijktijdige verzoeken — 32/32 geslaagd, nul fouten
+- [x] geheugenmeting met `free -m` en `tegrastats` rond elke run — `Tegrastats` toegevoegd aan `meet.py`
+- [x] rapport naar `ops/ijking/rapport-<datum>.md`
+- [x] `config/budget.yaml` bijstellen op basis van de uitkomst — 300 beurten/dag, 20 per bezoeker,
+      `gelijktijdig.showmodel` 1 → 2
+
+**Uitkomst in één regel:** de GPU staat op 93-96% bij élk gelijktijdigheidsniveau, dus de machine is al
+bij één gebruiker verzadigd; gelijktijdigheid koopt doorzet met wachttijd. De knik ligt bij 2.
+Drie vondsten die de documentatie tegenspreken staan in `spec/05-besluitenlog.md` (V1-V3); **V1 raakt
+WP-04 direct**.
 
 **Klaar als:** er staat een reproduceerbaar rapport met p50/p95 per gelijktijdigheidsniveau, en
 `config/budget.yaml` bevat getallen die uit dat rapport volgen in plaats van uit een schatting.

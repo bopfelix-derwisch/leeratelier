@@ -1,15 +1,16 @@
 # Budget voor de leerbemiddelaar.
-# STARTWAARDEN, gerekend uit de inventarisgetallen -- GEEN metingen.
-# WP-01 vervangt deze door gemeten waarden. Verlaag liever dan te verhogen:
-# een atelier dat rustig aanvoelt is meer waard dan een atelier dat precies vol zit.
+# GEMETEN waarden, afgeleid uit ops/ijking/rapport-2026-09-02.md (WP-01).
+# De eerdere waarden waren een berekening uit de inventarisgetallen; die zijn hiermee vervangen.
+# Verlaag liever dan te verhogen: een atelier dat rustig aanvoelt is meer waard dan een
+# atelier dat precies vol zit.
 
-dagbudget_modelbeurten: 150
-per_bezoeker_per_dag: 15
+dagbudget_modelbeurten: 300
+per_bezoeker_per_dag: 20
 gereserveerd_begeleide_sessie: 0.20   # aandeel dat op sessiedagen wordt vrijgehouden
 
 gelijktijdig:
-  klasmodel: 4
-  showmodel: 1
+  klasmodel: 4                   # NIET GEMETEN -- er is nog geen klasmodel. Toetsen in WP-04.
+  showmodel: 2                   # gemeten knik: +65 procent doorzet t.o.v. 1, voor 4 s extra p95
 
 reset:
   tijdstip: "00:00"
@@ -25,8 +26,16 @@ logboek:
 
 herkomst:
   gerekend_op: "2026-09-02"
-  gemeten_op: null               # vullen na WP-01
+  gemeten_op: "2026-09-02"
+  rapport: "ops/ijking/rapport-2026-09-02.md"
   toelichting: >
-    Basis: keten 50-70 s bij koude cache, sequentieel. Een slot bij 60 s per antwoord
-    en 40 procent belasting geeft ruwweg 190 antwoorden per dag; klasmodel en cache
-    vermenigvuldigen dat.
+    Gemeten op het showmodel (Qwen2.5-32B Q4_K_M) bij gelijktijdigheid 1, 2, 4 en 8:
+    doorzet 2,6 / 4,3 / 5,1 / 5,6 antwoorden per minuut bij p95 van 28 / 32 / 49 / 86 s.
+    De GPU staat op 93-96 procent bij elk niveau, dus de machine is al bij een enkele
+    gebruiker verzadigd; gelijktijdigheid koopt doorzet met wachttijd, niet met extra werk.
+    Afleiding van het dagbudget vanaf de knik (gelijktijdigheid 2) in plaats van vanaf het
+    maximum: 4,3 per min x 60 x 6 uur druk venster x 0,25 vulfactor = 387, afgerond naar 300.
+    meet.py adviseert zelf 3225; dat getal neemt 24 uur volle belasting aan en is niet bruikbaar.
+  open_vraag: >
+    spec/07-open-vragen.md vraag 4: op het advies beginnen of eerst een maand op de helft?
+    Halveren is een wijziging van een regel: dagbudget_modelbeurten 300 -> 150.

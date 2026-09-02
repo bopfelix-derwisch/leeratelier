@@ -83,8 +83,12 @@ meer klopt: corrigeer het in dit bestand en noteer het in `spec/05-besluitenlog.
 
 Lees deze vóór je met modellen of de index werkt.
 
-1. **`--ctx-size` is het totaal, niet per slot.** llama.cpp verdeelt het over `--parallel`. Bij
-   `--parallel 4` heb je minimaal `--ctx-size 16384` nodig om 4096 per slot te houden.
+1. **`--ctx-size` gedraagt zich op deze build per slot, niet als totaal.** Oorspronkelijk stond hier
+   dat llama.cpp `--ctx-size` over `--parallel` verdeelt. Waargenomen op build 8117 (2026-09-02):
+   `derwisch_local-llm` geeft `--ctx-size 4096` mee en zet `--parallel` niet, waarna `/props` meldt
+   `total_slots: 4` met per slot `n_ctx: 4096`. `--parallel` staat standaard op `-1` (auto).
+   **Toets dit bij WP-04** met een verse server op :8081 voordat je de unit vastzet — de oude regel
+   laat je vier keer te veel context aanvragen. Zie `spec/05-besluitenlog.md` vondst V1.
 2. **MoE-modellen hangen mogelijk op deze chip.** Bekende llama.cpp-bug op SM87 voor builds ná b7309
    (dec 2025): het model laadt, decode produceert nooit tokens. Zie `ggml-org/llama.cpp` issue #19219.
    Deze machine draait build 8117. **Verifieer dit (WP-02) voordat je op een MoE-model plant.**
