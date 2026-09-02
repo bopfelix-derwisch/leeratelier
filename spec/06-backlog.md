@@ -72,7 +72,9 @@ python3 ops/ijking/meet.py --endpoint http://127.0.0.1:8080 --concurrency 1 2 4 
   --out ops/ijking/rapport-$(date +%F).json
 ```
 
-### [ ] WP-02 🔴 MoE-verificatie op SM87
+### [x] WP-02 🔴 MoE-verificatie op SM87
+**Afgerond 2026-09-02** — rapport: `ops/ijking/moe-verificatie-2026-09-02.md`. Antwoord: **MoE werkt**,
+en is 5,4x sneller dan het dense showmodel. Besluit B16 in `05-besluitenlog.md`; vondsten V4 en V5.
 **Doel:** vaststellen of Mixture-of-Experts-modellen op deze chip en deze build werken. Dit bepaalt of
 Gemma 4 26B-A4B (3,8B actief van 25,2B, dus 4B-snelheid bij veel hogere kwaliteit) een optie is — op
 papier het beste dat deze machine kan draaien.
@@ -81,14 +83,21 @@ Achtergrond: `ggml-org/llama.cpp` issue #19219 meldt dat MoE-decode hangt op Jet
 alle builds ná b7309 (dec 2025). Deze machine draait build 8117. De melding is van januari 2026 en kan
 inmiddels opgelost zijn.
 
-- [ ] check of het issue inmiddels gesloten is en of er een fix in een latere build zit
-- [ ] download één MoE-GGUF naar `/mnt/nvme/nvme/models/` (**niet naar `/`**)
-- [ ] draai `ops/ijking/moe_check.sh` — die start een server, doet één korte generatie, en breekt af bij
-      een timeout
-- [ ] bij hangen: bepaal of terugvallen op build b7309 haalbaar is, of dat dense de weg is
+- [x] check of het issue inmiddels gesloten is en of er een fix in een latere build zit — gesloten als
+      `not_planned`/`stale`, dus **niet** opgelost verklaard; de oorzaak
+      (`CUDA_SCALE_LAUNCH_QUEUES`, commit `a83c73a18`) is wel gereverteerd in PR #19227 en is met
+      `strings` aantoonbaar afwezig in build 8117
+- [x] download één MoE-GGUF naar `/mnt/nvme/nvme/models/` (**niet naar `/`**) —
+      `qwen3-30b-a3b/Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf`, 18,4 GB; `/` bleef op 82%
+- [x] draai `ops/ijking/moe_check.sh` — GESLAAGD, antwoord in 1 s
+- [x] bij hangen: n.v.t. — het hangt niet. In plaats daarvan gemeten hoe snel het is (35,1 tegen
+      6,5 tok/s) en het besluit dense-versus-MoE onderbouwd: **variant A**, MoE vervangt het showmodel
 
 **Klaar als:** in `05-besluitenlog.md` staat een schriftelijk ja/nee met bewijs (output of timeout), en
 een besluit over dense versus MoE.
+
+**Uitvoering van variant A is bewust níet gedaan** — het showmodel vervangen raakt een draaiende dienst
+(Derwisch) en is een keuze van de eigenaar, geen uitkomst van de meting. Werk voor WP-03/WP-04.
 
 **Verificatie:**
 ```bash

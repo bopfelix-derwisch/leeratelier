@@ -89,9 +89,14 @@ Lees deze vóór je met modellen of de index werkt.
    `total_slots: 4` met per slot `n_ctx: 4096`. `--parallel` staat standaard op `-1` (auto).
    **Toets dit bij WP-04** met een verse server op :8081 voordat je de unit vastzet — de oude regel
    laat je vier keer te veel context aanvragen. Zie `spec/05-besluitenlog.md` vondst V1.
-2. **MoE-modellen hangen mogelijk op deze chip.** Bekende llama.cpp-bug op SM87 voor builds ná b7309
-   (dec 2025): het model laadt, decode produceert nooit tokens. Zie `ggml-org/llama.cpp` issue #19219.
-   Deze machine draait build 8117. **Verifieer dit (WP-02) voordat je op een MoE-model plant.**
+2. **MoE werkt op deze build — maar controleer dat na elke llama.cpp-upgrade.** De hang uit
+   `ggml-org/llama.cpp` issue #19219 werd veroorzaakt door `CUDA_SCALE_LAUNCH_QUEUES`, gereverteerd in
+   PR #19227 en afwezig in build 8117. WP-02 heeft MoE-decode gemeten: werkt, en 5,4x sneller dan het
+   dense showmodel. **De onderliggende JetPack-fout zit hier nog wel** (L4T R36.4.7). Na een upgrade:
+   `strings $(command -v llama-server) | grep CUDA_SCALE_LAUNCH_QUEUES` — een treffer betekent dat MoE
+   opnieuw hangt. Zie `spec/05-besluitenlog.md` V5.
+   **Twee modellen van ~19 GB passen niet werkbaar naast elkaar** (samen 47 GB, 0,5 GB vrij) en laden
+   lukt alleen na `drop_caches`: NvMap kan page-cache niet opeisen. Zie V4.
 3. **De RAG-index is vermoedelijk piepklein.** `vectors.npy` is 33 KB; bij bge-m3 (1024 dimensies) komt
    dat neer op ongeveer 8 chunks fp32. Inspecteer vóór je iets herbouwt (WP-09).
 4. **Het modelpad bevat `nvme/nvme`.** Bekende bron van verwarring.

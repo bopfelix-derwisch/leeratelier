@@ -10,19 +10,24 @@
 #
 # Uitkomst: "GESLAAGD" -> MoE werkt, Gemma 4 26B-A4B is een serieuze kandidaat.
 #           "HANGT"    -> dense blijft de weg; noteer dat in het besluitenlog.
+#
+# LET OP: bewerk dit bestand niet terwijl het draait. Bash leest een script
+# incrementeel; een wijziging halverwege verschuift de offsets en levert een
+# syntaxfout op een regel die prima is. Overkomen op 2026-09-02.
 
 set -u
 MODEL="${1:?geef het pad naar een MoE-GGUF}"
 POORT="${2:-8099}"
-TIMEOUT="${TIMEOUT:-120}"
+TIMEOUT="${TIMEOUT:-120}"          # seconden voor de generatie zelf
+LAADVENSTER="${LAADVENSTER:-420}"  # seconden om te wachten tot /health antwoordt
 LOG="$(mktemp)"
 
 command -v llama-server >/dev/null || { echo "llama-server niet gevonden in PATH"; exit 2; }
 [ -f "$MODEL" ] || { echo "model niet gevonden: $MODEL"; exit 2; }
 
 echo "Model:   $MODEL"
-echo "Build:   $(llama-server --version 2>&1 | head -1)"
-echo "Poort:   $POORT   timeout: ${TIMEOUT}s"
+echo "Build:   $(llama-server --version 2>&1 | grep -m1 '^version:')"
+echo "Poort:   $POORT   generatie-timeout: ${TIMEOUT}s   laadvenster: ${LAADVENSTER}s"
 echo "Geheugen vooraf:"; free -m | head -2
 echo
 
@@ -32,13 +37,13 @@ PID=$!
 trap 'kill "$PID" 2>/dev/null' EXIT
 
 echo -n "wachten tot het model geladen is"
-for _ in $(seq 1 60); do
+for _ in $(seq 1 $((LAADVENSTER / 2))); do
   if curl -sf "http://127.0.0.1:$POORT/health" >/dev/null 2>&1; then echo " -> geladen"; break; fi
   echo -n "."; sleep 2
 done
 
 if ! curl -sf "http://127.0.0.1:$POORT/health" >/dev/null 2>&1; then
-  echo; echo "RESULTAAT: LADEN MISLUKT (geen /health binnen 120s)"
+  echo; echo "RESULTAAT: LADEN MISLUKT (geen /health binnen ${LAADVENSTER}s)"
   tail -20 "$LOG"; exit 1
 fi
 

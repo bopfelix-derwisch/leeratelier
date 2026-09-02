@@ -7,8 +7,9 @@ showmodel:
   poort: 8080
   rol: "demonstratie en vergelijking; traag en gerantsoeneerd"
   opmerking: >
-    Vervangen door Qwen3.6-27B is een verbetering maar niet blokkerend.
-    Doe het na de eerste module, niet ervoor.
+    NOG ONGEWIJZIGD, maar WP-02 adviseert vervanging door het MoE-model
+    (Qwen3-30B-A3B): 5,4x sneller bij gelijke grootte. Zie besluit B16, variant A.
+    Dat besluit is aan de eigenaar; uitvoering hoort bij WP-03/WP-04.
 
 klasmodel:
   naam: null                    # vullen na WP-03
@@ -42,8 +43,24 @@ hardware_werkelijkheid:
     50-70 s ketenlatency volledig en is de kern van module K3.
 
 moe_status:
-  werkt_op_deze_build: null     # vullen na WP-02
+  werkt_op_deze_build: true     # WP-02, gemeten 2026-09-02
+  getest_met: "Qwen3-30B-A3B-Instruct-2507 Q4_K_M (18,4 GB, ~3B actief van 30B)"
+  gemeten:
+    tok_per_s: 35.13            # tegen 6,48 voor het dense showmodel
+    p50_s: 4.32                 # tegen 24,06
+    doorzet_per_min: 13.2       # tegen 2,6
+  rapport: "ops/ijking/moe-verificatie-2026-09-02.md"
   toelichting: >
-    llama.cpp issue 19219: MoE-decode hangt op Jetson Orin AGX (SM87) voor builds
-    na b7309. Deze machine draait build 8117. Als MoE wel werkt, is Gemma 4 26B-A4B
-    (3,8B actief van 25,2B) waarschijnlijk het beste dat deze machine kan draaien.
+    Issue 19219 is gesloten als not_planned/stale, dus niet opgelost verklaard -- maar de
+    oorzaak (CUDA_SCALE_LAUNCH_QUEUES uit commit a83c73a18) is met PR 19227 gereverteerd
+    en zit niet meer in build 8117. Geverifieerd met strings op de binary. MoE decodeert
+    normaal en is 5,4x sneller dan het dense showmodel bij gelijke bestandsgrootte.
+  risico: >
+    De onderliggende JetPack-fout zit nog wel op deze machine (L4T R36.4.7, exact de
+    versie van de melder). Zodra een nieuwere llama.cpp de env-var herintroduceert, hangt
+    MoE opnieuw. Controleer na elke upgrade:
+    strings $(command -v llama-server) | grep CUDA_SCALE_LAUNCH_QUEUES
+  geheugengrens: >
+    Twee modellen van ~19 GB passen niet werkbaar naast elkaar: samen 47,2 GB gebruikt met
+    499 MB vrij, en laden lukt alleen na drop_caches omdat NvMap geen page-cache kan
+    opeisen. Zie besluit B16 (variant A) en vondst V4.
