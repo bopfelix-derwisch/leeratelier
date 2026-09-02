@@ -1,0 +1,18 @@
+# WP-06. Naar /etc/systemd/system/.
+[Unit]
+Description=Leeratelier portaal (poort 8793)
+After=network-online.target atelier-bemiddelaar.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=bob
+WorkingDirectory=/mnt/nvme/workspaces/leeratelier
+EnvironmentFile=-/mnt/nvme/workspaces/leeratelier/.env
+ExecStart=/usr/bin/python3 -m uvicorn app.main:app --host 127.0.0.1 --port 8793
+Restart=always
+RestartSec=5
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=multi-user.target

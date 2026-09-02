@@ -1,0 +1,24 @@
+# WP-04. Klasmodel, permanent. Naar /etc/systemd/system/.
+# LET OP: --ctx-size is het TOTAAL en wordt over --parallel verdeeld.
+# Bij --parallel 4 dus minimaal 16384 om 4096 per slot te houden.
+# Meet het geheugen voor en na de eerste start: 61 GB unified, circa 30 GB al in gebruik.
+[Unit]
+Description=llama.cpp klasmodel voor het leeratelier (poort 8081)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=bob
+ExecStart=/usr/local/bin/llama-server \
+  --model /mnt/nvme/nvme/models/VUL_MODEL_IN.gguf \
+  --host 127.0.0.1 --port 8081 \
+  --ctx-size 16384 --parallel 4 \
+  --n-gpu-layers 99 --threads 4
+Restart=always
+RestartSec=10
+# Het atelier is permanent open en onbewaakt. Nooit opgeven.
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=multi-user.target

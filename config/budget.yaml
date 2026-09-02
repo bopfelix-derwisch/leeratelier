@@ -1,0 +1,32 @@
+# Budget voor de leerbemiddelaar.
+# STARTWAARDEN, gerekend uit de inventarisgetallen -- GEEN metingen.
+# WP-01 vervangt deze door gemeten waarden. Verlaag liever dan te verhogen:
+# een atelier dat rustig aanvoelt is meer waard dan een atelier dat precies vol zit.
+
+dagbudget_modelbeurten: 150
+per_bezoeker_per_dag: 15
+gereserveerd_begeleide_sessie: 0.20   # aandeel dat op sessiedagen wordt vrijgehouden
+
+gelijktijdig:
+  klasmodel: 4
+  showmodel: 1
+
+reset:
+  tijdstip: "00:00"
+  tijdzone: "Europe/Amsterdam"
+
+cache:
+  inschakelen: true
+  bewaartermijn_uren: 168        # een week; lesvragen herhalen zich
+
+logboek:
+  inschakelen: true
+  bewaartermijn_dagen: 90        # gelijk aan history.jsonl van sysmonitor
+
+herkomst:
+  gerekend_op: "2026-09-02"
+  gemeten_op: null               # vullen na WP-01
+  toelichting: >
+    Basis: keten 50-70 s bij koude cache, sequentieel. Een slot bij 60 s per antwoord
+    en 40 procent belasting geeft ruwweg 190 antwoorden per dag; klasmodel en cache
+    vermenigvuldigen dat.

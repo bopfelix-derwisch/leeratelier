@@ -1,0 +1,49 @@
+# Modellen in het atelier. Bijwerken na WP-02 (MoE-verificatie) en WP-03 (ijkset).
+
+showmodel:
+  naam: "Qwen2.5-32B-Instruct"
+  quantisatie: "Q4_K_M"
+  grootte_gb: 19
+  poort: 8080
+  rol: "demonstratie en vergelijking; traag en gerantsoeneerd"
+  opmerking: >
+    Vervangen door Qwen3.6-27B is een verbetering maar niet blokkerend.
+    Doe het na de eerste module, niet ervoor.
+
+klasmodel:
+  naam: null                    # vullen na WP-03
+  quantisatie: "Q4_K_M"
+  poort: 8081
+  rol: "standaard voor alle bezoekersvragen"
+  advies: >
+    Een dense Qwen in de 8B-klasse. Nederlands is hier doorslaggevend: de Qwen-familie
+    heeft veruit de breedste meertaligheid. Zoek geen Nederlands-specifiek model --
+    kleine meertalige modellen presteren daar inmiddels beter.
+
+embeddings:
+  naam: "bge-m3"
+  precisie: "FP16"
+  dimensies: 1024
+  poort: 8082
+
+modellenbank:
+  # Module K3: dezelfde Nederlandse vraag aan vijf modellen.
+  # Twee draaien live, drie komen uit conserven. Zo krijg je een vijfvoudige
+  # vergelijking zonder vijf modellen tegelijk te draaien.
+  live: ["klasmodel", "showmodel"]
+  uit_conserven: []             # vullen na WP-03
+
+hardware_werkelijkheid:
+  bandbreedte_gb_s: 200
+  toelichting: >
+    Tokengeneratie is bandbreedte-gebonden, niet rekenkracht-gebonden.
+    Ruwweg: tokens/s = bandbreedte / modelgrootte. Een 19 GB model haalt dus
+    hooguit ongeveer 10 tok/s, een 5 GB model ongeveer 40. Dit verklaart de
+    50-70 s ketenlatency volledig en is de kern van module K3.
+
+moe_status:
+  werkt_op_deze_build: null     # vullen na WP-02
+  toelichting: >
+    llama.cpp issue 19219: MoE-decode hangt op Jetson Orin AGX (SM87) voor builds
+    na b7309. Deze machine draait build 8117. Als MoE wel werkt, is Gemma 4 26B-A4B
+    (3,8B actief van 25,2B) waarschijnlijk het beste dat deze machine kan draaien.
