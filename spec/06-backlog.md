@@ -129,18 +129,29 @@ trainingsdata en peildatum noemt. Het 4B-model verzint daar instanties die niet 
 **Vondst V6:** op ijk-12 (asvolgorde) faalt élk model — het beste lesmateriaal dat de set opleverde.
 **Vondst V7:** Qwen3-8B heeft `--reasoning-budget 0` nodig; die vlag staat nu in de unit voor WP-04.
 
-### [ ] WP-04 🔴 Klasmodel permanent op :8081
+### [x] WP-04 🔴 Klasmodel permanent op :8081
 **Doel:** een snel, meertalig dens model dat permanent draait naast het showmodel.
+**Afgerond 2026-09-03** — rapport: `ops/ijking/klasmodel-2026-09-03.md`. Draait: `Qwen3-8B` Q4_K_M.
 
-Let op: `--ctx-size` is het **totaal** en wordt over `--parallel` verdeeld. Bij `--parallel 4` dus
-minimaal `--ctx-size 16384`.
+Let op: `--ctx-size` is het **totaal** zodra `--parallel` expliciet staat. Bij `--parallel 4` dus
+`--ctx-size 16384` voor 4096 per slot. **Getoetst bij dit werkpakket** — de correctie die WP-01 op deze
+regel aanbracht (vondst V1) was fout en is teruggedraaid.
 
-- [ ] geheugenmeting vóór de start: `free -m` (61 GB totaal, ~30 GB in gebruik)
-- [ ] systemd-unit op basis van `ops/systemd/llama-klasmodel.service`
-- [ ] `Restart=always`, want het atelier draait permanent en onbewaakt
-- [ ] geheugenmeting ná de start; noteer of er ruimte overblijft voor het showmodel
+- [x] geheugenmeting vóór de start: 35 894 MB in gebruik
+- [x] systemd-unit op basis van `ops/systemd/llama-klasmodel.service`, geïnstalleerd en enabled
+- [x] `Restart=always` en `StartLimitIntervalSec=0`, want het atelier draait permanent en onbewaakt
+- [x] geheugenmeting ná de start: proces `VmRSS` 7,58 GB; met alle drie de modellen draaiend staat de
+      machine op ~36 van 62,8 GB, dus **ruim 25 GB over** — genoeg voor variant A uit besluit B16
+- [x] gelijktijdigheid gemeten (stond nog als gok in `config/budget.yaml`): 10,9 / 20,5 / 24,4 / 25,4
+      antwoorden per minuut bij 1 / 2 / 4 / 8. `gelijktijdig.klasmodel: 4` blijkt juist
+- [x] geverifieerd dat `--reasoning-budget 0` werkt: geen `<think>`-blok in het antwoord (V7)
 
 **Klaar als:** de unit is enabled en active, overleeft een reboot, en `/v1/models` antwoordt op :8081.
+
+> **Nog niet afgevinkt: de reboot.** Een herstart van `orin3` legt Derwisch, LeefomgevingLab, waterlab,
+> de relays en sysmonitor tegelijk plat; dat is geen beslissing van een werkpakket. `is-enabled` geeft
+> `enabled` en het symlink in `multi-user.target.wants/` staat er, dus de unit hoort mee te starten —
+> maar dat is een redenering, geen waarneming. **Toets dit bij de eerstvolgende geplande herstart.**
 
 **Verificatie:**
 ```bash

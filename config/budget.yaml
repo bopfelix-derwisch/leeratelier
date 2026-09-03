@@ -9,7 +9,9 @@ per_bezoeker_per_dag: 20
 gereserveerd_begeleide_sessie: 0.20   # aandeel dat op sessiedagen wordt vrijgehouden
 
 gelijktijdig:
-  klasmodel: 4                   # NIET GEMETEN -- er is nog geen klasmodel. Toetsen in WP-04.
+  klasmodel: 4                   # GEMETEN in WP-04 (2026-09-03): 24,4 antw/min bij p95 10,2 s.
+                                 # De knik ligt bij 2 (20,5/min, p95 5,9 s), maar 4 blijft ruim
+                                 # onder de warn-drempel van 60 s uit plan par. 8. Gok bleek juist.
   showmodel: 2                   # gemeten knik: +65 procent doorzet t.o.v. 1, voor 4 s extra p95
 
 reset:
@@ -28,6 +30,7 @@ herkomst:
   gerekend_op: "2026-09-02"
   gemeten_op: "2026-09-02"
   rapport: "ops/ijking/rapport-2026-09-02.md"
+  rapport_klasmodel: "ops/ijking/klasmodel-2026-09-03.md"
   toelichting: >
     Gemeten op het showmodel (Qwen2.5-32B Q4_K_M) bij gelijktijdigheid 1, 2, 4 en 8:
     doorzet 2,6 / 4,3 / 5,1 / 5,6 antwoorden per minuut bij p95 van 28 / 32 / 49 / 86 s.
@@ -36,6 +39,12 @@ herkomst:
     Afleiding van het dagbudget vanaf de knik (gelijktijdigheid 2) in plaats van vanaf het
     maximum: 4,3 per min x 60 x 6 uur druk venster x 0,25 vulfactor = 387, afgerond naar 300.
     meet.py adviseert zelf 3225; dat getal neemt 24 uur volle belasting aan en is niet bruikbaar.
+  ruimte_na_wp04: >
+    Het dagbudget van 300 is afgeleid uit het SHOWMODEL (4,3 antw/min bij de knik). Sinds WP-04
+    beantwoordt het KLASMODEL de bezoekersvragen, en dat haalt 20,5 antw/min bij dezelfde knik --
+    bijna vijf keer zoveel. Dezelfde afleiding zou op ongeveer 1800 uitkomen. 300 is dus zeer
+    conservatief, ongeveer twee procent van het theoretische plafond. Bewust zo gelaten: verhogen
+    kan met een regel zodra er echte bezoekers zijn, verlagen na een slechte ervaring niet.
   open_vraag: >
     spec/07-open-vragen.md vraag 4: op het advies beginnen of eerst een maand op de helft?
     Halveren is een wijziging van een regel: dagbudget_modelbeurten 300 -> 150.

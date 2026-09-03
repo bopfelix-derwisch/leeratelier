@@ -10,11 +10,12 @@ Type=simple
 User=bob
 # Model gekozen in WP-03 (besluit B17). --reasoning-budget 0 is niet optioneel:
 # Qwen3-8B is hybride en lekt anders <think>-blokken naar de bezoeker (vondst V7).
-# --ctx-size is op build 8117 PER SLOT, niet het totaal -- toets dat bij WP-04 (vondst V1).
+# --ctx-size is het TOTAAL zodra --parallel expliciet staat: 16384 / 4 = 4096 per slot.
+# Getoetst op build 8117 bij WP-04; zie vondst V1 in spec/05-besluitenlog.md.
 ExecStart=/usr/local/bin/llama-server \
   --model /mnt/nvme/nvme/models/qwen3-8b/Qwen3-8B-Q4_K_M.gguf \
   --host 127.0.0.1 --port 8081 \
-  --ctx-size 4096 --parallel 4 \
+  --ctx-size 16384 --parallel 4 \
   --reasoning-budget 0 \
   --n-gpu-layers 99 --threads 4
 Restart=always

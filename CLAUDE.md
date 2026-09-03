@@ -62,7 +62,7 @@ meer klopt: corrigeer het in dit bestand en noteer het in `spec/05-besluitenlog.
 |---|---|
 | 8000, 8788, 8789, 8790, 8791, 8792, 8795, 8799 | **bezet** door bestaande diensten |
 | 8080 | llama-server showmodel (Qwen2.5-32B Q4_K_M, 19 GB), `127.0.0.1` |
-| 8081 | **leeg** — hier komt het klasmodel (`derwisch_local-nemo` is disabled) |
+| 8081 | **klasmodel** — `llama-klasmodel.service`, Qwen3-8B Q4_K_M, 4 slots × 4096 (WP-04) |
 | 8082 | llama-server embeddings (bge-m3 FP16), `127.0.0.1` |
 | **8793** | **vrij** — atelier-portaal |
 | **8794** | **vrij** — leerbemiddelaar |
@@ -83,12 +83,18 @@ meer klopt: corrigeer het in dit bestand en noteer het in `spec/05-besluitenlog.
 
 Lees deze vóór je met modellen of de index werkt.
 
-1. **`--ctx-size` gedraagt zich op deze build per slot, niet als totaal.** Oorspronkelijk stond hier
-   dat llama.cpp `--ctx-size` over `--parallel` verdeelt. Waargenomen op build 8117 (2026-09-02):
-   `derwisch_local-llm` geeft `--ctx-size 4096` mee en zet `--parallel` niet, waarna `/props` meldt
-   `total_slots: 4` met per slot `n_ctx: 4096`. `--parallel` staat standaard op `-1` (auto).
-   **Toets dit bij WP-04** met een verse server op :8081 voordat je de unit vastzet — de oude regel
-   laat je vier keer te veel context aanvragen. Zie `spec/05-besluitenlog.md` vondst V1.
+1. **`--ctx-size` is het totaal zodra je `--parallel` expliciet zet.** Getoetst op build 8117
+   (2026-09-03), zelfde model, drie varianten:
+
+   | vlaggen | slots | per slot |
+   |---|---:|---:|
+   | `--ctx-size 4096` (geen `--parallel`, dus auto `-1`) | 4 | 4096 |
+   | `--ctx-size 4096 --parallel 4` | 4 | **1024** |
+   | `--ctx-size 16384 --parallel 4` | 4 | 4096 |
+
+   Zet je `--parallel` expliciet, reken dan `--ctx-size` = gewenste context × aantal slots. Laat je hem
+   weg, dan geldt `--ctx-size` per sequentie. Zie `spec/05-besluitenlog.md` V1.
+
 2. **MoE werkt op deze build — maar controleer dat na elke llama.cpp-upgrade.** De hang uit
    `ggml-org/llama.cpp` issue #19219 werd veroorzaakt door `CUDA_SCALE_LAUNCH_QUEUES`, gereverteerd in
    PR #19227 en afwezig in build 8117. WP-02 heeft MoE-decode gemeten: werkt, en 5,4x sneller dan het

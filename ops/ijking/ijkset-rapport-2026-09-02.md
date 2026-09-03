@@ -118,6 +118,30 @@ allemaal plausibel en allemaal fout antwoorden, is precies het materiaal dat mod
 faalvorm "plausibel maar fout", en dat K5 nodig heeft voor de asvolgorde. Bewaar deze vijf antwoorden als
 conserf en toon ze naast elkaar — het argument dat "een groter model het wel weet" sneuvelt hier zichtbaar.
 
+## 4b. Nagekomen op 2026-09-03: de domeinkennis is overal zwak
+
+Dit rapport is geschreven na het lezen van ijk-20, ijk-13 en ijk-12. Bij het in bedrijf nemen van het
+klasmodel (WP-04) bleek een willekeurige controlevraag over Lden fout beantwoord, en dat gaf aanleiding
+ijk-05 alsnog na te lopen. **Ook daar faalt elk model**, en erger dan bij ijk-12:
+
+| model | antwoord op "Wat betekent Lden?" |
+|---|---|
+| `mistral-nemo-12b` | "Lokale dagelijkse verkeersruis" — verzonnen |
+| `qwen2.5-32b-dense` | "Lärmpegeldichte Nacht" — verzonnen, en Duits |
+| `qwen3-30b-a3b-moe` | "Day Night Average", een maat voor **luchtvervuiling** |
+| `qwen3-8b` | "Luchtvervuiling, dagelijks gemiddeld" — zelfde domeinfout |
+
+Correct is: gewogen etmaalniveau voor **geluid**, met toeslagen voor avond en nacht.
+
+Dat twee modellen Lden in het verkeerde domein plaatsen, is ernstiger dan ijk-12: daar ging het om een
+randgeval dat het veld `let_op` al als "staat waarschijnlijk nergens in" had aangemerkt, hier gaat het om
+basisvocabulaire van de POC die module K4 gebruikt.
+
+**Dit werpt de keuze voor Qwen3-8B niet om** — de selectie was relatief, en op de vraag die telt (ijk-20)
+wint het nog steeds. Maar het verandert wel wat het klasmodel is: niet een kennisbron, maar een taalmodel
+dat pas bruikbaar wordt met een deugdelijke index eronder. **WP-09b is daarmee geen verbetering achteraf
+maar een voorwaarde.** Zie vondst V8.
+
 ## 5. Waarom Qwen3-8B en niet een van de andere
 
 | | waarom niet |

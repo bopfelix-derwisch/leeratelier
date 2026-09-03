@@ -28,6 +28,12 @@ klasmodel:
     mediaan_s: 7.4
     tekens_gemiddeld: 527
     ijk20_oordeel: "eerlijk"     # als enige van de vijf
+  beperking: >
+    LET OP (vondst V8): de domeinkennis is zwak. Op ijk-05 plaatst dit model "Lden" in het
+    domein luchtvervuiling in plaats van geluid -- basisvocabulaire voor LeefomgevingLab.
+    Alle vijf de geteste modellen falen daar, dus het is geen reden om een ander te kiezen,
+    maar het maakt een deugdelijke RAG-index (WP-09b) een voorwaarde voor bruikbaarheid,
+    niet een verbetering achteraf.
   motivatie: >
     Gekozen op de ijkset van 20 Nederlandse vragen langs 5 modellen (100/100 geslaagd).
     Doorslaggevend was ijk-20, de vraag naar de eigen herkomst: Qwen3-8B is het enige
