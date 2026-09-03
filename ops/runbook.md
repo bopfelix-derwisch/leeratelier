@@ -22,6 +22,24 @@ free -m | head -2 && df -h / /mnt/nvme | tail -2
 - [ ] meldingen uit de "ik kom er niet uit"-knop afhandelen
 - [ ] herstel na een reboot: welke units, in welke volgorde
 
+## Tijdelijk: het portaal bekijken via Tailscale
+
+Zolang WP-07 (Cloudflare Access) niet staat, is het portaal alleen binnen het tailnet te bekijken.
+De dienst zelf blijft op `127.0.0.1`; Tailscale zet er een proxy voor.
+
+```bash
+sudo tailscale serve --bg --https=443 http://127.0.0.1:8793   # aanzetten
+tailscale serve status                                        # controleren
+sudo tailscale serve --https=443 off                          # uitzetten
+```
+
+Bereikbaar op **https://orin3.tail897ef4.ts.net/** voor apparaten in het tailnet.
+
+**Dit is geen toegangsbeveiliging.** Binnen het tailnet is er geen inlog: iedereen deelt hetzelfde
+budget en dezelfde naam, en wie een `Cf-Access-Authenticated-User-Email`-header meestuurt, is die
+persoon. Het portaal zegt dat ook zelf in een banner. Zet dit uit zodra Access er staat, of eerder
+als er iemand anders in het tailnet komt.
+
 ## Wat je nooit doet tijdens openingstijd
 - een POC-repo aanraken
 - de RAG-index herbouwen zonder aankondiging (K4 en spoor L worden er onvoorspelbaar van)

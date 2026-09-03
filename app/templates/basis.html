@@ -19,6 +19,11 @@
   </div>
 </header>
 
+{% if not afgeschermd %}
+<div class="banner let">Dit portaal staat nog niet achter een inlog. Iedereen die hier komt
+  deelt hetzelfde budget en dezelfde naam. Kijk gerust rond; ga er niet van uit dat wat je
+  hier invult van jou blijft.</div>
+{% endif %}
 {% if storing %}
 <div class="banner {{ 'storing' if storing.niveau == 'storing' else 'let' }}">{{ storing.tekst }}</div>
 {% elif gezondheid.get('bemiddelaar') == 'weg' %}

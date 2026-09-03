@@ -90,6 +90,17 @@ def bezoeker_van(request: Request) -> str:
     return email or os.environ.get("ATELIER_BEZOEKER", "lokaal@orin3")
 
 
+def is_afgeschermd(request: Request) -> bool:
+    """Staat er een geverifieerde identiteit achter dit verzoek?
+
+    Zolang dat niet zo is, deelt iedereen hetzelfde budget en kan iedereen elke
+    identiteit claimen door een header mee te sturen. Dat hoort de bezoeker te zien
+    en niet alleen de bouwer -- het atelier leert per slot van rekening dat je moet
+    kunnen nagaan waar iets vandaan komt.
+    """
+    return bool(request.headers.get("cf-access-authenticated-user-email"))
+
+
 def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI:
     basis = bemiddelaar_basis or os.environ.get("ATELIER_BEMIDDELAAR",
                                                 "http://127.0.0.1:8794")
@@ -107,7 +118,8 @@ def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI
         return {"request": request, "bezoeker": bezoeker,
                 "budget": await mid.budget(bezoeker),
                 "gezondheid": await mid.gezondheid(),
-                "storing": lees_storingsbanner()}
+                "storing": lees_storingsbanner(),
+                "afgeschermd": is_afgeschermd(request)}
 
     def zoek_module(module_id: str):
         map_ = modules_dir / module_id
