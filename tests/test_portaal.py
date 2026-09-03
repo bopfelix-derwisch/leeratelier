@@ -250,3 +250,50 @@ def test_gezondheid_voor_sysmonitor(keten):
     assert g["modules_gepubliceerd"] >= 1
     assert g["modules_stuk"] == 0
     assert "keten" in g
+
+
+# ------------------------------------------------- storingsbanner van sysmonitor
+
+def test_banner_van_sysmonitor_wordt_getoond(keten, tmp_path, monkeypatch):
+    """WP-08: sysmonitor schrijft, het portaal toont."""
+    import json as _json
+    from datetime import datetime, timezone
+
+    import app.main as main_mod
+
+    pad = tmp_path / "storing.json"
+    pad.write_text(_json.dumps({
+        "actief": True, "niveau": "storing",
+        "tekst": "Er is een storing: klasmodel.",
+        "gezet_op": datetime.now(timezone.utc).isoformat()}), encoding="utf-8")
+    monkeypatch.setattr(main_mod, "STORING_BESTAND", pad)
+
+    portaal, _ = keten
+    html = portaal.get("/").text
+    assert "Er is een storing: klasmodel." in html
+    assert 'class="banner storing"' in html
+
+
+def test_verouderde_banner_wordt_genegeerd(keten, tmp_path, monkeypatch):
+    """Een sysmonitor die stilvalt mag geen banner laten staan die niemand bijwerkt."""
+    import json as _json
+    from datetime import datetime, timedelta, timezone
+
+    import app.main as main_mod
+
+    pad = tmp_path / "oud.json"
+    pad.write_text(_json.dumps({
+        "actief": True, "niveau": "storing", "tekst": "Oude melding.",
+        "gezet_op": (datetime.now(timezone.utc) - timedelta(hours=4)).isoformat()}),
+        encoding="utf-8")
+    monkeypatch.setattr(main_mod, "STORING_BESTAND", pad)
+
+    portaal, _ = keten
+    assert "Oude melding." not in portaal.get("/").text
+
+
+def test_ontbrekend_bannerbestand_is_geen_fout(keten, tmp_path, monkeypatch):
+    import app.main as main_mod
+    monkeypatch.setattr(main_mod, "STORING_BESTAND", tmp_path / "bestaat-niet.json")
+    portaal, _ = keten
+    assert portaal.get("/").status_code == 200

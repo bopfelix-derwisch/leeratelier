@@ -19,7 +19,9 @@
   </div>
 </header>
 
-{% if gezondheid.get('bemiddelaar') == 'weg' %}
+{% if storing %}
+<div class="banner {{ 'storing' if storing.niveau == 'storing' else 'let' }}">{{ storing.tekst }}</div>
+{% elif gezondheid.get('bemiddelaar') == 'weg' %}
 <div class="banner storing">De leerbemiddelaar is niet bereikbaar. De pagina's werken,
   maar vragen stellen kan nu niet.</div>
 {% elif gezondheid.storingsmodus %}

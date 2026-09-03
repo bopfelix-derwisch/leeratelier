@@ -275,7 +275,10 @@ twintig modelaanroepen en de test doet het in een fractie van de tijd.
 - [ ] privacytekst op de inlogpagina: wat er gelogd wordt, waarom, en 90 dagen bewaartermijn
 - [ ] eerlijke verwachtingstekst: *dit is een privé-lab van één persoon; storingen kunnen dagen duren*
 
-### [ ] WP-08 🟡 Sysmonitor-uitbreiding
+### [x] WP-08 🟡 Sysmonitor-uitbreiding
+**Afgerond 2026-09-03.** Sectie "Leeratelier" in `~/sysmonitor/sysmonitor.py`, gevoed door
+`/v1/gezondheid` van de bemiddelaar. De drie nieuwe units (`llama-klasmodel`,
+`atelier-bemiddelaar`, `atelier-portaal`) staan nu ook in `SERVICES`.
 Zes nieuwe drempels, in het bestaande patroon: elke warn/crit krijgt een concrete actie via `advise()`.
 
 | Signaal | warn | crit | Actie |
@@ -287,8 +290,18 @@ Zes nieuwe drempels, in het bestaande patroon: elke warn/crit krijgt een concret
 | Klasmodel niet actief | — | direct | unit :8081 herstarten |
 | Openstaande meldingen | 3 | 10 | mail naar beheerder |
 
-- [ ] drempels toegevoegd, met `advise()`-teksten in het Nederlands
-- [ ] de storingsbanner van het portaal wordt hierdoor gezet
+- [x] drempels toegevoegd, met `advise()`-teksten in het Nederlands — elk met een
+      uitvoerbaar commando, niet met "onderzoek dit nader"
+- [x] de storingsbanner van het portaal wordt hierdoor gezet — sysmonitor schrijft
+      `/mnt/nvme/leeratelier/storing.json`, het portaal leest dat en toont de banner
+
+**Live getoetst:** met `llama-klasmodel` gestopt gaat sysmonitor naar `crit`, schrijft de banner,
+en ziet een bezoeker op `/` de tekst *"Er is een storing: klasmodel. Waar een voorberekend antwoord
+klaarstaat krijg je dat, zichtbaar gelabeld."* Na herstarten is de banner binnen één sysmonitor-run
+weer weg.
+
+> Een banner ouder dan 90 minuten wordt genegeerd. Een sysmonitor die zelf stilvalt mag geen
+> melding laten staan die niemand meer bijwerkt — dat is precies de storing die niemand opmerkt.
 
 ### [x] WP-09b 🟡 RAG-index herbouwen en vergroten
 Blokkerend voor K4 en spoor L. Pas doen na WP-09a.

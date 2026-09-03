@@ -14,7 +14,9 @@ Bindt op 127.0.0.1: de Cloudflare-tunnel praat lokaal.
 
 from __future__ import annotations
 
+import json
 import os
+from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi import FastAPI, Form, Request
@@ -45,6 +47,31 @@ KAARTVELDEN = (
     ("oordeel", "Waar neemt het model het denken over?",
      "Een alinea. Waar vervangt het systeem een oordeel dat een mens hoort te maken?"),
 )
+
+
+# Sysmonitor schrijft hier wat het portaal als banner moet tonen. Het portaal leidt
+# zelf al iets af uit /v1/gezondheid, maar sysmonitor ziet meer: een volgelopen schijf,
+# een unit die niet draait, een machine die te heet wordt. Zie WP-08.
+STORING_BESTAND = Path(os.environ.get("ATELIER_STORING",
+                                      "/mnt/nvme/leeratelier/storing.json"))
+# Ouder dan dit en de melding wordt genegeerd: een sysmonitor die zelf stilvalt, mag
+# geen banner laten staan die niemand meer bijwerkt.
+STORING_MAX_MIN = 90
+
+
+def lees_storingsbanner(pad: Path = None):
+    """Wat sysmonitor gemeld heeft, of niets. Nooit een fout naar de bezoeker."""
+    pad = pad or STORING_BESTAND
+    try:
+        d = json.loads(pad.read_text(encoding="utf-8"))
+        if not d.get("actief") or not d.get("tekst"):
+            return None
+        gezet = datetime.fromisoformat(d["gezet_op"])
+        if (datetime.now(timezone.utc) - gezet).total_seconds() > STORING_MAX_MIN * 60:
+            return None
+        return {"niveau": d.get("niveau") or "let", "tekst": d["tekst"]}
+    except (OSError, ValueError, KeyError):
+        return None
 
 
 class VraagIn(BaseModel):
@@ -79,7 +106,8 @@ def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI
         bezoeker = bezoeker_van(request)
         return {"request": request, "bezoeker": bezoeker,
                 "budget": await mid.budget(bezoeker),
-                "gezondheid": await mid.gezondheid()}
+                "gezondheid": await mid.gezondheid(),
+                "storing": lees_storingsbanner()}
 
     def zoek_module(module_id: str):
         map_ = modules_dir / module_id
@@ -235,7 +263,9 @@ def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI
     async def gezondheid(request: Request):
         modules, fouten = schema.lees_alle(modules_dir)
         keten = await mid.gezondheid()
+        storing = lees_storingsbanner()
         return {"portaal": "actief",
+                "storingsbanner": storing["tekst"] if storing else None,
                 "bemiddelaar": "weg" if keten.get("bemiddelaar") == "weg" else "actief",
                 "modules_totaal": len(modules),
                 "modules_gepubliceerd": sum(1 for m in modules if m.gepubliceerd),
