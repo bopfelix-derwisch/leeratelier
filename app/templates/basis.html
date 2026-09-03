@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block titel %}Leeratelier{% endblock %}</title>
+<link rel="stylesheet" href="/static/atelier.css">
+</head>
+<body>
+<header class="balk">
+  <div class="balk-in">
+    <a class="naam" href="/">Leeratelier</a>
+    <span class="rek"></span>
+    {% if budget %}
+    <span class="meter {% if budget.persoonlijk_resterend == 0 %}leeg{% endif %}">
+      nog <b>{{ budget.persoonlijk_resterend }}</b> van {{ budget.persoonlijk_totaal }} beurten vandaag
+    </span>
+    {% endif %}
+  </div>
+</header>
+
+{% if gezondheid.get('bemiddelaar') == 'weg' %}
+<div class="banner storing">De leerbemiddelaar is niet bereikbaar. De pagina's werken,
+  maar vragen stellen kan nu niet.</div>
+{% elif gezondheid.storingsmodus %}
+<div class="banner storing">Er draait op dit moment geen taalmodel. Waar een voorberekend
+  antwoord klaarstaat krijg je dat; het is zichtbaar gelabeld. Dit is een prive-lab van
+  een persoon, dus een storing kan dagen duren.</div>
+{% elif gezondheid.klasmodel != 'actief' %}
+<div class="banner let">Het klasmodel is weg. Vragen gaan naar het showmodel: trager,
+  en anders gelabeld.</div>
+{% elif gezondheid.dagbudget_verbruikt_pct >= 90 %}
+<div class="banner let">Het dagbudget is voor {{ gezondheid.dagbudget_verbruikt_pct }} procent
+  verbruikt. Na middernacht zijn live antwoorden weer ruim beschikbaar.</div>
+{% endif %}
+
+<div class="wrap {% block breed %}{% endblock %}">
+{% block inhoud %}{% endblock %}
+<footer>
+  Leeratelier op orin3 &middot; een prive-lab, geen operationele dienst.
+  Vragen worden gelogd en na 90 dagen verwijderd.
+  {% if gezondheid.rag_index_leeftijd_dagen is not none %}
+  &middot; zoekindex {{ gezondheid.rag_index_leeftijd_dagen }} dagen oud.
+  {% endif %}
+</footer>
+</div>
+</body>
+</html>

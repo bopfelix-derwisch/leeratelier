@@ -1,0 +1,6 @@
+{% extends "basis.html" %}
+{% block titel %}Opdracht &middot; {{ module.titel }}{% endblock %}
+{% block inhoud %}
+<p class="uitleg"><a href="/module/{{ module.id }}">&larr; terug naar {{ module.titel }}</a></p>
+{{ inhoud_html|safe }}
+{% endblock %}

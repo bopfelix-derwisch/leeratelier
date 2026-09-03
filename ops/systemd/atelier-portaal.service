@@ -9,7 +9,8 @@ Type=simple
 User=bob
 WorkingDirectory=/mnt/nvme/workspaces/leeratelier
 EnvironmentFile=-/mnt/nvme/workspaces/leeratelier/.env
-ExecStart=/usr/bin/python3 -m uvicorn app.main:app --host 127.0.0.1 --port 8793
+ExecStart=/usr/bin/python3 -m uvicorn app.main:maak_app --factory \
+  --host 127.0.0.1 --port 8793
 Restart=always
 RestartSec=5
 StartLimitIntervalSec=0

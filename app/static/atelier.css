@@ -1,0 +1,93 @@
+/* Leeratelier-portaal. Sober, leesbaar, geen frameworks.
+   De bezoeker is een vakvolwassen beheerder, geen cursist. */
+:root{
+  --grond:#f7f8fa; --vlak:#fff; --vlak-2:#eef1f4;
+  --inkt:#151a1e; --inkt-zacht:#55636e; --inkt-flauw:#7c8894;
+  --lijn:#dce2e8; --accent:#1a5e63;
+  --klaar:#2e7d5b; --klaar-vlak:#e3f0ea;
+  --waarschuw:#b4690e; --waarschuw-vlak:#f8eedf;
+  --storing:#b3352e; --storing-vlak:#f8e6e4;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--grond);color:var(--inkt);
+  font:16px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:var(--accent)}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px 80px}
+.breed{max-width:960px}
+
+/* kop met budgetmeter: op elke pagina, niet weggestopt */
+header.balk{background:var(--vlak);border-bottom:1px solid var(--lijn);
+  position:sticky;top:0;z-index:5}
+.balk-in{max-width:960px;margin:0 auto;padding:10px 20px;display:flex;
+  align-items:center;gap:16px;flex-wrap:wrap}
+.balk-in .naam{font-weight:600;text-decoration:none;color:var(--inkt)}
+.balk-in .rek{flex:1}
+.meter{font-size:.86rem;color:var(--inkt-zacht);white-space:nowrap}
+.meter b{color:var(--inkt);font-variant-numeric:tabular-nums}
+.meter.leeg b{color:var(--storing)}
+
+/* storingsbanner, gezet vanuit /v1/gezondheid */
+.banner{padding:11px 20px;font-size:.9rem;border-bottom:1px solid var(--lijn)}
+.banner.storing{background:var(--storing-vlak);color:var(--storing)}
+.banner.let{background:var(--waarschuw-vlak);color:var(--waarschuw)}
+
+h1{font-size:1.8rem;line-height:1.2;margin:32px 0 8px;text-wrap:balance}
+h2{font-size:1.25rem;margin:34px 0 8px}
+h3{font-size:1.05rem;margin:24px 0 6px}
+p,ul,ol{margin:12px 0}
+table{border-collapse:collapse;width:100%;margin:16px 0;font-size:.93rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--lijn);padding:7px 10px;text-align:left;vertical-align:top}
+th{background:var(--vlak-2);font-weight:600}
+code{background:var(--vlak-2);padding:.1em .35em;border-radius:3px;font-size:.9em}
+pre{background:var(--vlak-2);padding:12px;border-radius:6px;overflow-x:auto}
+pre code{background:none;padding:0}
+blockquote{margin:16px 0;padding:2px 16px;border-left:3px solid var(--lijn);color:var(--inkt-zacht)}
+
+.kaartjes{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:12px;margin:18px 0}
+.kaart{background:var(--vlak);border:1px solid var(--lijn);border-radius:8px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit}
+.kaart:hover{border-color:var(--accent)}
+.kaart .id{font-size:.78rem;color:var(--accent);font-weight:600;letter-spacing:.04em}
+.kaart .tt{font-weight:600;line-height:1.3}
+.kaart .ds{font-size:.87rem;color:var(--inkt-zacht)}
+.kaart .vt{margin-top:auto;padding-top:8px;font-size:.78rem;color:var(--inkt-flauw)}
+
+.merk{display:inline-block;font-size:.74rem;padding:1px 7px;border-radius:10px;
+  border:1px solid var(--lijn);background:var(--vlak-2);color:var(--inkt-zacht)}
+.merk.gratis{background:var(--klaar-vlak);color:var(--klaar);border-color:transparent}
+.merk.concept{background:var(--waarschuw-vlak);color:var(--waarschuw);border-color:transparent}
+
+/* vraagblok */
+.vraagblok{background:var(--vlak);border:1px solid var(--lijn);border-radius:8px;
+  padding:16px 18px;margin:26px 0}
+.vraagblok h2{margin-top:0}
+textarea,input[type=text]{width:100%;font:inherit;padding:9px 11px;
+  border:1px solid var(--lijn);border-radius:6px;background:var(--grond);color:var(--inkt)}
+textarea{min-height:80px;resize:vertical}
+button{font:inherit;font-weight:600;padding:9px 16px;border-radius:6px;border:1px solid var(--accent);
+  background:var(--accent);color:#fff;cursor:pointer}
+button.stil{background:var(--vlak);color:var(--accent)}
+button[disabled]{opacity:.55;cursor:default}
+.knoprij{display:flex;gap:10px;align-items:center;margin-top:12px;flex-wrap:wrap}
+
+/* antwoord met bronlabel: altijd zichtbaar waar het vandaan komt */
+.antwoord{margin-top:16px;padding:14px 16px;background:var(--vlak-2);border-radius:6px;
+  white-space:pre-wrap}
+.bronlabel{font-size:.8rem;color:var(--inkt-zacht);margin-bottom:8px;
+  padding-bottom:8px;border-bottom:1px solid var(--lijn)}
+.bronlabel b{color:var(--inkt)}
+.bronlabel .conserf{color:var(--waarschuw)}
+.wachtend{font-size:.88rem;color:var(--inkt-zacht)}
+
+.fout{background:var(--storing-vlak);color:var(--storing);padding:12px 16px;
+  border-radius:6px;margin:16px 0}
+.uitleg{font-size:.88rem;color:var(--inkt-zacht)}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--lijn);
+  font-size:.84rem;color:var(--inkt-flauw)}
+@media (prefers-color-scheme:dark){
+  :root{--grond:#0f1316;--vlak:#161b20;--vlak-2:#1d242a;--inkt:#e5ebef;
+    --inkt-zacht:#9ba8b3;--inkt-flauw:#77848f;--lijn:#283138;--accent:#4fb3b0;
+    --klaar:#5ebe8c;--klaar-vlak:#13291f;--waarschuw:#dfa044;--waarschuw-vlak:#2b2113;
+    --storing:#e0736a;--storing-vlak:#2c1917}
+  button{color:#0f1316}
+}

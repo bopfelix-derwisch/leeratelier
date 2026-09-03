@@ -1,0 +1,34 @@
+{% extends "basis.html" %}
+{% block titel %}Facilitator{% endblock %}
+{% block breed %}breed{% endblock %}
+{% block inhoud %}
+<h1>Facilitator</h1>
+<div class="banner let" style="border-radius:6px;margin:16px 0">Deze pagina is nog niet
+  afgeschermd. WP-07 zet Cloudflare Access ervoor. Zolang dat niet staat, is dit portaal
+  niet publiek te maken.</div>
+
+<h2>Alle modules</h2>
+<table>
+  <tr><th>id</th><th>spoor</th><th>status</th><th>beurten</th><th>conserven</th><th>bewijs</th></tr>
+  {% for m in modules %}
+  <tr>
+    <td><a href="/module/{{ m.id }}">{{ m.id }}</a></td>
+    <td>{{ m.spoor }}</td>
+    <td>{% if m.gepubliceerd %}gepubliceerd{% else %}<span class="merk concept">concept</span>{% endif %}</td>
+    <td>{{ m.beurten }}</td>
+    <td>{{ 'ja' if m.conserven else 'nee' }}</td>
+    <td>{{ m.bewijs }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% if fouten %}
+<h2>Modules die niet renderen</h2>
+<div class="fout"><ul>{% for f in fouten %}<li>{{ f }}</li>{% endfor %}</ul></div>
+{% endif %}
+
+<h2>Gezondheid van de keten</h2>
+<table>
+  {% for k, v in gezondheid.items() %}<tr><th>{{ k }}</th><td>{{ v }}</td></tr>{% endfor %}
+</table>
+{% endblock %}

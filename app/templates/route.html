@@ -1,0 +1,39 @@
+{% extends "basis.html" %}
+{% block titel %}Leeratelier &middot; de route{% endblock %}
+{% block inhoud %}
+<h1>De route</h1>
+<p>Je loopt een aantal modules door, stelt vragen aan lokale taalmodellen, en gaat weg
+met een ingevulde beheerkaart voor je eigen toepassing. Modules die nul beurten kosten
+kun je zo vaak doen als je wilt.</p>
+
+{% for spoor, titel in sporen %}
+  {% set lijst = per_spoor.get(spoor, []) %}
+  {% if lijst %}
+  <h2>{{ titel }}</h2>
+  <div class="kaartjes">
+    {% for m in lijst %}
+    <a class="kaart" href="/module/{{ m.id }}">
+      <span class="id">{{ m.id.split('-')[0]|upper }}</span>
+      <span class="tt">{{ m.titel }}</span>
+      <span class="ds">{{ m.bewijs }}</span>
+      <span class="vt">
+        {{ m.duur_min }} min &middot;
+        {% if m.beurten == 0 %}<span class="merk gratis">kost geen beurten</span>
+        {% else %}<span class="merk">{{ m.beurten }} beurten</span>{% endif %}
+        {% if not m.gepubliceerd %}<span class="merk concept">concept</span>{% endif %}
+      </span>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endfor %}
+
+{% if not zichtbaar %}
+<div class="fout">Er staat nog geen gepubliceerde module klaar. De facilitator ziet de
+  concepten op <a href="/facilitator">de facilitatorpagina</a>.</div>
+{% endif %}
+
+<h2>Je beheerkaart</h2>
+<p>Het eindproduct: <a href="/beheerkaart">een A4 over je eigen toepassing of bron</a>.
+Invullen kan op elk moment, ook voordat je de route af hebt.</p>
+{% endblock %}

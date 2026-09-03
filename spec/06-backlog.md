@@ -243,18 +243,30 @@ systemctl stop llama-klasmodel && curl -s -X POST http://127.0.0.1:8794/v1/vraag
 systemctl start llama-klasmodel
 ```
 
-### [ ] WP-06 🔴 Atelier-portaal :8793
+### [x] WP-06 🔴 Atelier-portaal :8793
 Zie `app/README.md` voor routes en schermen.
+**Afgerond 2026-09-03** — rapport: `ops/ijking/portaal-2026-09-03.md`. 16 tests, 39 in totaal.
 
-- [ ] routerenderer op het modulecontract uit `04-modulecontract.md`
-- [ ] budgetmeter zichtbaar op elke pagina ("nog 9 beurten vandaag")
-- [ ] "ik kom er niet uit"-knop met contextvangst (module, vraag, model, foutmelding, budgetstand)
-- [ ] storingsbanner, gezet door sysmonitor
-- [ ] bindt op `127.0.0.1:8793`
-- [ ] één dummy-module om de keten te bewijzen
+- [x] routerenderer op het modulecontract uit `04-modulecontract.md` — `app/schema.py` dwingt het af;
+      regel 2 (`wat_ging_mis` verplicht de sectie) laat een gepubliceerde module hard falen
+- [x] budgetmeter zichtbaar op elke pagina — in de balk, "nog 19 van 20 beurten vandaag"
+- [x] "ik kom er niet uit"-knop met contextvangst — module, laatste vraag, bron van dat antwoord,
+      budgetstand, status van beide modellen, leeftijd van de index, storingsmodus
+- [x] storingsbanner in vier gradaties, gevoed door `/v1/gezondheid` van de bemiddelaar
+- [x] bindt op `127.0.0.1:8793` — geverifieerd met `ss -ltn`
+- [x] één dummy-module om de keten te bewijzen — `content/modules/k00-proefmodule/`
 
 **Klaar als:** een testbezoeker logt in, doorloopt de dummy-module, verbruikt budget, krijgt bij uitputting
 een conserf, en dat is terug te vinden in het logboek.
+
+**Live doorlopen** met een Access-header: route (concept onzichtbaar) → module openen (20 → 19) →
+vraag (`bron=klas`, `model=Qwen3-8B`, index 0 dagen) → dezelfde vraag (`bron=cache`, 0 beurten) →
+terug te vinden in het logboek. De uitputting-naar-conserf is met een test gedekt: dat leegmaken kost
+twintig modelaanroepen en de test doet het in een fractie van de tijd.
+
+> **Dit portaal mag nog niet publiek.** `bezoeker_van()` leest de Access-header maar valt terug op een
+> vaste naam als die ontbreekt; zonder Access ervoor kan iedereen elke identiteit claimen door een header
+> mee te sturen. Blijft op `127.0.0.1` tot WP-07 staat. Waarschuwing staat ook op `/facilitator`.
 
 ### [ ] WP-07 🔴 Toegang en privacy
 - [ ] Cloudflare Access met e-mail-OTP op `leeratelier.felixisfelix.com` → `127.0.0.1:8793`

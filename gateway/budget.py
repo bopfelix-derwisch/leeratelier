@@ -117,6 +117,26 @@ class Budget:
             raise BudgetOp(self.reset_om(), "persoonlijk")
         return min(aantal, max(0, self.inst.per_bezoeker - beurten))
 
+    def reserveer_minstens(self, bezoeker_id: str, aantal: int) -> int:
+        """Zorg dat er *minstens* `aantal` beurten opzij staan. Idempotent.
+
+        Dit is wat het openen van een module nodig heeft. `reserveer` telt op, en dat
+        is fout bij herhaald openen: wie een modulepagina twintig keer ververst, zou
+        anders zijn hele budget in reserveringen kwijt zijn zonder een vraag te stellen.
+        Waargenomen bij de doorloop van WP-06.
+        """
+        if aantal <= 0:
+            return 0
+        with transactie(self.con):
+            self._zorg_rij(bezoeker_id)
+            self.con.execute(
+                "UPDATE verbruik SET gereserveerd = MAX(gereserveerd, "
+                "  MIN(?, MAX(0, ? - beurten))) "
+                "WHERE bezoeker_id=? AND datum=?",
+                (aantal, self.inst.per_bezoeker, bezoeker_id, self.datum()))
+            _, gereserveerd = self._rij(bezoeker_id)
+        return gereserveerd
+
     def controleer(self, bezoeker_id: str) -> None:
         """Kan deze bezoeker nu één beurt verbruiken? Zo nee: BudgetOp.
 

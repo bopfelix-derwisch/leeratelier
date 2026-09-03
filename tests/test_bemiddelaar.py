@@ -328,3 +328,21 @@ def test_reserveren_overschrijdt_het_persoonlijke_budget_nooit(inst):
     beurten, gereserveerd = b._rij("drukker")
     assert beurten + gereserveerd == inst.per_bezoeker, \
         f"gereserveerd {gereserveerd} boven plafond {inst.per_bezoeker}"
+
+
+def test_module_herhaald_openen_stapelt_geen_reserveringen(inst):
+    """Twintig keer verversen mag geen twintig beurten kosten."""
+    b = Budget(verbind(inst.db_pad), inst)
+    for _ in range(20):
+        b.reserveer_minstens("ververser", 1)
+    beurten, gereserveerd = b._rij("ververser")
+    assert (beurten, gereserveerd) == (0, 1)
+    assert b.stand("ververser").persoonlijk_resterend == inst.per_bezoeker - 1
+
+
+def test_reserveren_via_de_api_is_idempotent(client):
+    for _ in range(5):
+        r = client.post("/v1/reserveer", json={"bezoeker_id": "i", "module_id": "k04",
+                                               "beurten": 2})
+        assert r.status_code == 200
+    assert client.get("/v1/budget/i").json()["persoonlijk_resterend"] == 1

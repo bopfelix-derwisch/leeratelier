@@ -1,0 +1,114 @@
+{% extends "basis.html" %}
+{% block titel %}{{ module.titel }}{% endblock %}
+{% block inhoud %}
+<p class="uitleg"><a href="/">&larr; terug naar de route</a></p>
+<h1>{{ module.titel }}</h1>
+<p class="uitleg">
+  {{ module.duur_min }} minuten &middot;
+  {% if module.beurten == 0 %}kost geen modelbeurten
+  {% else %}{{ module.beurten }} modelbeurten, vooraf gereserveerd{% endif %}
+  {% if module.competenties %}&middot; competenties {{ module.competenties|join(', ') }}{% endif %}
+  {% if not module.gepubliceerd %}&middot; <span class="merk concept">concept</span>{% endif %}
+</p>
+
+{% if reservering_fout %}
+<div class="fout">{{ reservering_fout }}</div>
+{% endif %}
+
+{{ inhoud_html|safe }}
+
+{% if module.heeft_opdracht %}
+<p><a href="/opdracht/{{ module.id }}">De opdracht bij deze module</a></p>
+{% endif %}
+
+{% if module.kost_beurten or 'klas' in module.modellen or 'show' in module.modellen %}
+<div class="vraagblok">
+  <h2>Stel je vraag</h2>
+  <p class="uitleg">Het antwoord komt van een taalmodel dat op deze machine draait.
+    Onder elk antwoord staat waar het vandaan komt.</p>
+  <form id="vraagform" onsubmit="return stelVraag(event)">
+    <textarea id="vraag" name="vraag" placeholder="Typ je vraag..."
+              {% if budget.persoonlijk_resterend == 0 %}disabled{% endif %}></textarea>
+    <div class="knoprij">
+      <button type="submit" id="verstuur"
+              {% if budget.persoonlijk_resterend == 0 %}disabled{% endif %}>Vraag stellen</button>
+      <span class="wachtend" id="stand"></span>
+    </div>
+  </form>
+  <div id="uitkomst"></div>
+</div>
+{% endif %}
+
+<div class="vraagblok">
+  <h2>Ik kom er niet uit</h2>
+  <p class="uitleg">Kijk eerst of het aan de bron ligt: staat er een voorberekend antwoord,
+    is de zoekindex oud, is het model weg? De banner bovenaan zegt het. Helpt dat niet,
+    laat dan een melding achter. Die neemt automatisch mee waar je was en wat er misging.</p>
+  <form method="post" action="/vastgelopen">
+    <input type="hidden" name="module_id" value="{{ module.id }}">
+    <input type="hidden" name="laatste_vraag" id="laatste_vraag" value="">
+    <input type="hidden" name="laatste_bron" id="laatste_bron" value="">
+    <textarea name="tekst" placeholder="Waar loop je vast?" required></textarea>
+    <div class="knoprij">
+      <button class="stil" type="submit">Melding versturen</button>
+      <span class="uitleg">Dit is een prive-lab van een persoon; een reactie kan dagen duren.</span>
+    </div>
+  </form>
+</div>
+
+<script>
+// Het enige script in dit portaal: pollen op de taakstatus. Verder alles server-rendered.
+async function stelVraag(e){
+  e.preventDefault();
+  const vraag = document.getElementById('vraag').value.trim();
+  if(!vraag) return false;
+  const knop = document.getElementById('verstuur'), stand = document.getElementById('stand');
+  const uit = document.getElementById('uitkomst');
+  knop.disabled = true; uit.innerHTML = ''; stand.textContent = 'versturen...';
+  document.getElementById('laatste_vraag').value = vraag;
+
+  const r = await fetch('/module/{{ module.id }}/vraag', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({vraag: vraag})});
+  const b = await r.json();
+  if(!r.ok || b.fout){
+    stand.textContent = '';
+    uit.innerHTML = '<div class="fout">' + (b.melding || 'Er ging iets mis.') + '</div>';
+    knop.disabled = false; return false;
+  }
+  stand.textContent = b.positie > 0
+    ? 'in de rij, plaats ' + b.positie + ', ongeveer ' + b.geschat_wachten_s + ' seconden'
+    : 'bezig, ongeveer ' + b.geschat_wachten_s + ' seconden';
+
+  for(let i=0;i<300;i++){
+    await new Promise(r => setTimeout(r, 1500));
+    const t = await (await fetch('/taak/' + b.taak_id)).json();
+    if(t.status === 'wachtend'){ stand.textContent = 'in de rij, plaats ' + (t.positie ?? 0); continue; }
+    if(t.status === 'bezig'){ stand.textContent = 'het model schrijft...'; continue; }
+    stand.textContent = '';
+    document.getElementById('laatste_bron').value = t.bron || '';
+    toon(t); knop.disabled = false; return false;
+  }
+  stand.textContent = 'het duurt langer dan verwacht; probeer het later opnieuw';
+  knop.disabled = false; return false;
+}
+
+function toon(t){
+  const labels = {cache:'uit de cache, eerder al beantwoord', klas:'live van het klasmodel',
+                  show:'live van het showmodel', conserf:'voorberekend antwoord, niet nu gegenereerd'};
+  const bron = labels[t.bron] || 'onbekende bron';
+  const extra = [];
+  if(t.model) extra.push(t.model);
+  if(t.latency_ms) extra.push(Math.round(t.latency_ms/100)/10 + ' s');
+  if(t.index_leeftijd_dagen !== null && t.index_leeftijd_dagen !== undefined)
+    extra.push('zoekindex ' + t.index_leeftijd_dagen + ' dagen oud');
+  const klas = t.bron === 'conserf' ? ' conserf' : '';
+  document.getElementById('uitkomst').innerHTML =
+    '<div class="antwoord"><div class="bronlabel"><b class="' + klas + '">' + bron + '</b>'
+    + (extra.length ? ' &middot; ' + extra.join(' &middot; ') : '')
+    + (t.beurten_verbruikt ? ' &middot; kostte ' + t.beurten_verbruikt + ' beurt' : ' &middot; kostte geen beurt')
+    + '</div>' + escape_(t.antwoord || '') + '</div>';
+}
+function escape_(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+</script>
+{% endblock %}

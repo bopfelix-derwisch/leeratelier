@@ -91,10 +91,13 @@ def maak_app(inst=None) -> FastAPI:
             taak.antwoord, taak.latency_ms, taak.bron = antwoord, latency_ms, gebruikt
             taak.model = gebruikt
             taak.beurten_verbruikt = 1
-            taak.status = KLAAR
+            # Eerst afboeken en cachen, dan pas op klaar zetten. Andersom ziet een
+            # bezoeker die meteen doorvraagt een stand die nog niet bijgewerkt is:
+            # de cache mist, of het budget laat een beurt door die al vergeven was.
             await asyncio.to_thread(budget.boek_af, taak.bezoeker_id, 1)
             await asyncio.to_thread(cache.bewaar, taak.vraag, taak.module_id,
                                     gebruikt, antwoord)
+            taak.status = KLAAR
         except ModelWeg as fout:
             conserf = (conserven.zoek(taak.module_id, taak.vraag)
                        or conserven.eerste(taak.module_id))
@@ -102,8 +105,9 @@ def maak_app(inst=None) -> FastAPI:
             # bezoeker mag niet betalen voor een storing die hij niet veroorzaakte.
             await asyncio.to_thread(budget.geef_terug, taak.bezoeker_id, 1)
             if conserf:
-                taak.antwoord, taak.bron, taak.status = conserf.antwoord, "conserf", KLAAR
+                taak.antwoord, taak.bron = conserf.antwoord, "conserf"
                 taak.beurten_verbruikt = 0
+                taak.status = KLAAR
             else:
                 taak.status, taak.fout = MISLUKT, str(fout)[:200]
                 taak.antwoord = (
@@ -231,7 +235,7 @@ def maak_app(inst=None) -> FastAPI:
     @app.post("/v1/reserveer")
     async def reserveer(r: ReserveerIn):
         try:
-            n = await asyncio.to_thread(budget.reserveer, r.bezoeker_id, r.beurten)
+            n = await asyncio.to_thread(budget.reserveer_minstens, r.bezoeker_id, r.beurten)
         except BudgetOp as op:
             return JSONResponse(status_code=429, content={
                 "fout": "budget_op", "welk": op.welk, "reset_om": op.reset_om,
