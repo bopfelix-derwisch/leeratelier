@@ -206,20 +206,33 @@ python3 ops/ijking/rag_inspect.py --dir /mnt/nvme/geluidsmeter/data/rag
 Doel van deze fase: een **dunne maar complete keten** van inlog tot antwoord. Alles aanwezig, niets diep.
 Niet verder gaan voordat een testbezoeker end-to-end door een dummy-module heen komt.
 
-### [ ] WP-05 🔴 Leerbemiddelaar :8794
+### [x] WP-05 🔴 Leerbemiddelaar :8794
 Zie `gateway/README.md` voor het volledige API-contract en de datamodellen.
+**Afgerond 2026-09-03** — rapport: `ops/ijking/bemiddelaar-2026-09-03.md`. 21 tests.
 
-- [ ] HTTP-API zoals gespecificeerd (vraag indienen, taak opvragen, budget, gezondheid)
-- [ ] wachtrij met positiefeedback binnen 2 s
-- [ ] dag- en persoonsbudget uit `config/budget.yaml`, met automatische reset om middernacht
-- [ ] cache op `sha256(genormaliseerde vraag + module_id + model)`
-- [ ] conserven-terugval uit `content/conserven/`
-- [ ] degradatieladder: cache → klasmodel → showmodel → conserf → licht pad
-- [ ] logboek in sqlite met 90 dagen bewaartermijn en een opruimtaak
-- [ ] bindt op `127.0.0.1:8794`
+- [x] HTTP-API zoals gespecificeerd — alle zes de endpoints, plus `/health` voor systemd
+- [x] wachtrij met positiefeedback binnen 2 s — **gemeten: acht verzoeken in 0,25 s**
+- [x] dag- en persoonsbudget uit `config/budget.yaml`, met automatische reset om middernacht
+      — de reset is een gevolg van de sleutel `(bezoeker, datum)`, geen taak die kan missen
+- [x] cache op `sha256(genormaliseerde vraag + module_id + model)`
+- [x] conserven-terugval uit `content/conserven/` — vijf echte conserven voor K4,
+      gegenereerd uit de ijkset-antwoorden van Qwen3-8B (WP-03)
+- [x] degradatieladder: cache → klasmodel → showmodel → conserf → licht pad
+- [x] logboek in sqlite met 90 dagen bewaartermijn en een opruimtaak (elke zes uur,
+      niet op een kloktijd: een taak die op middernacht wacht mist zijn slag bij herstart)
+- [x] bindt op `127.0.0.1:8794` — geverifieerd met `ss -ltn`
 
 **Klaar als:** 8 gelijktijdige verzoeken krijgen allemaal binnen 2 s een status, niemand valt stil, het
 budget wordt correct afgeboekt, en bij een gestopt model valt alles netjes terug op conserven.
+
+**Gemeten tegen het echte klasmodel:** acht verzoeken ingediend in 0,25 s, alle acht beantwoord na 9 s,
+budget exact acht afgeboekt (292 van 300 over). Met `systemctl stop llama-klasmodel` valt een vraag
+automatisch terug op het showmodel, zichtbaar gelabeld als `bron: show`.
+
+> **Trede 4 is met tests getoetst, niet live.** Conserven komen pas in beeld als *beide* modellen weg
+> zijn, en het showmodel op :8080 is dat van Derwisch. Dat stilleggen om een eigen werkpakket af te
+> vinken is niet in verhouding. Twee tests dekken het: conserf zonder beurtkosten, en een nette uitleg
+> als er ook geen conserf is.
 
 **Verificatie:**
 ```bash
