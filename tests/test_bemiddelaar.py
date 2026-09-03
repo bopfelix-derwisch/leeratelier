@@ -185,7 +185,8 @@ def test_tweede_identieke_vraag_komt_uit_de_cache(client):
     assert client.get("/v1/budget/c").json()["persoonlijk_resterend"] == 2
 
 
-def test_budget_op_geeft_429_met_verwijzing_naar_conserf(client):
+def test_budget_op_meldt_wanneer_het_weer_kan(client):
+    """Ook bij een conserf hoort de bezoeker te weten dat zijn budget op is."""
     for i in range(3):
         r = client.post("/v1/vraag", json={"bezoeker_id": "d", "module_id": "k04",
                                            "vraag": f"vraag {i}"})
@@ -197,10 +198,8 @@ def test_budget_op_geeft_429_met_verwijzing_naar_conserf(client):
     r = client.post("/v1/vraag", json={"bezoeker_id": "d",
                                        "module_id": "k04-wanneer-klopt-het-niet",
                                        "vraag": "nog een"})
-    assert r.status_code == 429
     body = r.json()
-    assert body["fout"] == "budget_op"
-    assert body["conserf_beschikbaar"] is True
+    assert body["budget_op"] is True
     assert body["reset_om"]
 
 
@@ -346,3 +345,43 @@ def test_reserveren_via_de_api_is_idempotent(client):
                                                "beurten": 2})
         assert r.status_code == 200
     assert client.get("/v1/budget/i").json()["persoonlijk_resterend"] == 1
+
+
+def test_budget_op_levert_het_conserf_in_plaats_van_een_weigering(client):
+    """Trede 4 van de ladder noemt 'budget op' met zoveel woorden."""
+    import time
+    for i in range(3):                                    # per_bezoeker = 3
+        r = client.post("/v1/vraag", json={"bezoeker_id": "op", "module_id": "k04",
+                                           "vraag": f"vraag {i}"})
+        tid = r.json()["taak_id"]
+        for _ in range(100):
+            if client.get(f"/v1/taak/{tid}").json()["status"] == "klaar":
+                break
+            time.sleep(0.05)
+    r = client.post("/v1/vraag", json={
+        "bezoeker_id": "op", "module_id": "k04-wanneer-klopt-het-niet",
+        "vraag": "Wat is een omgevingsvergunning?"})
+    assert r.status_code == 202
+    body = r.json()
+    assert body["verwachte_bron"] == "conserf"
+    assert body["beurten_gereserveerd"] == 0
+    assert body["budget_op"] is True
+    t = client.get(f"/v1/taak/{body['taak_id']}").json()
+    assert t["status"] == "klaar" and t["bron"] == "conserf"
+
+
+def test_zonder_conserf_blijft_het_een_nette_weigering(client):
+    """Trede 5: het enige moment waarop iemand geen antwoord krijgt."""
+    import time
+    for i in range(3):
+        r = client.post("/v1/vraag", json={"bezoeker_id": "op2", "module_id": "k04",
+                                           "vraag": f"vraag {i}"})
+        tid = r.json()["taak_id"]
+        for _ in range(100):
+            if client.get(f"/v1/taak/{tid}").json()["status"] == "klaar":
+                break
+            time.sleep(0.05)
+    r = client.post("/v1/vraag", json={"bezoeker_id": "op2",
+                                       "module_id": "k99-geen-conserf", "vraag": "x"})
+    assert r.status_code == 429
+    assert r.json()["conserf_beschikbaar"] is False

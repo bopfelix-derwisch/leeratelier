@@ -84,20 +84,23 @@ def maak_app(inst=None) -> FastAPI:
     conserven = Conserven(inst.conserven_dir)
 
     async def verwerk(taak: Taak) -> None:
-        """Trede 2, 3 en 4: model, ander model, conserf."""
+        """Trede 2, 3 en 4: model, ander model, conserf.
+
+        De statuswissel is met opzet de allerlaatste handeling. "Klaar" moet betekenen
+        dat alles klaar is -- ook het afboeken, het cachen en de logregel. Wie meteen
+        doorvraagt of meteen in het logboek kijkt, mag geen halve waarheid zien.
+        """
+        eindstatus = MISLUKT
         try:
             antwoord, latency_ms, gebruikt = await vraag_met_terugval(
                 inst, taak.model, taak.vraag)
             taak.antwoord, taak.latency_ms, taak.bron = antwoord, latency_ms, gebruikt
             taak.model = gebruikt
             taak.beurten_verbruikt = 1
-            # Eerst afboeken en cachen, dan pas op klaar zetten. Andersom ziet een
-            # bezoeker die meteen doorvraagt een stand die nog niet bijgewerkt is:
-            # de cache mist, of het budget laat een beurt door die al vergeven was.
             await asyncio.to_thread(budget.boek_af, taak.bezoeker_id, 1)
             await asyncio.to_thread(cache.bewaar, taak.vraag, taak.module_id,
                                     gebruikt, antwoord)
-            taak.status = KLAAR
+            eindstatus = KLAAR
         except ModelWeg as fout:
             conserf = (conserven.zoek(taak.module_id, taak.vraag)
                        or conserven.eerste(taak.module_id))
@@ -107,9 +110,9 @@ def maak_app(inst=None) -> FastAPI:
             if conserf:
                 taak.antwoord, taak.bron = conserf.antwoord, "conserf"
                 taak.beurten_verbruikt = 0
-                taak.status = KLAAR
+                eindstatus = KLAAR
             else:
-                taak.status, taak.fout = MISLUKT, str(fout)[:200]
+                taak.fout = str(fout)[:200]
                 taak.antwoord = (
                     "Er draait op dit moment geen taalmodel en voor deze module staat "
                     "geen voorberekend antwoord klaar. De pagina's en dashboards werken "
@@ -121,7 +124,8 @@ def maak_app(inst=None) -> FastAPI:
             await asyncio.to_thread(
                 logboek.schrijf, taak.bezoeker_id, taak.module_id, taak.vraag,
                 naam, taak.bron or "geen", taak.latency_ms,
-                taak.beurten_verbruikt, taak.status == KLAAR)
+                taak.beurten_verbruikt, eindstatus == KLAAR)
+            taak.status = eindstatus
 
     rij = Wachtrij(inst, verwerk)
 
@@ -173,13 +177,29 @@ def maak_app(inst=None) -> FastAPI:
             return {"taak_id": taak.taak_id, "positie": 0, "geschat_wachten_s": 0,
                     "verwachte_bron": "cache", "beurten_gereserveerd": 0}
 
-        # Budget. Bij uitputting geen weigering maar een verwijzing naar het conserf.
+        # Budget. Trede 4 van de ladder noemt "budget op" met zoveel woorden: is er een
+        # conserf, dan krijgt de bezoeker dat -- zichtbaar gelabeld en gratis. Pas als
+        # er niets klaarstaat volgt trede 5, en dat is het enige moment waarop iemand
+        # geen antwoord krijgt.
         try:
             await asyncio.to_thread(budget.controleer, v.bezoeker_id)
         except BudgetOp as op:
+            conserf = (conserven.zoek(v.module_id, v.vraag)
+                       or conserven.eerste(v.module_id))
+            if conserf:
+                taak = rij.voeg_klaar_toe(Taak(
+                    taak_id=os.urandom(16).hex(), bezoeker_id=v.bezoeker_id,
+                    module_id=v.module_id, vraag=v.vraag, model=model,
+                    antwoord=conserf.antwoord, bron="conserf"))
+                await asyncio.to_thread(
+                    logboek.schrijf, v.bezoeker_id, v.module_id, v.vraag,
+                    conserf.model, "conserf", 0, 0, True)
+                return {"taak_id": taak.taak_id, "positie": 0, "geschat_wachten_s": 0,
+                        "verwachte_bron": "conserf", "beurten_gereserveerd": 0,
+                        "budget_op": True, "reset_om": op.reset_om}
             return JSONResponse(status_code=429, content={
                 "fout": "budget_op", "welk": op.welk, "reset_om": op.reset_om,
-                "conserf_beschikbaar": conserven.heeft(v.module_id)})
+                "conserf_beschikbaar": False})
 
         # Trede 4 vooraf: rij te diep, dan meteen een conserf in plaats van wachten.
         if rij.diepte(model) >= RIJ_CRIT:

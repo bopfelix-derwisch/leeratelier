@@ -198,7 +198,7 @@ def test_hele_keten_vraag_tot_logboek(keten):
     assert rij == ("k00-proefmodule", "klas", 1, 1)
 
 
-def test_bij_uitputting_verwijst_het_portaal_naar_het_conserf(keten):
+def test_bij_uitputting_krijgt_de_bezoeker_het_conserf(keten):
     portaal, _ = keten
     import time
     for i in range(2):                                    # per_bezoeker = 2
@@ -209,10 +209,14 @@ def test_bij_uitputting_verwijst_het_portaal_naar_het_conserf(keten):
                 break
             time.sleep(0.05)
     r = portaal.post("/module/k00-proefmodule/vraag", json={"vraag": "nog een"})
-    assert r.status_code == 429
+    assert r.status_code == 200
     body = r.json()
-    assert body["fout"] == "budget_op"
-    assert "voorberekend antwoord" in body["melding"]
+    # Trede 4: het conserf komt gewoon, gratis en zichtbaar gelabeld.
+    assert body["verwachte_bron"] == "conserf"
+    assert body["beurten_gereserveerd"] == 0
+    assert body["budget_op"] is True
+    t = portaal.get(f"/taak/{body['taak_id']}").json()
+    assert t["bron"] == "conserf"
 
 
 def test_vastgelopen_vangt_context(keten):

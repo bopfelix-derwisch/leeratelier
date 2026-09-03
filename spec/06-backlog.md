@@ -406,16 +406,30 @@ Elke module die een model gebruikt, werkt dus ook als er geen model draait.
 
 ## Fase 5 · Openstellen
 
-### [ ] WP-18 🔴 Runbook
+### [~] WP-18 🔴 Runbook
 `ops/runbook.md` moet een tweede persoon in staat stellen een storing op te lossen.
+**Geschreven en getoetst op 2026-09-03; de proef met een tweede persoon ligt bij de eigenaar.**
 
-- [ ] dag openen en sluiten, budget bijstellen
-- [ ] een module publiceren of terugzetten naar concept
-- [ ] handmatig uitwijken naar conserven
-- [ ] herstel na crash van elk van de vier diensten
-- [ ] meldingen uit de "vastgelopen"-knop afhandelen
+- [x] budget bijstellen — situatie 6, met de instructie eerst te kijken of het klasmodel draait
+- [x] een module publiceren of terugzetten naar concept — situatie 8, inclusief de controle achteraf
+- [x] handmatig uitwijken naar conserven — situatie 5, via `dagbudget_modelbeurten: 0`. Zo blijft
+      Derwisch ongemoeid; het showmodel stilleggen was het alternatief en dat mag niet
+- [x] herstel na crash van elk van de vier diensten — situaties 1, 2, 3 en 10
+- [x] meldingen afhandelen — situatie 9, met een script dat de contextvangst uitleest
 
 **Klaar als:** iemand anders lost een gesimuleerde storing op zonder jou.
+
+**Wat er wél getoetst is.** Elk commando in het runbook is uitgevoerd voordat het erin kwam, en drie
+storingen zijn nagespeeld alsof het runbook voor het eerst gelezen werd:
+
+| gesimuleerde storing | wat het runbook belooft | wat er gebeurde |
+|---|---|---|
+| klasmodel gestopt | gele banner, vragen naar het showmodel | klopt; herstart brengt hem in een minuut terug |
+| bemiddelaar gestopt | rode banner, pagina's blijven werken | klopt; modulepagina gaf gewoon 200 |
+| module zonder verplichte sectie | die ene module valt weg, de rest blijft | klopt; foutmelding noemt bestand én regel uit het contract |
+
+**Wat er niet getoetst is:** of een ánder mens ermee uit de voeten kan. Dat vraagt een tweede persoon en
+is de eigenlijke eis. Het openstaande risico *bus factor 1* staat nog steeds in het besluitenlog.
 
 ### [ ] WP-19 ⚪ Maandelijkse tegenspraaksessie inrichten
 - [ ] reservering van 20% dagbudget op de sessiedag
