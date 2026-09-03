@@ -179,17 +179,18 @@ curl -s http://127.0.0.1:8081/v1/models | head -c 200; echo
 free -m | head -2
 ```
 
-### [ ] WP-09a 🔴 RAG-index inspecteren
+### [x] WP-09a 🔴 RAG-index inspecteren
+**Afgerond 2026-09-03** — rapport: `ops/ijking/rag-inspectie-2026-09-03.md`.
 **Doel:** vaststellen hoe klein de index werkelijk is. `vectors.npy` is 33 KB; bij bge-m3 (1024 dim) is
 dat ongeveer 8 chunks fp32. Als dat klopt, beantwoordt de vergunningen-chatbot vragen uit een handvol
 fragmenten van juni — te dun voor lesgebruik, maar wél uitstekend materiaal voor module K4.
 
 `ops/ijking/rag_inspect.py` staat er al.
 
-- [ ] vorm, dtype en aantal vectoren uitlezen
-- [ ] aantal chunks en totale tekstlengte in `chunks.jsonl`
-- [ ] bouwdatum en welke bronnen erin zitten
-- [ ] bevindingen naar `ops/ijking/rag-inspectie-<datum>.md`
+- [x] vorm, dtype en aantal vectoren uitlezen — `(8, 1024)`, `<f4`
+- [x] aantal chunks en totale tekstlengte in `chunks.jsonl` — 8 fragmenten, 8.187 tekens
+- [x] bouwdatum en welke bronnen erin zitten — 21 juni, **twee** IPLO-pagina's
+- [x] bevindingen naar `ops/ijking/rag-inspectie-<datum>.md`
 
 **Klaar als:** het exacte aantal chunks bekend is en vastligt.
 
@@ -264,15 +265,26 @@ Zes nieuwe drempels, in het bestaande patroon: elke warn/crit krijgt een concret
 - [ ] drempels toegevoegd, met `advise()`-teksten in het Nederlands
 - [ ] de storingsbanner van het portaal wordt hierdoor gezet
 
-### [ ] WP-09b 🟡 RAG-index herbouwen en vergroten
+### [x] WP-09b 🟡 RAG-index herbouwen en vergroten
 Blokkerend voor K4 en spoor L. Pas doen na WP-09a.
+**Afgerond 2026-09-03** — besluit B19, vondsten V13 en V14.
 
-- [ ] `scripts/07_build_rag_index.py` opnieuw draaien met een ruimere bronset
-- [ ] rapport oud versus nieuw aantal chunks
-- [ ] index-leeftijd zichtbaar maken in de gezondheidsendpoint van de bemiddelaar
+- [x] `scripts/07_build_rag_index.py` opnieuw draaien met een ruimere bronset — **170 bronnen**,
+      geselecteerd uit `iplo.nl/sitemap.xml` (8.585 pagina's) op de domeinen van de ijkset, elk vooraf
+      geverifieerd op bereikbaarheid en tekstopbrengst
+- [x] rapport oud versus nieuw aantal chunks — **8 → 924** (115x), 8.187 → 986.001 tekens (120x)
+- [ ] index-leeftijd zichtbaar maken in de gezondheidsendpoint van de bemiddelaar — **kan pas bij WP-05**;
+      die dienst bestaat nog niet. Het veld `rag_index_leeftijd_dagen` staat al in `gateway/README.md`
 
 **Klaar als:** de index is jonger dan 7 dagen en het aantal chunks is met minstens een orde van grootte
-gegroeid.
+gegroeid. **Gehaald:** 0 dagen oud, twee ordes van grootte gegroeid.
+
+> **Het gat uit V8 is hiermee niet gedicht, en dat kan ook niet met IPLO.** `Lden`, `Lmax` en `dB(A)` komen
+> in de index van 924 fragmenten nul keer voor, en geen enkele geluid-regelgevingspagina van IPLO noemt ze.
+> IPLO gaat over de Omgevingswet, niet over akoestiek. Dat is een derde faalvorm naast de vier van K4: **de
+> vraag valt buiten het bronbereik**. Gevraagd naar Lden verzint de chatbot "Lärmpegel Dauer nacht" en noemt
+> daarbij vier IPLO-bronnen die het woord niet bevatten — het scherpste bewijsstuk dat dit project tot nu
+> toe heeft opgeleverd. Zie vondst V13 en §4 van het rapport.
 
 ---
 
