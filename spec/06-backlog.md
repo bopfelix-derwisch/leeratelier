@@ -377,15 +377,30 @@ door een echte route. Ze blijft voor de facilitator zichtbaar als snelle ketenco
 
 ## Fase 4 · Incrementeel uitbreiden
 
-In deze volgorde, steeds één module, steeds meteen live:
+**Alle zes afgerond op 2026-09-03.** Dertien modules, drie sporen, alles op `gepubliceerd`.
 
-- [ ] **WP-12** K6 Draaiend houden (0 beurten)
-- [ ] **WP-13** K7 Beheerkaart — invulformulier plus export naar markdown
-- [ ] **WP-14** K3 Modellenbank — twee modellen live, drie uit conserven
-- [ ] **WP-15** K2 De motorkap zonder mystiek
-- [ ] **WP-16** Spoor L: L1 kwaliteit, L2 vergunningen-RAG van binnen, L3 antwoordcontract
-- [ ] **WP-17** Spoor W: W1 FEWS-emulatie (mét de waarschuwing ín de module), W2 toen het misging,
+- [x] **WP-12** K6 Draaiend houden (0 beurten) — de zes sysmonitor-drempels als lesmateriaal, inclusief
+      de vraag waar een drempelwaarde vandaan komt
+- [x] **WP-13** K7 Beheerkaart — het formulier en de export waren al gebouwd in WP-06; de module leidt
+      erheen en behandelt de zes vragen
+- [x] **WP-14** K3 Modellenbank — vijf modellen naast elkaar op de echte ijkset-cijfers; twee live,
+      de rest uit conserven
+- [x] **WP-15** K2 De motorkap zonder mystiek — de zes onderdelen, met de werkelijke instellingen van
+      deze machine (1024 dimensies, 1200/200 chunk, `top_k` 4)
+- [x] **WP-16** Spoor L: L1 kwaliteit, L2 vergunningen-RAG van binnen, L3 antwoordcontract
+- [x] **WP-17** Spoor W: W1 FEWS-emulatie **mét de waarschuwing ín de module**, W2 toen het misging,
       W3 casussen
+
+**De basisroute kost samen 7 van de 20 beurten.** Vier van de zeven basismodules kosten er nul, precies
+zoals het plan wilde: de route voelt af zonder budget te verbruiken.
+
+**Conserven:** 33 voorberekende antwoorden over vijf modules, allemaal uit de ijkset-run van Qwen3-8B.
+Elke module die een model gebruikt, werkt dus ook als er geen model draait.
+
+> **Wat spoor W anders maakt.** W1 beschrijft een nagebouwde FEWS PI-REST-service die live draait op
+> `:8000` en waarop een echte FEWS-client zou aansluiten. De waarschuwing staat boven de eerste proef in
+> een eigen blok, niet in een voetnoot — conform het plan. De module noteert ook wat er *niet* is opgelost:
+> de emulatie draagt zijn status niet in de data zelf, alleen in de omringende tekst.
 
 ---
 
