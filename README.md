@@ -58,10 +58,9 @@ gebouwd. De eerste drie taken zijn WP-01, WP-02 en de inspectiehelft van WP-09; 
   (`gh auth login -h github.com`, scopes `repo` + `read:org`), daarna:
   `gh repo create bopfelix-derwisch/leeratelier --private --source=. --remote=origin`
   en `git remote set-url origin git@github.com:bopfelix-derwisch/leeratelier.git` (SSH-conventie).
-- **Licentie** — nog niet vastgesteld. Zie `spec/05-besluitenlog.md` besluit B8, WP-00 in de backlog,
-  en `~/sysmonitor/BACKLOG.md` A1. Zonder licentiebestand is code juridisch "alle rechten voorbehouden";
-  dat blokkeert het geloofwaardig onderwijzen van houdbaarheid en hergebruik. Dit is de eerste repo
-  waar het meteen goed kan.
+- **Licentie** — vastgesteld op **Apache-2.0** (besluit B18, 3 september 2026) en toegepast in alle tien
+  de repo's op deze machine. De canonieke tekst staat ongewijzigd in `LICENSE`; de appendix is niet
+  ingevuld, dus er is nog geen `NOTICE` met een rechthebbende. Zie open vraag 1.
 
 ## Verwante documenten buiten deze repo
 

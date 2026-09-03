@@ -3,8 +3,10 @@
 Alle veertien vragen uit plan v0.2 zijn beantwoord. Wat nu nog openstaat, ontstond door die antwoorden.
 
 ## Blokkerend
-1. **Licentie: Apache-2.0 of EUPL-1.2?** Apache geeft ruim hergebruik en een patentclausule; EUPL sluit
-   aan bij NL-overheidsbeleid. Kies één en pas hem overal toe. Blokkeert WP-00.
+1. ~~**Licentie: Apache-2.0 of EUPL-1.2?**~~ **Beantwoord 2026-09-03: Apache-2.0** (besluit B18), toegepast
+   in alle tien de repo's. Wat er nog uit volgt: de canonieke tekst noemt geen rechthebbende. Wil je een
+   `NOTICE`-bestand met een copyrightregel, en zo ja op welke naam? Er staat nergens in de projecten een
+   auteursvermelding, dus die naam is niet af te leiden en is bewust niet gegokt.
 2. **Wie kan dit beheren behalve jij?** Bij permanent bedrijf is dit een groter risico dan bij dagvensters.
    Tweede persoon met sudo en Tailscale, óf de verwachting expliciet verlagen op de inlogpagina.
 

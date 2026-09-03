@@ -9,27 +9,46 @@ Legenda: 🔴 blokkerend voor alles daarna · 🟡 blokkerend voor een specifiek
 
 ## Fase 0 · Fundament
 
-### [ ] WP-00 🔴 Fundament op orde
+### [~] WP-00 🔴 Fundament op orde
+**Grotendeels afgerond 2026-09-03.** Vier van de zes deeltaken zijn klaar; twee liggen bij de eigenaar
+omdat ze het Cloudflare-dashboard of een draaiende dienst raken.
 **Doel:** alles wat een bezoeker straks ziet, is juridisch en technisch vertoonbaar.
 
 Deeltaken, elk apart af te vinken:
-- [ ] **Licentiebesluit.** Kies één licentie voor alle repo's. Advies: Apache-2.0 (patentclausule, ruime
-      herbruikbaarheid) of EUPL-1.2 (aansluiting bij NL-overheidsbeleid). Noteer het besluit met motivatie
-      in `05-besluitenlog.md` en zet het officiële licentiebestand in alle 9 repo's **plus** deze repo.
-- [ ] **`docuchat`, `transcribe`, `sysmonitor` in git.** Eerst geheimencheck, dan `.gitignore`, dan eerste
-      commit. Deze drie zitten nu nergens in.
+- [x] **Licentiebesluit — Apache-2.0** (besluit B18). Canonieke tekst, sha256 `cfc7749b…`, 202 regels,
+      ongewijzigd in **alle tien** de repo's, elk in een eigen commit die uitsluitend `LICENSE` bevat
+      zodat de vuile werkbomen onaangeroerd bleven.
+- [x] **`docuchat`, `transcribe`, `sysmonitor` in git.** Geheimencheck vóór de eerste commit, daarna
+      `.gitignore`, daarna committen. Buiten git gehouden: `sysmonitor/.auth` (gebruiker + sha256 van het
+      wachtwoord), `history.jsonl` en `public/status.json` (gegenereerd), een `.bak`-bestand, en
+      `docuchat/.env` — met een `.env.example` ernaast voor de sleutelnamen.
 - [ ] **TLS-fout oplossen.** `admin.helper.felixisfelix.com` valt buiten Cloudflare Universal SSL (vierde
       niveau). Voeg in het Zero Trust-dashboard `helper-admin.felixisfelix.com` toe naar `localhost:8788`
-      en werk verwijzingen bij. Goedkoper dan een custom cert.
-- [ ] **API-titel corrigeren.** `Geluidsmeter API` → `LeefomgevingLab API` in de FastAPI-app van
-      LeefomgevingLab.
-- [ ] **Apex ontdubbelen.** `felixisfelix.com` wordt nu zowel door de statische Vercel-site als door de
-      tunnel naar :8790 bediend. Kies één en documenteer de keuze.
-- [ ] **Geheimencheck.** `.env` per project, `core/location_private.yaml`, Studio-PIN in de systemd-unit.
-      Controleer dat niets daarvan in git zit of erin terecht kan komen.
+      en werk verwijzingen bij. **Ligt bij de eigenaar: dit is een dashboard-actie, niet vanaf de machine
+      te doen.** Gemeten 2026-09-03: beide hostnames geven geen verbinding, dus de nieuwe bestaat nog niet.
+- [x] **API-titel corrigeren.** `Geluidsmeter API` → `LeefomgevingLab API` in
+      `src/leefomgevinglab/geluidsmeter/api.py` regel 85. Gecommit. **Werkt pas na een herstart van de
+      dienst**; niet herstart, want de POC is publiek bereikbaar.
+- [x] **Apex onderzocht.** Gemeten: `felixisfelix.com` geeft 200 en wordt door Vercel geserveerd
+      (`x-vercel-cache: HIT`). Op `:8790` draait de Derwisch-transcriptiepagina, geen tweede apex-site.
+      Vanaf deze machine is geen dubbele belegging waarneembaar; of er in het Zero Trust-dashboard nog een
+      Public Hostname op de apex staat, is alleen daar te zien. Zie vondst V12.
+- [x] **Geheimencheck uitgevoerd — en die leverde de belangrijkste vondst van dit werkpakket op.**
+      `Derwisch_local` had **geen `.gitignore`** en een ongenegeerde `.env` met `OPENAI_API_KEY`,
+      `GITHUB_TOKEN`, `CF_TOKEN_FELIXISFELIX` en `VERCEL_TOKEN`, in een repo met 39 gewijzigde bestanden en
+      een GitHub-remote. Opgelost (V10). `morele-helper`, `LeefomgevingLab` en `waterlab` negeerden hun
+      `.env` al correct.
+- [ ] **Studio-PIN uit de historie halen — ligt bij de eigenaar.** De PIN staat als hardcoded fallback in
+      `Derwisch_local/server.mjs` regel 65 en als waarde in `HANDOVER_Derwisch_local_1700.md`, in twee
+      commits. Roteren vraagt een herstart van `derwisch_local-backend.service`; uit de historie halen
+      vraagt een herschreven geschiedenis en een force-push. Zie vondst V11.
 
 **Klaar als:** elke repo heeft een licentiebestand, de drie losse projecten zitten in git, en
 `helper-admin.felixisfelix.com` geeft een 401 in plaats van een TLS-fout.
+
+**Stand 2026-09-03:** de eerste twee zijn gehaald (10/10 repo's met licentie, 3/3 projecten in git). De
+derde wacht op een dashboard-actie. Fase 0 is daarmee niet volledig af, maar wel zover als vanaf de
+machine mogelijk is.
 
 **Verificatie:**
 ```bash
