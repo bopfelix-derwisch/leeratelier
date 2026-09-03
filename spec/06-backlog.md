@@ -104,20 +104,30 @@ een besluit over dense versus MoE.
 bash ops/ijking/moe_check.sh /mnt/nvme/nvme/models/<moe-model>.gguf
 ```
 
-### [ ] WP-03 🔴 Nederlandse ijkset
+### [x] WP-03 🔴 Nederlandse ijkset
+**Afgerond 2026-09-02** — rapport: `ops/ijking/ijkset-rapport-2026-09-02.md`.
+**Klasmodel wordt `Qwen3-8B` Q4_K_M** (besluit B17).
 **Doel:** een vaste set van twintig Nederlandse domeinvragen waarmee elk kandidaat-model beoordeeld wordt.
 Dit is tegelijk de selectieprocedure, de conserven-voorraad en het complete lesmateriaal van module K3.
 
 `ops/ijkset-nl.jsonl` staat er al met twintig vragen. Bouw het script dat elk model erlangs haalt.
 
-- [ ] `ops/ijking/ijkloop.py`: draait de set langs een endpoint, schrijft antwoord, latency, tok/s en
-      geheugen naar `ops/ijking/ijkset-<model>-<datum>.jsonl`
-- [ ] minstens drie modellen doorlopen: huidig showmodel + twee kandidaten
-- [ ] een vergelijkingstabel genereren (model × vraag × tijd × oordeel)
-- [ ] de vraag "welk model wordt klasmodel" beantwoorden en vastleggen
+- [x] `ops/ijking/ijkloop.py`: stond er al en werkt ongewijzigd
+- [x] minstens drie modellen doorlopen — het zijn er **vijf** geworden, de vijf klassen uit plan §5.4:
+      32B dens, 30B MoE, 12B dens, 8B dens, 4B dens. **100/100 antwoorden geslaagd**
+- [x] een vergelijkingstabel genereren (model × vraag × tijd × oordeel) — `ops/ijking/beoordeel.py`
+      toegevoegd, want `ijkloop.py --vergelijk` geeft alleen tijd en lengte, en daarmee wint een model
+      dat snel drie regels produceert
+- [x] de vraag "welk model wordt klasmodel" beantwoorden en vastleggen — **Qwen3-8B**, besluit B17;
+      `config/modellen.yaml` en `ops/systemd/llama-klasmodel.service` zijn ingevuld
 
 **Klaar als:** er ligt een matrix van minstens 3 modellen × 20 vragen, en het klasmodel is gekozen met
 motivatie in `05-besluitenlog.md`.
+
+**Doorslaggevend was ijk-20**, de vraag naar de eigen herkomst: Qwen3-8B is het enige van de vijf dat
+trainingsdata en peildatum noemt. Het 4B-model verzint daar instanties die niet bestaan.
+**Vondst V6:** op ijk-12 (asvolgorde) faalt élk model — het beste lesmateriaal dat de set opleverde.
+**Vondst V7:** Qwen3-8B heeft `--reasoning-budget 0` nodig; die vlag staat nu in de unit voor WP-04.
 
 ### [ ] WP-04 🔴 Klasmodel permanent op :8081
 **Doel:** een snel, meertalig dens model dat permanent draait naast het showmodel.

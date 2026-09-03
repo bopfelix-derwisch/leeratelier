@@ -12,14 +12,29 @@ showmodel:
     Dat besluit is aan de eigenaar; uitvoering hoort bij WP-03/WP-04.
 
 klasmodel:
-  naam: null                    # vullen na WP-03
+  naam: "Qwen3-8B"              # WP-03, gekozen 2026-09-02, besluit B17
   quantisatie: "Q4_K_M"
+  grootte_gb: 5.0
+  pad: "/mnt/nvme/nvme/models/qwen3-8b/Qwen3-8B-Q4_K_M.gguf"
   poort: 8081
   rol: "standaard voor alle bezoekersvragen"
-  advies: >
-    Een dense Qwen in de 8B-klasse. Nederlands is hier doorslaggevend: de Qwen-familie
-    heeft veruit de breedste meertaligheid. Zoek geen Nederlands-specifiek model --
-    kleine meertalige modellen presteren daar inmiddels beter.
+  vereiste_vlag: "--reasoning-budget 0"
+  waarom_die_vlag: >
+    Qwen3-8B is een hybride redeneermodel. Zonder deze vlag komt er een <think>-blok
+    mee in het antwoord: zichtbaar voor de bezoeker en een veelvoud aan tokens.
+    Zie vondst V7.
+  gemeten:
+    tok_per_s: 24.1
+    mediaan_s: 7.4
+    tekens_gemiddeld: 527
+    ijk20_oordeel: "eerlijk"     # als enige van de vijf
+  motivatie: >
+    Gekozen op de ijkset van 20 Nederlandse vragen langs 5 modellen (100/100 geslaagd).
+    Doorslaggevend was ijk-20, de vraag naar de eigen herkomst: Qwen3-8B is het enige
+    model dat trainingsdata en peildatum noemt en geen live toegang claimt. Het MoE-model
+    en het 4B-model antwoorden daar stellig; het 4B-model verzint zelfs instanties.
+    Verder correct op ijk-13 waar Mistral-Nemo en het 4B-model falen. Zie
+    ops/ijking/ijkset-rapport-2026-09-02.md.
 
 embeddings:
   naam: "bge-m3"
@@ -29,10 +44,15 @@ embeddings:
 
 modellenbank:
   # Module K3: dezelfde Nederlandse vraag aan vijf modellen.
-  # Twee draaien live, drie komen uit conserven. Zo krijg je een vijfvoudige
-  # vergelijking zonder vijf modellen tegelijk te draaien.
+  # Twee draaien live, drie komen uit conserven. Dat is geen bezuiniging maar
+  # noodzaak: samen wegen deze vijf 52 GB en de machine heeft er 61. Zie V4.
   live: ["klasmodel", "showmodel"]
-  uit_conserven: []             # vullen na WP-03
+  uit_conserven: ["qwen3-30b-a3b-moe", "mistral-nemo-12b", "qwen3-4b"]
+  conserven_bron: "ops/ijking/ijkset-<model>-2026-09-02.jsonl"
+  lesmateriaal: >
+    Vraag ijk-12 (asvolgorde) is het sterkste materiaal dat de ijkset opleverde: alle
+    vijf de modellen, van 2,5 tot 19 GB, antwoorden plausibel en fout, elk op een andere
+    manier. Toon die vijf antwoorden naast elkaar met grootte en snelheid erbij. Zie V6.
 
 hardware_werkelijkheid:
   bandbreedte_gb_s: 200
