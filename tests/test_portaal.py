@@ -132,7 +132,14 @@ def keten(tmp_path, monkeypatch):
                     lambda: bem.post(url.replace("http://bem", ""), json=json))
 
         monkeypatch.setattr(render_mod.httpx, "AsyncClient", DirecteClient)
-        with TestClient(maak_portaal(bemiddelaar_basis="http://bem")) as portaal:
+        # Eigen modulemap: deze tests gaan over gedrag, niet over de publicatiestatus
+        # van de echte modules. Die verandert bij elk werkpakket.
+        mods = tmp_path / "modules"
+        schrijf_module(mods / "k00-proefmodule", titel="Proefmodule", beurten=1)
+        schrijf_module(mods / "k99-nogniet", titel="Nog niet af", status="concept",
+                       beurten=0, tekst="# Kop\n\nNog niets.\n")
+        with TestClient(maak_portaal(bemiddelaar_basis="http://bem",
+                                     modules_dir=mods)) as portaal:
             yield portaal, inst
 
 
@@ -140,13 +147,13 @@ def test_route_toont_alleen_gepubliceerde_modules(keten):
     portaal, _ = keten
     html = portaal.get("/").text
     assert "k00-proefmodule" in html
-    assert "k04-wanneer-klopt-het-niet" not in html      # concept: onzichtbaar
+    assert "k99-nogniet" not in html                     # concept: onzichtbaar
 
 
 def test_facilitator_ziet_de_concepten_wel(keten):
     portaal, _ = keten
     html = portaal.get("/facilitator").text
-    assert "k04-wanneer-klopt-het-niet" in html
+    assert "k99-nogniet" in html
     assert "concept" in html
 
 
@@ -161,8 +168,8 @@ def test_modulepagina_toont_budgetmeter_en_reserveert(keten):
 
 def test_begeleiding_wordt_nooit_geserveerd(keten):
     portaal, _ = keten
-    for pad in ("/module/k04-wanneer-klopt-het-niet/begeleiding",
-                "/opdracht/k04-wanneer-klopt-het-niet/begeleiding"):
+    for pad in ("/module/k00-proefmodule/begeleiding",
+                "/opdracht/k00-proefmodule/begeleiding"):
         assert portaal.get(pad).status_code in (404, 405)
 
 

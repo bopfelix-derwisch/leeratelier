@@ -328,25 +328,50 @@ gegroeid. **Gehaald:** 0 dagen oud, twee ordes van grootte gegroeid.
 
 ## Fase 3 · Eerste module volledig
 
-### [ ] WP-10 🔴 Module K4 "Wanneer klopt het niet"
-De volledige inhoud staat al in `content/modules/k04-wanneer-klopt-het-niet/`. Wat nog moet:
+### [~] WP-10 🔴 Module K4 "Wanneer klopt het niet"
+De volledige inhoud staat al in `content/modules/k04-wanneer-klopt-het-niet/`.
+**Inhoudelijk afgerond 2026-09-03; de testronde met mensen ligt bij de eigenaar.**
 
-- [ ] conserven genereren voor alle vier de proeven (`content/conserven/k04.json`)
-- [ ] de module laten renderen in het portaal
-- [ ] de vaste sectie "wat hier misging" controleren op feitelijke juistheid tegen de POC's
-- [ ] testronde met drie functioneel beheerders
+- [x] conserven genereren — 8 conserven uit de ijkset-run van Qwen3-8B, over vergunningen, geluid en meta,
+      zodat alle proeven ook zonder model werken
+- [x] de module laten renderen in het portaal — `status: gepubliceerd`, zichtbaar op de route
+- [x] **de vaste sectie "wat hier misging" gecontroleerd tegen de POC's.** Drie van de vier bullets
+      klopten niet meer of waren niet te verifiëren; zie hieronder
+- [ ] **testronde met drie functioneel beheerders** — dit vraagt drie mensen. Niet iets wat vanaf de
+      machine te doen is
 
 **Klaar als:** drie testbezoekers ronden de module af zonder hulp en leveren het bewijsstuk van B2: drie
 zelf gevonden foute antwoorden met diagnose.
 
-### [ ] WP-11 ⚪ Modules K1 en K5
-Beide kosten **nul modelbeurten** en geven je vrijwel gratis een route van drie modules die als geheel
-aanvoelt. De skeletten met frontmatter staan er al.
+**Wat de feitencontrole opleverde.** De sectie beweerde vier dingen; na toetsing tegen de POC's:
 
-- [ ] K1 Rondgang uitschrijven: twaalf dingen op één machine, wat draait er, wat kost het, wat is stuk
-- [ ] K5 De bron veranderde uitschrijven: RD versus WGS84, asvolgorde, genegeerde `bbox-crs`, leeggelopen
-      collection — allemaal live tegen `/wfs-kwaliteit`
-- [ ] beide op `status: gepubliceerd`
+| claim | uitkomst |
+|---|---|
+| "De index staat stil sinds juni" | wás waar, 74 dagen — maar is op 3 september herbouwd. Herschreven naar de historische feiten mét de herbouw |
+| "Een orde van grootte kleiner dan aangenomen" | waar, en nu meetbaar: 8 fragmenten uit twee pagina's, 8.187 tekens. Twee ordes eigenlijk |
+| "De ontwerpers legden vast dat het contract niet mag onderdrukken" | **niet te verifiëren** — staat nergens. Vervangen door iets dat wél controleerbaar is: `onzekerheid` staat op vier plaatsen in de broncode als vaste `True` en wordt nergens berekend |
+| "Gegokte endpoints klopten zelden" | waar, en letterlijk terug te vinden op de kwaliteitspagina van LeefomgevingLab, inclusief het concrete voorbeeld |
+
+Er is een **vijfde faalvorm** bijgekomen die er niet stond: *buiten het bronbereik*. Die kwam boven bij
+WP-09b en is de moeilijkste, omdat hij er precies uitziet als een te dunne index. En proef 4 heeft nu echt
+bewijsmateriaal van deze machine: de chatbot verzon "Lärmpegel Dauer nacht" en noemde vier IPLO-bronnen
+die het woord niet bevatten.
+
+### [x] WP-11 ⚪ Modules K1 en K5
+
+Beide kosten **nul modelbeurten** en geven je vrijwel gratis een route van drie modules die als geheel
+aanvoelt. **Afgerond 2026-09-03.**
+
+- [x] K1 Rondgang uitgeschreven — drie proeven op gemeten getallen van deze machine: 17 diensten,
+      38 van 61 GB, 77 GB modellen, en het invulschema van zes onderdelen als bewijsstuk
+- [x] K5 De bron veranderde uitgeschreven — vier proeven live tegen `/wfs-kwaliteit`, met echte cijfers
+      uit de scan van 3 september: een laag met **94,3 procent ongeldige geometrieën**, vier IMEV-velden
+      die de specificatie eist maar die niet in het schema zitten, en drie lagen die nul objecten bevatten
+      terwijl ze netjes antwoorden
+- [x] beide op `status: gepubliceerd`
+
+De proefmodule uit WP-06 staat weer op `concept`: die bestond om de keten te bewijzen en is nu vervangen
+door een echte route. Ze blijft voor de facilitator zichtbaar als snelle ketencontrole.
 
 ---
 

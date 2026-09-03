@@ -8,7 +8,7 @@ duur_min: 35
 beurten: 3
 modellen: [klas, show]
 conserven: conserven/k04.json
-status: concept
+status: gepubliceerd
 wat_ging_mis: true
 bewijs: "drie zelf gevonden foute antwoorden, elk met faalvorm, signaal en check"
 poc: leefomgevinglab
@@ -32,7 +32,7 @@ te laten zien wat er gebeurt.
 
 ## Wat je gaat zien
 
-Vier faalvormen, elk met een proef die je zelf doet:
+Vijf faalvormen, elk met een proef die je zelf doet:
 
 | # | Faalvorm | Wat je denkt dat er gebeurt | Wat er werkelijk gebeurt |
 |---|---|---|---|
@@ -81,9 +81,23 @@ of juist opeens heel algemeen. Die grens is de rand van de index.
 getallenreeksen. Bij een vraag worden de best passende stukken opgehaald en aan het model meegegeven. Zit
 het antwoord niet in die stukken, dan valt het model terug op wat het uit zijn training denkt te weten.
 
-Op deze machine is die index **klein**. Hoe klein precies staat in het inspectierapport bij deze module.
-Dat is geen schande — het is een proefopstelling — maar het verandert wel wat je van het antwoord mag
-verwachten.
+Op deze machine is die index op 3 september 2026 opnieuw gebouwd: van **8 fragmenten uit twee
+webpagina's** naar **924 fragmenten uit 170 pagina's**. Dat is honderdvijftien keer zoveel, en het is te
+merken — een vraag over plaatsgebonden risico levert nu de echte grenswaarde uit de bron op, waar eerder
+geen enkel fragment over dat onderwerp bestond.
+
+**Maar er is een tweede rand, en die is verraderlijker.** IPLO gaat over de Omgevingswet, niet over
+akoestiek. De termen `Lden`, `Lmax` en `dB(A)` komen in die 924 fragmenten **nul keer** voor. Een vraag
+over geluidsniveaus valt dus buiten het bronbereik, hoe groot de index ook wordt. Voor jou als gebruiker
+ziet dat er identiek uit als een te dunne index — vloeiend, zelfverzekerd, fout — maar de remedie is een
+andere: niet vergroten, maar een andere bron toevoegen of de vraag afwijzen.
+
+Dat onderscheid is de kern van deze proef:
+
+| wat je ziet | wat het is | wat je eraan doet |
+|---|---|---|
+| overal vage antwoorden | te dunne index | index vergroten |
+| raak op één onderwerp, mis op het volgende | buiten het bronbereik | andere bron, of de vraag afwijzen |
 
 **Signaal in je eigen werk:** vraag niet "hoe goed is de chatbot", vraag "hoeveel zit erin". Het aantal
 documenten in de index zegt meer over de bruikbaarheid dan welke demo dan ook.
@@ -100,10 +114,21 @@ je om een oordeel vraagt. Bijvoorbeeld: niet *"wat staat er over X"* maar *"mag 
 
 **Kijk naar:** krijg je de informatie die er wél is, of krijg je vooral een disclaimer?
 
-**Wat er onder de motorkap gebeurt.** Dit systeem heeft bewust een conservatief antwoordcontract:
-disclaimer, vangnet, geen stellige uitspraken. Dat is een verstandige eis — maar de bouwers noteerden er
-zelf bij dat het contract niet zó streng mag zijn dat het nuttige, gevonden informatie onderdrukt. Dat is
-een reële spanning en er bestaat geen instelling die hem oplost.
+**Wat er onder de motorkap gebeurt.** Dit systeem heeft een conservatief antwoordcontract: elk antwoord
+draagt een disclaimer, een vangnet dat naar het bevoegd gezag verwijst, en een veld `onzekerheid`.
+
+Kijk naar dat laatste veld. In de broncode staat het op vier plaatsen, en overal als vaste waarde:
+
+```python
+{"vraag": activiteit, "bron": BRON, "onzekerheid": True, ...}
+```
+
+**`onzekerheid` wordt nergens berekend.** Het staat altijd op waar, of het antwoord nu woordelijk uit een
+opgehaald fragment komt of volledig uit het geheugen van het model. Een signaal dat altijd afgaat, draagt
+geen informatie.
+
+Dat is geen slordigheid maar een reële spanning: een systeem dat zijn eigen zekerheid moet inschatten,
+moet weten wanneer het iets niet weet — en dat is precies wat een taalmodel niet kan.
 
 **Signaal in je eigen werk:** gebruikers die zeggen "hij zegt nooit iets nuttigs" melden meestal geen
 kapot systeem maar een te streng contract. Dat is een instelbaar probleem, geen technisch defect — maar
@@ -125,6 +150,21 @@ niet aanwijsbaar is?
 bronverwijzing is óók tekst. Zonder een expliciete koppeling tussen antwoord en het daadwerkelijk
 opgehaalde fragment is er geen enkele garantie dat de genoemde bron bestaat.
 
+**Wat hier op deze machine gebeurde, op 3 september 2026.** Gevraagd wat `Lden` betekent, antwoordde de
+chatbot dat het staat voor *"Lärmpegel Dauer nacht"*. Die uitschrijving bestaat niet; Lden is
+*level day-evening-night*. En eronder stonden vier IPLO-bronnen als onderbouwing, waaronder
+`iplo.nl/thema/geluid/geluid-regelgeving/geluidproductieplafond/`.
+
+In geen van die vier pagina's komt het woord Lden voor.
+
+Het ophaalmechanisme leverde de dichtstbijzijnde fragmenten over geluid in het algemeen, het model schreef
+het antwoord uit eigen geheugen, en de bronnenlijst eronder gaf dat verzinsel het aanzien van iets dat
+nagezocht was. Het vangnet werkte daarbij gewoon: `onzekerheid: true`, disclaimer, verwijzing naar het
+bevoegd gezag. En toch een zelfverzekerd fout antwoord met vier links eronder.
+
+**Een bronvermelding bewijst niet dat het antwoord uit die bron komt.** Dat is de scherpste les van deze
+hele module.
+
 **Signaal in je eigen werk:** verwijzingen die er goed uitzien maar niet aanklikbaar zijn. Als je een
 bronvermelding niet in twee klikken kunt controleren, is ze niet meer waard dan de rest van de zin.
 
@@ -137,30 +177,41 @@ een van de scherpste vragen die je aan een bouwer kunt stellen.
 
 *(Deze sectie staat in elke module. Het zijn echte fouten uit dit lab, niet verzonnen voorbeelden.)*
 
-- **De index staat stil sinds juni.** Hij is één keer gebouwd en daarna niet meer aangeraakt, terwijl de
-  bronnen wel doorliepen. Niemand merkte dat, omdat de chatbot bleef antwoorden. Een systeem dat stilstaat
-  ziet er precies hetzelfde uit als een systeem dat werkt.
-- **De index bleek een orde van grootte kleiner dan iedereen aannam.** Bij het opzetten van dit atelier
-  werd de bestandsgrootte pas echt bekeken. Tot dat moment werd er over "de vergunningen-chatbot" gepraat
-  alsof die de IPLO-documentatie kende.
-- **Het antwoordcontract sloeg door.** De ontwerpers legden het zelf vast: een conservatief contract is een
-  harde eis, maar het mag nuttige gevonden informatie niet onderdrukken. Dat evenwicht is meerdere keren
-  bijgesteld en is nog steeds niet af.
-- **Gegokte endpoints klopten zelden.** Een terugkerende les uit de kwaliteitspagina: geraden endpoints,
-  headers en veldnamen kloppen bijna nooit. De OpenAPI-specificatie plus één echte aanroep zijn nodig
-  vóór er gebouwd wordt — niet erna.
+- **De index stond 74 dagen stil, en niemand merkte het.** Gebouwd op 21 juni, daarna niet meer
+  aangeraakt terwijl de bronnen doorliepen. De chatbot bleef gewoon antwoorden. Een systeem dat stilstaat
+  ziet er precies hetzelfde uit als een systeem dat werkt — dat is de hele reden dat index-leeftijd op een
+  statuspagina hoort. Sinds 3 september staat die leeftijd onder elk antwoord in dit atelier.
+- **De index was een orde van grootte kleiner dan iedereen aannam. Twee ordes, eigenlijk.** Er werd over
+  "de vergunningen-chatbot" gesproken alsof die de IPLO-documentatie kende. Toen iemand voor het eerst naar
+  de bestandsgrootte keek, bleek het **8 fragmenten uit twee webpagina's** te zijn, samen 8.187 tekens.
+  Niemand had gelogen; niemand had gekeken.
+- **Het `onzekerheid`-veld is een vaste waarde.** Elk antwoord meldt onzekerheid, ook een antwoord dat
+  woordelijk uit een opgehaald fragment komt. In de broncode staat het op vier plaatsen als letterlijke
+  `True` en het wordt nergens berekend. Een waarschuwing die altijd afgaat, is geen waarschuwing.
+- **Een gegokt endpoint bestond niet.** Van de kwaliteitspagina van LeefomgevingLab zelf: *"Het gegokte
+  operatie-pad bestond niet; de echte is `werkzaamheden/_bepaalRegelbeheerobjectTyperingen` (POST)."* De
+  les die daar als terugkerend patroon staat genoteerd: *"Gegokte endpoints, headers en veldnamen kloppen
+  zelden; de OpenAPI-spec plus een live call zijn nodig vóór het bouwen."*
+- **De herbouw loste het probleem niet op waarvoor hij bedoeld was.** De index werd vergroot omdat het
+  model `Lden` in het verkeerde vakgebied plaatste. Na 924 fragmenten doet het dat nog steeds, want IPLO
+  gaat niet over akoestiek. De aanname "meer bronnen is beter" hield geen stand tegen de vraag "staat het
+  antwoord überhaupt in deze bron".
 
 ---
 
 ## Wat je hiervan meeneemt
 
-Vier faalvormen, vier signalen, vier checks. Zet ze straks op je beheerkaart:
+Vijf faalvormen, vijf signalen, vijf checks. Zet ze straks op je beheerkaart:
 
 | Faalvorm | Signaal | Check |
 |---|---|---|
 | Verouderde kennis | nooit twijfel over actualiteit | wanneer is de index gebouwd? |
-| Te dunne index | vaag worden bij randvragen | hoeveel fragmenten, welke bronnen? |
-| Te streng vangnet | "hij zegt nooit iets nuttigs" | waar staat het antwoordcontract, wie beheert het? |
-| Plausibel maar fout | onaanklikbare bronvermelding | komt de bron uit het fragment of uit de tekst? |
+| Te dunne index | overal vaag worden | hoeveel fragmenten, welke bronnen? |
+| Buiten het bronbereik | raak op het ene onderwerp, mis op het volgende | staat dit onderwerp überhaupt in de bron? |
+| Te streng vangnet | "hij zegt nooit iets nuttigs" | wordt het onzekerheidssignaal berekend of staat het vast? |
+| Plausibel maar fout | bronvermelding die je niet kunt narekenen | komt de bron uit het fragment of uit de tekst? |
+
+Het zijn er vijf geworden in plaats van vier. De vijfde — buiten het bronbereik — kwam boven bij het
+vergroten van de index, en is de moeilijkste: hij ziet er precies uit als de tweede.
 
 **Volgende:** module K5 laat zien wat er gebeurt als de bron zelf verandert. Die kost geen modelbeurten.

@@ -8,7 +8,7 @@ duur_min: 5
 beurten: 1
 modellen: [klas]
 conserven: conserven/k00-proefmodule.json
-status: gepubliceerd
+status: concept
 wat_ging_mis: true
 bewijs: "een antwoord met een zichtbaar bronlabel"
 poc: geen
@@ -17,8 +17,9 @@ routes: []
 
 # Proefmodule
 
-Deze module bestaat om de keten te bewijzen, niet om iets te onderwijzen. Ze wordt
-vervangen zodra K1 en K4 gepubliceerd zijn.
+Deze module bestaat om de keten te bewijzen, niet om iets te onderwijzen. Sinds K1, K4 en K5
+gepubliceerd zijn staat ze op `concept` en is ze alleen nog zichtbaar voor de facilitator —
+als snelle controle dat de keten van portaal tot logboek nog loopt.
 
 Wat je hier doet: één vraag stellen en kijken wat er onder het antwoord staat.
 
