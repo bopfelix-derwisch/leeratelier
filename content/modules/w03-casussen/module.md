@@ -129,5 +129,5 @@ validatie?**
 De rechterkolom is langer. Dat is geen slordigheid van de taal maar de prijs van precisie, en het is
 precies het werk van een functioneel beheerder: de linkerkolom horen en de rechterkolom opschrijven.
 
-**Volgende:** dit was de laatste module van spoor W. Als je de basisroute nog niet af hebt, ga dan verder
-met K7 en vul je beheerkaart in — dat is waar dit allemaal naartoe werkt.
+**Volgende:** module W4 over de verwachting. Die kijkt niet terug maar veertien dagen vooruit, met live
+gegevens — en laat zien wat er gebeurt als die gegevens wegvallen.
