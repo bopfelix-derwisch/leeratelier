@@ -22,8 +22,12 @@ transformer werkt. Wat helpt is dat je de **vier manieren** herkent waarop een A
 per manier weet welk signaal erbij hoort en wat je dan checkt.
 
 Deze module gebruikt de vergunningen-chatbot van LeefomgevingLab. Die draait op een lokaal taalmodel met
-een zoekindex over IPLO- en DSO-documentatie. Hij is niet gebouwd om je te overtuigen; hij is gebouwd om
-te laten zien wat er gebeurt.
+een zoekindex over IPLO-documentatie. Hij is niet gebouwd om je te overtuigen; hij is gebouwd om te laten
+zien wat er gebeurt.
+
+Het vraagblok onderaan deze pagina stuurt je vraag naar diezelfde chatbot, dus mét de zoekindex ertussen.
+Onder elk antwoord zie je welke bronnen hij meegaf en wat er in zijn antwoordcontract stond. Wil je hem in
+zijn eigen omgeving zien, dan staat hij op **[de chatbot van LeefomgevingLab](https://leefomgevinglab.felixisfelix.com/chatbot)**.
 
 **Wat je nodig hebt:** je browser. Verder niets.
 **Wat het kost:** 3 modelbeurten van je dagbudget.

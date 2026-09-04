@@ -52,6 +52,10 @@ class VraagIn(BaseModel):
     module_id: str
     vraag: str
     model_voorkeur: str = Field(default="auto", pattern="^(auto|klas|show)$")
+    # Uit de frontmatter van de module. Is hij gezet en kent de bemiddelaar die POC,
+    # dan gaat de vraag naar de zoekindex van die POC in plaats van naar het kale
+    # model. Zonder dat kan module K4 haar eigen proeven niet uitvoeren.
+    poc: str = ""
 
 
 class ReserveerIn(BaseModel):
@@ -92,10 +96,17 @@ def maak_app(inst=None) -> FastAPI:
         """
         eindstatus = MISLUKT
         try:
-            antwoord, latency_ms, gebruikt = await vraag_met_terugval(
-                inst, taak.model, taak.vraag)
-            taak.antwoord, taak.latency_ms, taak.bron = antwoord, latency_ms, gebruikt
-            taak.model = gebruikt
+            if taak.poc and taak.poc in inst.poc_chat:
+                antwoord, latency_ms, bronnen, contract = await modellen.vraag_poc(
+                    inst.poc_chat[taak.poc], taak.vraag)
+                taak.bronnen, taak.contract = bronnen, contract
+                gebruikt = "poc"
+                taak.antwoord, taak.latency_ms, taak.bron = antwoord, latency_ms, "poc"
+            else:
+                antwoord, latency_ms, gebruikt = await vraag_met_terugval(
+                    inst, taak.model, taak.vraag)
+                taak.antwoord, taak.latency_ms, taak.bron = antwoord, latency_ms, gebruikt
+                taak.model = gebruikt
             taak.beurten_verbruikt = 1
             await asyncio.to_thread(budget.boek_af, taak.bezoeker_id, 1)
             await asyncio.to_thread(cache.bewaar, taak.vraag, taak.module_id,
@@ -120,7 +131,8 @@ def maak_app(inst=None) -> FastAPI:
         finally:
             # De modelnaam, niet de laddertrede: die staat al in `bron`. Het logboek
             # is het materiaal voor module K6, en "Qwen3-8B" zegt daar meer dan "klas".
-            naam = inst.modellen.get(taak.model, {}).get("naam", taak.model)
+            naam = (taak.poc if taak.bron == "poc"
+                    else inst.modellen.get(taak.model, {}).get("naam", taak.model))
             await asyncio.to_thread(
                 logboek.schrijf, taak.bezoeker_id, taak.module_id, taak.vraag,
                 naam, taak.bron or "geen", taak.latency_ms,
@@ -217,11 +229,13 @@ def maak_app(inst=None) -> FastAPI:
         if await asyncio.to_thread(budget.reservering, v.bezoeker_id) == 0:
             gereserveerd = await asyncio.to_thread(budget.reserveer, v.bezoeker_id, 1)
 
-        taak = rij.dien_in(v.bezoeker_id, v.module_id, v.vraag, model)
+        poc = v.poc if v.poc in inst.poc_chat else ""
+        taak = rij.dien_in(v.bezoeker_id, v.module_id, v.vraag, model, poc)
         positie = rij.positie(taak.taak_id)
         return {"taak_id": taak.taak_id, "positie": positie,
                 "geschat_wachten_s": rij.schat_wachten_s(model, positie),
-                "verwachte_bron": model, "beurten_gereserveerd": gereserveerd or 1}
+                "verwachte_bron": "poc" if poc else model,
+                "beurten_gereserveerd": gereserveerd or 1}
 
     # ----------------------------------------------------------------- taak
     @app.get("/v1/taak/{taak_id}")
@@ -234,7 +248,11 @@ def maak_app(inst=None) -> FastAPI:
             "positie": rij.positie(taak_id) if taak.status == WACHTEND else None,
             "antwoord": taak.antwoord or None,
             "bron": taak.bron or None,
-            "model": inst.modellen.get(taak.model, {}).get("naam") if taak.bron in ("klas", "show") else None,
+            "model": (taak.poc if taak.bron == "poc"
+                      else inst.modellen.get(taak.model, {}).get("naam")
+                      if taak.bron in ("klas", "show") else None),
+            "bronnen": taak.bronnen or None,
+            "contract": taak.contract or None,
             "latency_ms": taak.latency_ms or None,
             "beurten_verbruikt": taak.beurten_verbruikt,
             # Gaat expliciet mee bij elk antwoord. Module K4 leert bezoekers hiernaar

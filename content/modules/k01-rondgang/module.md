@@ -43,7 +43,8 @@ in je werk tegenkomt niet lukt.
 
 ## Proef 1 · Wat draait er eigenlijk?
 
-Open de statuspagina van deze machine. Je ziet zeventien systemd-diensten, elk met een status.
+Open **[de statuspagina van deze machine](https://status.felixisfelix.com/)**. Je ziet de bewaakte systemd-diensten, elk met een
+status, en bovenaan een blok "handelingsperspectief": per waarschuwing een concreet commando.
 
 **Wat je doet:** zoek er drie uit en probeer per dienst te benoemen wat er gebeurt als hij wegvalt.
 

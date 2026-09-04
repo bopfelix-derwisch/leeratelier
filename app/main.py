@@ -177,7 +177,8 @@ def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI
         if fout:
             return JSONResponse(status_code=404, content={"fout": "module", "melding": fout})
         voorkeur = "show" if module.modellen == ["show"] else "auto"
-        code, body = await mid.vraag(bezoeker_van(request), module_id, v.vraag, voorkeur)
+        code, body = await mid.vraag(bezoeker_van(request), module_id, v.vraag,
+                                     voorkeur, module.poc)
         if code == 429:
             return JSONResponse(status_code=429, content={
                 "fout": "budget_op",

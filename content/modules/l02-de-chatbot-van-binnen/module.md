@@ -20,6 +20,9 @@ routes: ["/chatbot", "/api/chat"]
 In K4 heb je deze chatbot gebruikt om fouten te vinden. Nu kijk je hoe hij werkt — niet als
 architectuurplaat, maar als zes stappen die je kunt narekenen.
 
+Het vraagblok onderaan gaat naar dezelfde chatbot; in zijn eigen omgeving staat hij op
+**[/chatbot](https://leefomgevinglab.felixisfelix.com/chatbot)**.
+
 **Wat het kost:** 2 modelbeurten.
 
 ---

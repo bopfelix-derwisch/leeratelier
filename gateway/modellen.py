@@ -60,3 +60,35 @@ async def vraag(endpoint: str, tekst: str, max_tokens: int = 400,
     if not antwoord:
         raise ModelWeg("leeg antwoord")
     return antwoord, latency_ms
+
+
+async def vraag_poc(endpoint: str, tekst: str, timeout_s: float = 180.0) -> tuple:
+    """Stel de vraag aan een POC met een eigen zoekindex.
+
+    Het verschil met `vraag` is de ophaalstap. Dezelfde vraag levert via het kale
+    model iets over beleggingsrisico op en via de POC het juiste wetsartikel -- want
+    daar zit een index tussen. Modules die over RAG gaan, moeten hierlangs.
+
+    Geeft (antwoord, latency_ms, bronnen, contract) terug of gooit ModelWeg. Het
+    contract -- disclaimer, vangnet, onzekerheid -- gaat mee omdat module L3 er
+    letterlijk over gaat: je kunt pas zien dat `onzekerheid` altijd op waar staat
+    als je het veld te zien krijgt.
+    """
+    start = time.perf_counter()
+    try:
+        async with httpx.AsyncClient(timeout=timeout_s) as c:
+            r = await c.post(endpoint, json={"vraag": tekst})
+            r.raise_for_status()
+            body = r.json()
+    except (httpx.HTTPError, ValueError) as fout:
+        raise ModelWeg(str(fout)) from fout
+
+    antwoord = (body.get("antwoord") or "").strip()
+    if not antwoord:
+        raise ModelWeg("poc gaf geen antwoord")
+    bronnen = []
+    for b in (body.get("bronnen") or []):
+        bronnen.append(b.get("url") if isinstance(b, dict) else str(b))
+    contract = {k: body[k] for k in ("onzekerheid", "disclaimer", "vangnet")
+                if k in body}
+    return antwoord, int((time.perf_counter() - start) * 1000), bronnen, contract

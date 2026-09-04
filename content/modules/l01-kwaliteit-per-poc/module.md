@@ -19,7 +19,7 @@ routes: ["/kwaliteit", "/wfs-kwaliteit"]
 
 LeefomgevingLab bestaat uit een handvol proefopstellingen die elk op echte open data of een
 overheids-API draaien. Bij het bouwen liep het team steeds tegen dezelfde soort dingen aan, en die zijn
-opgeschreven op een pagina die `/kwaliteit` heet.
+opgeschreven op **[de kwaliteitspagina](https://leefomgevinglab.felixisfelix.com/kwaliteit)**.
 
 Die pagina is het interessantste document van de hele machine, want het is geschreven door de mensen die
 het hebben meegemaakt en niet door iemand die het achteraf mooi moest maken.
@@ -48,7 +48,7 @@ de eigenlijke opbrengst van maanden werk.
 
 ## Proef 1 · Lees "wat steeds terugkomt"
 
-Open `/kwaliteit` en scroll naar het eind.
+Open **[`/kwaliteit`](https://leefomgevinglab.felixisfelix.com/kwaliteit)** en scroll naar het eind.
 
 De twee patronen die er als terugkerend staan genoteerd:
 
@@ -91,7 +91,7 @@ niet, dan heeft niemand gekeken — een bron zonder bekende beperkingen is een b
 
 ## Proef 3 · De cijfers achter één laag
 
-Open `/wfs-kwaliteit`. Deze pagina scant een landelijk register en telt.
+Open **[`/wfs-kwaliteit`](https://leefomgevinglab.felixisfelix.com/wfs-kwaliteit)**. Deze pagina scant een landelijk register en telt.
 
 Uit de scan van 3 september 2026, steekproef van 300 objecten per laag:
 

@@ -429,3 +429,41 @@ def test_bezoek_aan_een_gratis_module_wordt_gelogd(client):
     r = client.get("/v1/voortgang/wandelaar").json()
     assert [m["module_id"] for m in r["modules"]] == ["k05-de-bron-veranderde"]
     assert client.get("/v1/budget/wandelaar").json()["persoonlijk_resterend"] == 3
+
+
+# ------------------------------------------------------------ POC met index
+
+def test_module_met_een_poc_gaat_langs_de_zoekindex(inst, monkeypatch):
+    """Zonder dit kan K4 haar eigen proeven niet doen: geen index, geen bronnen."""
+    async def nooit(*a, **kw):
+        raise AssertionError("het kale model had niet aangeroepen mogen worden")
+
+    async def poc(endpoint, tekst, timeout_s=180.0):
+        assert endpoint.endswith("/api/chat")
+        return ("Volgens artikel 5.6 Bkl...", 42,
+                ["https://iplo.nl/thema/externe-veiligheid/"],
+                {"onzekerheid": True, "disclaimer": "Indicatief."})
+
+    monkeypatch.setattr(modellen, "vraag", nooit)
+    monkeypatch.setattr(modellen, "vraag_poc", poc)
+
+    with TestClient(maak_app(inst)) as c:
+        r = c.post("/v1/vraag", json={"bezoeker_id": "rag", "module_id": "k04",
+                                      "vraag": "Wat is het plaatsgebonden risico?",
+                                      "poc": "leefomgevinglab"})
+        assert r.json()["verwachte_bron"] == "poc"
+        for _ in range(100):
+            t = c.get(f"/v1/taak/{r.json()['taak_id']}").json()
+            if t["status"] in ("klaar", "mislukt"):
+                break
+            time.sleep(0.05)
+        assert t["bron"] == "poc"
+        assert t["bronnen"] == ["https://iplo.nl/thema/externe-veiligheid/"]
+        assert t["contract"]["onzekerheid"] is True
+
+
+def test_onbekende_poc_valt_terug_op_het_model(client):
+    """Een tikfout in de frontmatter mag geen module slopen."""
+    r = client.post("/v1/vraag", json={"bezoeker_id": "tik", "module_id": "k04",
+                                       "vraag": "iets", "poc": "bestaat-niet"})
+    assert r.json()["verwachte_bron"] == "klas"

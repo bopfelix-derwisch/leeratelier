@@ -43,7 +43,8 @@ Deze module kost **geen modelbeurten**.
 
 ## Wat je gaat zien
 
-Open `/fews/rest/fewspiservice/v1/locations`. Je krijgt dit terug:
+Open **[`/fews/rest/fewspiservice/v1/locations`](https://waterlab.felixisfelix.com/fews/rest/fewspiservice/v1/locations)**.
+Je krijgt dit terug:
 
 ```json
 {"locations":[
@@ -62,7 +63,7 @@ Er is aan dit antwoord niets te zien dat verraadt dat het een proefopstelling is
 
 ## Proef 1 · Waarom dit prikkelt
 
-**Wat je doet:** vraag de filters op via `/fews/rest/fewspiservice/v1/filters`.
+**Wat je doet:** vraag **[de filters](https://waterlab.felixisfelix.com/fews/rest/fewspiservice/v1/filters)** op.
 
 **Wat er onder de motorkap gebeurt.** Door het bestaande contract van een vakinterface na te bouwen, werkt
 alle software die dat contract al kent — zonder aanpassing. Dat is een reëel en waardevol patroon: je hoeft

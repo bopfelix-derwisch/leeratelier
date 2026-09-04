@@ -34,6 +34,9 @@ class Taak:
     module_id: str
     vraag: str
     model: str                      # "klas" of "show"
+    poc: str = ""                   # lege string = rechtstreeks naar het model
+    bronnen: list = field(default_factory=list)
+    contract: dict = field(default_factory=dict)
     status: str = WACHTEND
     antwoord: str = ""
     bron: str = ""                  # cache | klas | show | conserf
@@ -107,9 +110,10 @@ class Wachtrij:
         return int((positie + 1) * self.mediaan_s(model) / werkers)
 
     # -- gebruik ------------------------------------------------------------
-    def dien_in(self, bezoeker_id: str, module_id: str, vraag: str, model: str) -> Taak:
+    def dien_in(self, bezoeker_id: str, module_id: str, vraag: str, model: str,
+                poc: str = "") -> Taak:
         taak = Taak(taak_id=uuid.uuid4().hex, bezoeker_id=bezoeker_id,
-                    module_id=module_id, vraag=vraag, model=model)
+                    module_id=module_id, vraag=vraag, model=model, poc=poc)
         self.taken[taak.taak_id] = taak
         self.rijen[model].put_nowait(taak)
         return taak
@@ -143,7 +147,7 @@ class Wachtrij:
                 taak.fout = str(fout)[:200]
             finally:
                 rij.task_done()
-            if taak.status == KLAAR and taak.bron in ("klas", "show"):
+            if taak.status == KLAAR and taak.bron in ("klas", "show", "poc"):
                 duur = time.monotonic() - start
                 self._duren[model].append(duur)
                 del self._duren[model][:-20]        # alleen de laatste twintig

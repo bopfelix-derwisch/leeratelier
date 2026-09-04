@@ -47,7 +47,8 @@ Drie van die vier zijn vaste teksten. De vierde is een vaste waarde.
 Stel een vraag waarvan het antwoord letterlijk in de bron staat. Stel daarna een vraag die daar zeker
 buiten valt.
 
-**Kijk naar:** het veld `onzekerheid` in beide antwoorden.
+**Kijk naar:** het veld `onzekerheid` in beide antwoorden. Het vraagblok onderaan deze pagina toont het
+onder elk antwoord, samen met de disclaimer en het vangnet — precies zoals de chatbot ze meegeeft.
 
 **Wat er onder de motorkap gebeurt.** In de broncode van deze POC staat het veld op vier plaatsen, en
 overal zo:

@@ -38,6 +38,11 @@ class Instellingen:
     conserven_dir: Path
     modules_dir: Path
     rag_dir: Path
+    # POC's met een eigen chat-endpoint. Een module die in haar frontmatter een
+    # `poc` noemt, wordt daarheen gestuurd in plaats van naar het kale model --
+    # dat is het verschil tussen een antwoord mét en zonder zoekindex.
+    poc_chat: dict = field(default_factory=lambda: {
+        "leefomgevinglab": "http://127.0.0.1:8792/api/chat"})
     # Gemeten mediaan per model; voedt de wachttijdschatting tot er echte
     # metingen binnen zijn. Uit ops/ijking/, niet verzonnen.
     mediaan_s: dict = field(default_factory=lambda: {"klas": 5.5, "show": 24.1})

@@ -42,7 +42,7 @@ Vier keer "niets". Dat is de hele module.
 
 ## Proef 1 · Hetzelfde punt, drie plaatsen
 
-Open `/wfs-kwaliteit`. Deze pagina scant een landelijk register en rapporteert wat er over de data te
+Open **[`/wfs-kwaliteit`](https://leefomgevinglab.felixisfelix.com/wfs-kwaliteit)**. Deze pagina scant een landelijk register en rapporteert wat er over de data te
 zeggen valt.
 
 **Wat je doet:** zoek op welk coördinatenstelsel de lagen gebruiken, en vergelijk dat met wat je zou
@@ -101,7 +101,10 @@ waarvan je het antwoord kent? "Het staat in de standaard" is geen test.
 
 ## Proef 3 · Velden die de specificatie eist maar die er niet zijn
 
-Open `/api/wfs-kwaliteit` en zoek `imev_velden_niet_in_schema`.
+Open **[`/wfs-kwaliteit`](https://leefomgevinglab.felixisfelix.com/wfs-kwaliteit)** en zoek de kolom met IMEV-velden.
+
+> De ruwe cijfers staan achter `/api/wfs-kwaliteit`, maar die aanroep doet de scan opnieuw en duurt
+> langer dan de tunnel toestaat. Gebruik de pagina, niet de API.
 
 **Wat je ziet.** Vier velden die de informatiemodelspecificatie voorschrijft, ontbreken in het schema van
 de laag:
@@ -127,7 +130,7 @@ normaal; wat je wilt weten is of iemand dat verschil kent.
 
 ## Proef 4 · De inhoud zelf
 
-Kijk in `/api/wfs-kwaliteit` naar de kolom met ongeldige geometrieën. Een greep uit de scan van
+Kijk op **[`/wfs-kwaliteit`](https://leefomgevinglab.felixisfelix.com/wfs-kwaliteit)** naar de kolom met ongeldige geometrieën. Een greep uit de scan van
 3 september 2026, steekproef van 300 per laag:
 
 | laag | objecten | ongeldige vorm |

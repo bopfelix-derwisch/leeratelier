@@ -95,7 +95,8 @@ async function stelVraag(e){
 
 function toon(t){
   const labels = {cache:'uit de cache, eerder al beantwoord', klas:'live van het klasmodel',
-                  show:'live van het showmodel', conserf:'voorberekend antwoord, niet nu gegenereerd'};
+                  show:'live van het showmodel', poc:'live uit de POC, mét zoekindex',
+                  conserf:'voorberekend antwoord, niet nu gegenereerd'};
   const bron = labels[t.bron] || 'onbekende bron';
   const extra = [];
   if(t.model) extra.push(t.model);
@@ -103,11 +104,22 @@ function toon(t){
   if(t.index_leeftijd_dagen !== null && t.index_leeftijd_dagen !== undefined)
     extra.push('zoekindex ' + t.index_leeftijd_dagen + ' dagen oud');
   const klas = t.bron === 'conserf' ? ' conserf' : '';
+  const c = t.contract || {};
+  const contract = Object.keys(c).length
+    ? '<div class="bronlabel" style="border:0;margin:8px 0 0;padding:8px 0 0;border-top:1px solid var(--lijn)">'
+      + 'antwoordcontract: <code>onzekerheid: ' + escape_(String(c.onzekerheid)) + '</code>'
+      + (c.disclaimer ? ' &middot; ' + escape_(c.disclaimer) : '')
+      + (c.vangnet ? '<br>' + escape_(c.vangnet) : '') + '</div>' : '';
+  const bronnen = (t.bronnen || []).length
+    ? '<div class="bronlabel" style="border:0;margin:8px 0 0;padding:8px 0 0;border-top:1px solid var(--lijn)">'
+      + 'bronnen die de POC meegaf: ' + t.bronnen.map(u =>
+          '<a href="' + escape_(u) + '" target="_blank" rel="noopener">' + escape_(u.replace(/^https?:\/\//,'').slice(0,58)) + '</a>').join(' &middot; ')
+      + '</div>' : '';
   document.getElementById('uitkomst').innerHTML =
     '<div class="antwoord"><div class="bronlabel"><b class="' + klas + '">' + bron + '</b>'
     + (extra.length ? ' &middot; ' + extra.join(' &middot; ') : '')
     + (t.beurten_verbruikt ? ' &middot; kostte ' + t.beurten_verbruikt + ' beurt' : ' &middot; kostte geen beurt')
-    + '</div>' + escape_(t.antwoord || '') + '</div>';
+    + '</div>' + escape_(t.antwoord || '') + contract + bronnen + '</div>';
 }
 function escape_(s){ const d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
 </script>

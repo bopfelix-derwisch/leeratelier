@@ -89,10 +89,10 @@ class Bemiddelaar:
         return await self._get(f"/v1/taak/{taak_id}", None)
 
     async def vraag(self, bezoeker_id: str, module_id: str, tekst: str,
-                    model_voorkeur: str = "auto"):
+                    model_voorkeur: str = "auto", poc: str = ""):
         return await self._post("/v1/vraag", {
             "bezoeker_id": bezoeker_id, "module_id": module_id,
-            "vraag": tekst, "model_voorkeur": model_voorkeur})
+            "vraag": tekst, "model_voorkeur": model_voorkeur, "poc": poc})
 
     async def reserveer(self, bezoeker_id: str, module_id: str, beurten: int):
         return await self._post("/v1/reserveer", {

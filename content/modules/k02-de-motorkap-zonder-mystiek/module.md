@@ -102,7 +102,8 @@ op de laatste vraag nee is, kan niemand nagaan waarom het systeem vorige week an
 
 ## Proef 3 · Kijk zelf in de motor
 
-Open `/openapi.json` van LeefomgevingLab. Dit is de technische beschrijving die de POC zelf publiceert:
+Open **[`/openapi.json` van LeefomgevingLab](https://leefomgevinglab.felixisfelix.com/openapi.json)**. Dit is de technische beschrijving
+die de POC zelf publiceert:
 elk pad, elke parameter, elk antwoordveld.
 
 **Kijk naar:** het veld `info.title`, en daarna naar de lijst met paden.
