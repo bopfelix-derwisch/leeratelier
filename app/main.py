@@ -153,9 +153,11 @@ def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI
 
         # Regel 1 van het modulecontract: reserveer vooraf, zodat niemand halverwege
         # zonder budget valt.
+        # Altijd aanroepen, ook bij nul beurten: dit registreert het bezoek. Bij nul
+        # beurten reserveert de bemiddelaar niets, dus het kost de bezoeker ook niets.
         reservering_fout = None
+        code, body = await mid.reserveer(ctx["bezoeker"], module.id, module.beurten)
         if module.beurten > 0:
-            code, body = await mid.reserveer(ctx["bezoeker"], module.id, module.beurten)
             if code == 429:
                 reservering_fout = (
                     "Je dagbudget is op, dus voor deze module kunnen geen beurten meer "

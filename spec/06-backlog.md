@@ -431,7 +431,24 @@ storingen zijn nagespeeld alsof het runbook voor het eerst gelezen werd:
 **Wat er niet getoetst is:** of een ánder mens ermee uit de voeten kan. Dat vraagt een tweede persoon en
 is de eigenlijke eis. Het openstaande risico *bus factor 1* staat nog steeds in het besluitenlog.
 
-### [ ] WP-19 ⚪ Maandelijkse tegenspraaksessie inrichten
-- [ ] reservering van 20% dagbudget op de sessiedag
-- [ ] toelatingsvoorwaarde: basisroute afgerond plus beheerkaart meegebracht
-- [ ] werkvorm vastleggen: geen les, maar zes mensen die elkaars beheerkaart aanvallen
+### [x] WP-19 ⚪ Maandelijkse tegenspraaksessie inrichten
+**Afgerond 2026-09-04.** Werkvorm: `content/tegenspraaksessie.md`.
+
+- [x] reservering van 20% dagbudget op de sessiedag — gebouwd. `gereserveerd_begeleide_sessie` stond wel
+      in de config maar werd nergens gebruikt. Nu bepaalt `begeleide_sessie.datum` plus een deelnemerslijst
+      wie het gereserveerde deel mag aanspreken. Live getoetst: passant 240, deelnemer 300
+- [x] toelatingsvoorwaarde — **half automatiseerbaar, en dat is nu ook zo geregeld.** `GET /v1/voortgang/{id}`
+      toont welke modules iemand geopend heeft. Of de beheerkaart is meegebracht, kan geen systeem
+      vaststellen; dat blijft een menselijke controle en staat zo in de werkvorm
+- [x] werkvorm vastleggen — twee uur, zes deelnemers, een tijdschema, de drie vragen waarmee een kaart
+      wordt aangevallen, en wat de facilitator juist niet doet
+
+**Wat hiervoor eerst gebouwd moest worden.** De toelatingsvoorwaarde was niet controleerbaar: het logboek
+registreerde alleen vragen, en vier van de zeven basismodules kosten nul beurten. K1, K5, K6 en K7 lieten
+dus geen enkel spoor na. Het openen van een module wordt nu gelogd, wat ook het doel dient dat plan §4.5
+aan de logging geeft: *zien waar mensen vastlopen*.
+
+> **De sessie is nog niet gehouden.** De werkvorm is geschreven op grond van het plan, niet op grond van
+> ervaring. De sectie "waar het misgaat" bevat daarom verwachtingen, geen waarnemingen — inclusief één
+> risico dat het plan niet noemt: dat er niemand komt. Zes mensen die twee uur vrijmaken voor een
+> privé-lab is niet vanzelfsprekend.

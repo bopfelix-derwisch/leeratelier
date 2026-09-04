@@ -77,10 +77,26 @@ class Budget:
         return Stand(
             persoonlijk_resterend=max(0, self.inst.per_bezoeker - gebruikt),
             persoonlijk_totaal=self.inst.per_bezoeker,
-            dag_resterend=max(0, self.inst.dagbudget - self.dag_verbruikt()),
-            dag_totaal=self.inst.dagbudget,
+            dag_resterend=max(0, self.dagbudget_voor(bezoeker_id) - self.dag_verbruikt()),
+            dag_totaal=self.dagbudget_voor(bezoeker_id),
             reset_om=self.reset_om(),
         )
+
+    def dagbudget_voor(self, bezoeker_id: str) -> int:
+        """Het dagbudget dat voor deze bezoeker geldt.
+
+        Op de dag van de begeleide tegenspraaksessie wordt een deel vrijgehouden voor
+        de deelnemers. Zonder die reservering kan een drukke ochtend de sessie
+        leegtrekken, en die sessie is volgens het plan de enige schakel tussen de route
+        en de praktijk -- dus juist het stuk dat je niet wilt verliezen.
+
+        Staat er geen sessiedatum in de config, dan verandert er niets.
+        """
+        if not self.inst.sessie_datum or self.inst.sessie_datum != self.datum():
+            return self.inst.dagbudget
+        if bezoeker_id in self.inst.sessie_deelnemers:
+            return self.inst.dagbudget
+        return int(self.inst.dagbudget * (1.0 - self.inst.gereserveerd_sessie))
 
     def dag_verbruikt_pct(self) -> int:
         if self.inst.dagbudget <= 0:
@@ -148,7 +164,7 @@ class Budget:
         beurten, _ = self._rij(bezoeker_id)
         if beurten >= self.inst.per_bezoeker:
             raise BudgetOp(self.reset_om(), "persoonlijk")
-        if self.dag_verbruikt() >= self.inst.dagbudget:
+        if self.dag_verbruikt() >= self.dagbudget_voor(bezoeker_id):
             raise BudgetOp(self.reset_om(), "dag")
 
     def reservering(self, bezoeker_id: str) -> int:

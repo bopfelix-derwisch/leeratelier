@@ -385,3 +385,47 @@ def test_zonder_conserf_blijft_het_een_nette_weigering(client):
                                        "module_id": "k99-geen-conserf", "vraag": "x"})
     assert r.status_code == 429
     assert r.json()["conserf_beschikbaar"] is False
+
+
+# ------------------------------------------------- begeleide tegenspraaksessie
+
+def test_zonder_sessiedatum_verandert_er_niets(inst):
+    b = Budget(verbind(inst.db_pad), inst)
+    assert b.dagbudget_voor("wie dan ook") == inst.dagbudget
+
+
+def test_op_de_sessiedag_houdt_een_gewone_bezoeker_minder_over(inst):
+    """Een drukke ochtend mag de sessie niet leegtrekken."""
+    sessie = dataclasses.replace(
+        inst, dagbudget=100, gereserveerd_sessie=0.20,
+        sessie_deelnemers=("deelnemer@voorbeeld.nl",))
+    b = Budget(verbind(sessie.db_pad), sessie)
+    sessie = dataclasses.replace(sessie, sessie_datum=b.datum())
+    b = Budget(verbind(sessie.db_pad), sessie)
+
+    assert b.dagbudget_voor("passant@voorbeeld.nl") == 80
+    assert b.dagbudget_voor("deelnemer@voorbeeld.nl") == 100
+
+
+def test_de_gereserveerde_beurten_blijven_over_voor_de_deelnemer(inst):
+    sessie = dataclasses.replace(inst, dagbudget=100, per_bezoeker=100,
+                                 gereserveerd_sessie=0.20,
+                                 sessie_deelnemers=("deelnemer@voorbeeld.nl",))
+    b = Budget(verbind(sessie.db_pad), sessie)
+    sessie = dataclasses.replace(sessie, sessie_datum=b.datum())
+    b = Budget(verbind(sessie.db_pad), sessie)
+
+    b.boek_af("passant@voorbeeld.nl", 80)          # passanten hebben hun deel op
+    with pytest.raises(BudgetOp):
+        b.controleer("passant@voorbeeld.nl")
+    b.controleer("deelnemer@voorbeeld.nl")          # de deelnemer kan nog
+
+
+def test_bezoek_aan_een_gratis_module_wordt_gelogd(client):
+    """Anders blijven vier van de zeven basismodules onzichtbaar."""
+    client.post("/v1/reserveer", json={"bezoeker_id": "wandelaar",
+                                       "module_id": "k05-de-bron-veranderde",
+                                       "beurten": 0})
+    r = client.get("/v1/voortgang/wandelaar").json()
+    assert [m["module_id"] for m in r["modules"]] == ["k05-de-bron-veranderde"]
+    assert client.get("/v1/budget/wandelaar").json()["persoonlijk_resterend"] == 3

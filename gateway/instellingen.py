@@ -26,6 +26,8 @@ class Instellingen:
     per_bezoeker: int
     gereserveerd_sessie: float
     gelijktijdig: dict          # {"klasmodel": 4, "showmodel": 2}
+    sessie_datum: str           # "" als er geen sessie gepland is
+    sessie_deelnemers: tuple
     reset_tijdzone: str
     cache_aan: bool
     cache_uren: int
@@ -58,6 +60,9 @@ def laad(wortel: Path = WORTEL) -> Instellingen:
             "klas": int(budget["gelijktijdig"]["klasmodel"]),
             "show": int(budget["gelijktijdig"]["showmodel"]),
         },
+        sessie_datum=str((budget.get("begeleide_sessie") or {}).get("datum") or ""),
+        sessie_deelnemers=tuple(
+            (budget.get("begeleide_sessie") or {}).get("deelnemers") or ()),
         reset_tijdzone=str(budget["reset"]["tijdzone"]),
         cache_aan=bool(budget["cache"]["inschakelen"]),
         cache_uren=int(budget["cache"]["bewaartermijn_uren"]),

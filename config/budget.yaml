@@ -8,6 +8,14 @@ dagbudget_modelbeurten: 300
 per_bezoeker_per_dag: 20
 gereserveerd_begeleide_sessie: 0.20   # aandeel dat op sessiedagen wordt vrijgehouden
 
+# De maandelijkse tegenspraaksessie (besluit B13). Op de sessiedag krijgen gewone
+# bezoekers 80 procent van het dagbudget; de resterende 20 procent is alleen voor de
+# deelnemers. Zo kan een drukke ochtend de sessie niet leegtrekken.
+# Laat `datum` op null staan als er geen sessie is -- dan verandert er niets.
+begeleide_sessie:
+  datum: null                  # "2026-10-01" op de sessiedag
+  deelnemers: []               # de zes e-mailadressen uit de Access-header
+
 gelijktijdig:
   klasmodel: 4                   # GEMETEN in WP-04 (2026-09-03): 24,4 antw/min bij p95 10,2 s.
                                  # De knik ligt bij 2 (20,5/min, p95 5,9 s), maar 4 blijft ruim

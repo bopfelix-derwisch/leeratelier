@@ -52,6 +52,15 @@ class Logboek:
             "SELECT COUNT(*) AS n FROM meldingen WHERE afgehandeld=0").fetchone()
         return int(r["n"])
 
+    def bezochte_modules(self, bezoeker_id: str) -> list:
+        """Welke modules deze bezoeker geopend heeft, en wanneer voor het eerst."""
+        rijen = self.con.execute(
+            "SELECT module_id, MIN(tijdstip) AS eerste, COUNT(*) AS keer "
+            "FROM logboek WHERE bezoeker_id=? AND module_id!='' "
+            "GROUP BY module_id ORDER BY eerste", (bezoeker_id,)).fetchall()
+        return [{"module_id": r["module_id"], "eerste": r["eerste"], "keer": r["keer"]}
+                for r in rijen]
+
     def p95_latency_ms(self, laatste: int = 50) -> int:
         """p95 over de recente geslaagde antwoorden, voor de sysmonitor-drempel.
 

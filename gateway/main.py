@@ -254,6 +254,12 @@ def maak_app(inst=None) -> FastAPI:
 
     @app.post("/v1/reserveer")
     async def reserveer(r: ReserveerIn):
+        # Het openen van een module wordt gelogd, ook als hij niets kost. Zonder dat
+        # blijven vier van de zeven basismodules onzichtbaar in het logboek, en dan
+        # kan niemand zien waar bezoekers vastlopen -- wat volgens plan par. 4.5 juist
+        # het doel van de logging is.
+        await asyncio.to_thread(logboek.schrijf, r.bezoeker_id, r.module_id, "",
+                                "", "bezocht", 0, 0, True)
         try:
             n = await asyncio.to_thread(budget.reserveer_minstens, r.bezoeker_id, r.beurten)
         except BudgetOp as op:
@@ -261,6 +267,17 @@ def maak_app(inst=None) -> FastAPI:
                 "fout": "budget_op", "welk": op.welk, "reset_om": op.reset_om,
                 "conserf_beschikbaar": conserven.heeft(r.module_id)})
         return {"ok": True, "gereserveerd": n, "vervalt_om": budget.reset_om()}
+
+    @app.get("/v1/voortgang/{bezoeker_id}")
+    async def voortgang(bezoeker_id: str):
+        """Welke modules heeft deze bezoeker geopend?
+
+        De toelatingsvoorwaarde voor de tegenspraaksessie is "basisroute gedaan plus
+        beheerkaart meegebracht". Het tweede deel kan geen systeem vaststellen; het
+        eerste wel, mits het openen van een module gelogd wordt.
+        """
+        rijen = await asyncio.to_thread(logboek.bezochte_modules, bezoeker_id)
+        return {"bezoeker_id": bezoeker_id, "modules": rijen}
 
     # ----------------------------------------------------------- gezondheid
     @app.get("/v1/gezondheid")
