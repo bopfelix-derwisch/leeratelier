@@ -41,9 +41,10 @@ daar (`check_leeratelier` en `advise`) en is dus niet gecommit. Back-up van de v
 `/home/bob/sysmonitor/sysmonitor.py.bak-2026-09-05`. Wil je die reparatie behouden, zet
 `sysmonitor` onder git; dat staat al als los eind in K1 en de backlog.
 
-**De GitHub-remote bestaat nog niet.** De SSH-sleutel werkt (`ssh -T git@github.com` groet
-`bopfelix-derwisch`), maar de `gh`-token is verlopen, en zonder API kan de repo niet worden
-aangemaakt. Zie "Push" hieronder.
+**De GitHub-remote is er sinds 5 september 2026:**
+`git@github.com:bopfelix-derwisch/leeratelier.git`, privé, branch **`main`**. De lokale branch
+heette `master` en is meegehernoemd. Pushen gaat over SSH zonder token; de `gh`-CLI is nog
+steeds niet ingelogd, maar die is alleen voor API-werk nodig.
 
 **Twee sleutels moeten worden vervangen.** De Cloudflare-tunneltoken is tijdens deze sessie in
 een gesprek geplakt en moet daarom als gelekt gelden. En `Derwisch_local/.env` bevat vier levende
@@ -86,14 +87,13 @@ expliciet dat je eerst naar `p95_traagste_model` kijkt voordat je een gelijktijd
 
 ## Push
 
-De repo bestaat lokaal met de volledige geschiedenis, maar heeft geen remote.
+De repo staat op GitHub en lokaal en remote wijzen naar dezelfde commit.
 
 ```bash
-gh auth login -h github.com                       # scopes repo + read:org
-gh repo create bopfelix-derwisch/leeratelier --private --source=. --remote=origin
-git remote set-url origin git@github.com:bopfelix-derwisch/leeratelier.git
-git push -u origin master
+git push                                          # branch main, over SSH
 ```
 
-Kan ook zonder `gh`: maak de repo aan in de browser, daarna alleen de laatste twee regels.
-De SSH-conventie van deze machine is hard — **nooit een token in een remote-URL.**
+De eerste push moest de "Initial commit" van het aanmaakscherm opnemen: die had een eigen README
+en geen gemeenschappelijke voorouder. Opgelost met een merge (`--allow-unrelated-histories`,
+README-conflict in ons voordeel beslecht) in plaats van een force-push, zodat er niets is
+weggegooid. De SSH-conventie van deze machine is hard — **nooit een token in een remote-URL.**

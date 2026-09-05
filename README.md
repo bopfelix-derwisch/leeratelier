@@ -54,10 +54,10 @@ gebouwd. De eerste drie taken zijn WP-01, WP-02 en de inspectiehelft van WP-09; 
 
 ## Nog te regelen
 
-- **GitHub-remote** bestaat nog niet. Aanmaken kan pas als `gh` weer geldig ingelogd is
-  (`gh auth login -h github.com`, scopes `repo` + `read:org`), daarna:
-  `gh repo create bopfelix-derwisch/leeratelier --private --source=. --remote=origin`
-  en `git remote set-url origin git@github.com:bopfelix-derwisch/leeratelier.git` (SSH-conventie).
+- ~~**GitHub-remote** bestaat nog niet.~~ **Geregeld 5 september 2026:**
+  `git@github.com:bopfelix-derwisch/leeratelier.git`, privé, branch **`main`** (was lokaal `master`).
+  Pushen gaat over SSH en vraagt geen token. De `gh`-CLI is nog steeds niet ingelogd; dat is alleen
+  nodig voor API-werk, niet om te pushen.
 - **Licentie** — vastgesteld op **Apache-2.0** (besluit B18, 3 september 2026) en toegepast in alle tien
   de repo's op deze machine. De canonieke tekst staat ongewijzigd in `LICENSE`; de appendix is niet
   ingevuld, dus er is nog geen `NOTICE` met een rechthebbende. Zie open vraag 1.
