@@ -409,6 +409,22 @@ sudo systemctl restart atelier-portaal
 
 Elke wijziging is een aparte commit. Terugdraaien is `git revert <commit>`.
 
+**Liever laten voorleggen dan zelf zoeken?** Er staat een Claude Code-agent klaar in
+`.claude/agents/meldingen.md`. Die haalt de open meldingen op, leest de module erbij, controleert of
+de klacht klopt (inclusief het echt opvragen van genoemde links) en legt per melding een voorstel
+voor. Hij wijzigt niets. Starten met `/agents` of door erom te vragen; agentdefinities worden bij
+sessiestart ingelezen, dus na het aanmaken van een nieuwe agent eerst een nieuwe sessie.
+
+Wil je dat dagelijks, dan zijn er twee manieren:
+
+| manier | duurzaam? |
+|---|---|
+| Een cron in de lopende Claude-sessie | nee: verdwijnt met de sessie en vervalt na zeven dagen |
+| Een systemd-timer die `claude -p` aanroept | ja, ook na een herstart |
+
+De tweede staat er nog niet; de units in `ops/systemd/atelier-meldingen.*` draaien het script,
+niet de agent.
+
 **Melding afvinken** als je hem met de hand hebt opgelost:
 
 ```bash
