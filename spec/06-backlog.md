@@ -271,9 +271,13 @@ twintig modelaanroepen en de test doet het in een fractie van de tijd.
 ### [ ] WP-07 🔴 Toegang en privacy
 - [ ] Cloudflare Access met e-mail-OTP op `leeratelier.felixisfelix.com` → `127.0.0.1:8793`
 - [ ] bemiddelaar :8794 is **niet** publiek bereikbaar, alleen via het portaal
-- [ ] bezoeker-identiteit uit de Access-header koppelen aan het persoonlijke budget
-- [ ] privacytekst op de inlogpagina: wat er gelogd wordt, waarom, en 90 dagen bewaartermijn
-- [ ] eerlijke verwachtingstekst: *dit is een privé-lab van één persoon; storingen kunnen dagen duren*
+- [x] bezoeker-identiteit uit de Access-header koppelen aan het persoonlijke budget — `bezoeker_van()`
+      leest `Cf-Access-Authenticated-User-Email`; budget en logboek staan al op die sleutel
+- [x] privacytekst: wat er gelogd wordt, waarom, en 90 dagen bewaartermijn — staat in de voettekst op
+      elke pagina, niet alleen op een inlogpagina die Cloudflare zelf rendert
+- [x] eerlijke verwachtingstekst: *dit is een privé-lab van één persoon; storingen kunnen dagen duren* —
+      idem. Stond eerst alleen in de onbeveiligd-banner, en die verdwijnt zodra Access er staat; de zin
+      moet er juist dan nog zijn
 
 ### [x] WP-08 🟡 Sysmonitor-uitbreiding
 **Afgerond 2026-09-03.** Sectie "Leeratelier" in `~/sysmonitor/sysmonitor.py`, gevoed door

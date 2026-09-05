@@ -84,6 +84,7 @@ button[disabled]{opacity:.55;cursor:default}
 .uitleg{font-size:.88rem;color:var(--inkt-zacht)}
 footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--lijn);
   font-size:.84rem;color:var(--inkt-flauw)}
+footer p{margin:0 0 8px}
 @media (prefers-color-scheme:dark){
   :root{--grond:#0f1316;--vlak:#161b20;--vlak-2:#1d242a;--inkt:#e5ebef;
     --inkt-zacht:#9ba8b3;--inkt-flauw:#77848f;--lijn:#283138;--accent:#4fb3b0;

@@ -44,11 +44,16 @@
 <div class="wrap {% block breed %}{% endblock %}">
 {% block inhoud %}{% endblock %}
 <footer>
-  Leeratelier op orin3 &middot; een prive-lab, geen operationele dienst.
-  Vragen worden gelogd en na 90 dagen verwijderd.
+  <p><b>Dit is een prive-lab van een persoon.</b> Geen operationele dienst, geen wachtdienst:
+  storingen kunnen dagen duren. Wat je hier ziet is indicatief en niet geschikt om een besluit op
+  te baseren.</p>
+  <p>Je vraag, het gekozen model en de duur worden vastgelegd om te zien waar mensen vastlopen en
+  om de voorberekende antwoorden te verbeteren. Na 90 dagen wordt dat verwijderd. Je identiteit
+  komt uit je inlog en wordt nergens anders voor gebruikt.</p>
+  <p>Leeratelier op orin3.
   {% if gezondheid.rag_index_leeftijd_dagen is not none %}
-  &middot; zoekindex {{ gezondheid.rag_index_leeftijd_dagen }} dagen oud.
-  {% endif %}
+  Zoekindex {{ gezondheid.rag_index_leeftijd_dagen }} dagen oud.
+  {% endif %}</p>
 </footer>
 </div>
 </body>
