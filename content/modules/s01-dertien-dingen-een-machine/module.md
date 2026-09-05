@@ -3,7 +3,7 @@ id: s01-dertien-dingen-een-machine
 titel: "Dertien dingen op een machine — de rondgang"
 spoor: sturing
 volgorde: 10
-competenties: [S1, S4]
+competenties: [M1, M4]
 duur_min: 20
 beurten: 0
 modellen: []

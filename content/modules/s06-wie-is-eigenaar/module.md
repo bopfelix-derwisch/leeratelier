@@ -1,9 +1,9 @@
 ---
-id: s05-wie-is-eigenaar
+id: s06-wie-is-eigenaar
 titel: "Wie is eigenaar als het misgaat"
 spoor: sturing
-volgorde: 50
-competenties: [S5, S6]
+volgorde: 60
+competenties: [M5, M6]
 duur_min: 20
 beurten: 0
 modellen: []

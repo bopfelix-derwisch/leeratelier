@@ -459,6 +459,31 @@ antwoord fout kan zijn.
 
 ---
 
+### [x] WP-23 De verwachting als centrale case van de route Sturing
+
+Op verzoek van de eigenaar. Waterlab bewijst voor deze doelgroep in één case wat de andere modules los
+uitleggen: open source, lokale AI, een cloudmodel en een agentische stap, op edge-hardware, aangesloten
+op het bestaande landschap.
+
+- [x] Module `s03-de-verwachting` (0 beurten, 30 min) als hart van de route
+- [x] Modules S3-S6 een plaats opgeschoven naar S4-S7; conserf mee hernoemd, ook het `module_id`
+      binnenin
+- [x] Competenties hernoemd van S1-S6 naar **M1-M6**, want ze botsten visueel met de modulenummers
+- [x] Kruisverwijzingen in S0, S5 en S7 bijgewerkt; besluitkaart kreeg vraag 1a over de lokaal/cloud-
+      verdeling en de agentische stap
+- [x] `/start` en de routebeschrijving noemen de case
+
+**Verificatie:** `python3 ops/valideer.py`, `python3 -m pytest tests/ -q` (59 groen), alle pagina's 200,
+en het conserf lost op onder de nieuwe module-id.
+
+**De route telt nu acht modules, 190 minuten, nog steeds 2 modelbeurten.**
+
+**Wat er niet is gerepareerd:** de live verwachting vertrekt vanaf een opvulwaarde (V37, 6,2x de laatste
+echte meting). Dat is een POC-repo buiten WP-00 en dus een eigenaarsbesluit. Het staat wel in de module,
+als het eerlijke tegenwicht bij de businesscase.
+
+---
+
 ### [ ] WP-21 De latere fase: de overige tien projecten aansluiten
 
 Volgt uit WP-20. Nu zijn `derwisch-ritueel` en `sysmonitor` aangesloten op de kluis; de andere tien

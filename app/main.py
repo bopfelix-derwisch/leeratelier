@@ -48,7 +48,10 @@ ROUTES = (
     {"id": "sturing", "naam": "Sturing en besluit",
      "voor": "informatiemanagers, programmamanagers en algemeen managers",
      "zin": "Je beslist over AI-toepassingen zonder ze zelf te bouwen of te beheren, "
-            "en wilt weten wat je koopt, wat het later kost en waar je voor tekent.",
+            "en wilt weten wat je koopt, wat het later kost en waar je voor tekent. "
+            "Met een werkende case in het midden: de IJssel-verwachting van Waterlab, "
+            "waarin lokale AI, open source, een cloudmodel en een agentische stap "
+            "samenkomen op een apparaat van tweeduizend euro.",
      "sporen": ("sturing",),
      "kaart_url": "/besluitkaart", "kaart_naam": "besluitkaart",
      "kaart_zin": "een A4 over het besluit dat voorligt: wat is beloofd, wie merkt het "

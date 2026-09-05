@@ -1,9 +1,9 @@
 ---
-id: s04-de-rekening-die-later-komt
+id: s05-de-rekening-die-later-komt
 titel: "De rekening die later komt"
 spoor: sturing
-volgorde: 40
-competenties: [S4]
+volgorde: 50
+competenties: [M4]
 duur_min: 25
 beurten: 0
 modellen: []
@@ -50,7 +50,7 @@ temperatuur en beveiliging nakijkt. Die is er niet voor de storing; die is er vo
 geen storing is.
 
 **5. Iemand moet het kunnen uitleggen, over een jaar.**
-Dit is de duurste en de minst zichtbare. Zie S5.
+Dit is de duurste en de minst zichtbare. Zie S6.
 
 ---
 

@@ -3,7 +3,7 @@ id: s02-wat-je-koopt
 titel: "Wat je koopt als je AI koopt"
 spoor: sturing
 volgorde: 20
-competenties: [S1, S3]
+competenties: [M1, M3]
 duur_min: 25
 beurten: 0
 modellen: []

@@ -23,9 +23,9 @@ Alle vier de diensten stonden bij het schrijven op `active`.
 | route | sporen | modules | duur | beurten | eindproduct |
 |---|---|---|---:|---:|---|
 | Beheer en techniek | basis, waterlab, leefomgeving | 16 | 470 min | 7 | `/beheerkaart` |
-| Sturing | sturing (S0-S6) | 7 | 160 min | 2 | `/besluitkaart` |
+| Sturing | sturing (S0-S7) | 8 | 190 min | 2 | `/besluitkaart` |
 
-Drieëntwintig gepubliceerde modules (basis 9, sturing 7, waterlab 4, leefomgeving 3) plus een
+Vierentwintig gepubliceerde modules (basis 9, sturing 8, waterlab 4, leefomgeving 3) plus een
 proefmodule op `concept`. Alle modules spreken de bezoeker met **je** aan, ook de sturingsroute.
 
 ## Wat deze sessie is veranderd

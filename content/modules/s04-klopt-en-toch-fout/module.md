@@ -1,13 +1,13 @@
 ---
-id: s03-klopt-en-toch-fout
+id: s04-klopt-en-toch-fout
 titel: "Een antwoord dat klopt en toch fout is"
 spoor: sturing
-volgorde: 30
-competenties: [S2, S3]
+volgorde: 40
+competenties: [M2, M3]
 duur_min: 25
 beurten: 2
 modellen: [klas, poc]
-conserven: s03-klopt-en-toch-fout
+conserven: s04-klopt-en-toch-fout
 status: gepubliceerd
 wat_ging_mis: true
 bewijs: "drie manieren benoemd waarop een antwoord fout kan zijn zonder dat je het ziet"
