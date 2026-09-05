@@ -409,21 +409,34 @@ sudo systemctl restart atelier-portaal
 
 Elke wijziging is een aparte commit. Terugdraaien is `git revert <commit>`.
 
-**Liever laten voorleggen dan zelf zoeken?** Er staat een Claude Code-agent klaar in
-`.claude/agents/meldingen.md`. Die haalt de open meldingen op, leest de module erbij, controleert of
-de klacht klopt (inclusief het echt opvragen van genoemde links) en legt per melding een voorstel
-voor. Hij wijzigt niets. Starten met `/agents` of door erom te vragen; agentdefinities worden bij
-sessiestart ingelezen, dus na het aanmaken van een nieuwe agent eerst een nieuwe sessie.
+### De dagelijkse ronde met de agent
 
-Wil je dat dagelijks, dan zijn er twee manieren:
+Zo is het bedoeld te lopen, en het vraagt geen timer en geen cron.
 
-| manier | duurzaam? |
-|---|---|
-| Een cron in de lopende Claude-sessie | nee: verdwijnt met de sessie en vervalt na zeven dagen |
-| Een systemd-timer die `claude -p` aanroept | ja, ook na een herstart |
+In `.claude/agents/meldingen.md` staat een Claude Code-agent. Die haalt de open meldingen op,
+leest de module erbij, controleert of de klacht klopt -- inclusief het echt opvragen van
+genoemde links -- en legt per melding een voorstel voor. Hij wijzigt niets.
 
-De tweede staat er nog niet; de units in `ops/systemd/atelier-meldingen.*` draaien het script,
-niet de agent.
+**Aanroepen vanaf de telefoon.** Claude Code op de telefoon heeft een remote verbinding met
+orin3, dus de sessie draait op de machine zelf en leest de database rechtstreeks. Vraag om de
+agent (of start hem met `/agents`) en je krijgt de meldingen ter beoordeling. Keur je iets goed,
+dan wordt de wijziging in dezelfde sessie gemaakt.
+
+Twee dingen die daarvoor moeten kloppen:
+
+- De sessie moet starten op het **canonieke pad** `/mnt/nvme/workspaces/leeratelier`, anders
+  wordt `.claude/agents/` niet gevonden. Dat is precies waarvoor het `orin3`-control-center is.
+- Agentdefinities worden bij **sessiestart** ingelezen. Verandert de agent, dan is een nieuwe
+  sessie nodig.
+
+**Valt de remote verbinding weg,** dan is er een noodpad: `python3 ops/meldingen-dump.py`
+schrijft `ops/meldingen/openstaand.md` met de open meldingen erin, zonder e-mailadressen, zodat
+je ze ook kunt lezen in een sessie die alleen de repo heeft. Dat is een momentopname en niet de
+bron; met `--push` gaat hij ook de repo in. Er draait geen timer op -- dat hoeft niet zolang de
+remote verbinding staat.
+
+**Meldingen worden nooit automatisch opgeruimd.** `ruim_op()` raakt alleen het logboek (90
+dagen). Afgehandelde meldingen blijven staan als dossier; dat is bewust.
 
 **Melding afvinken** als je hem met de hand hebt opgelost:
 

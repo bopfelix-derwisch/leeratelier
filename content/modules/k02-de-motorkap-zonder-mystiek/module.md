@@ -38,6 +38,10 @@ over heeft — en, belangrijker, welk stukje niemand beheert.
 | **prompt** | de instructie aan het model | niemand weet meer wat erin staat |
 | **model** | schrijft de zinnen | verzint aan wat er niet gevonden is |
 
+Het contract waarlangs die onderdelen met elkaar praten, staat in de
+**OpenAPI-beschrijving** die de POC zelf publiceert. Die kun je openen; dat doe je in
+[proef 3 hieronder](#proef-3-kijk-zelf-in-de-motor).
+
 De volgorde is de volgorde waarin een vraag er doorheen gaat. Het model is het **laatste** onderdeel,
 niet het eerste — en dat is precies andersom dan hoe erover gepraat wordt.
 
@@ -102,9 +106,11 @@ op de laatste vraag nee is, kan niemand nagaan waarom het systeem vorige week an
 
 ## Proef 3 · Kijk zelf in de motor
 
-Open **[`/openapi.json` van LeefomgevingLab](https://leefomgevinglab.felixisfelix.com/openapi.json)**. Dit is de technische beschrijving
-die de POC zelf publiceert:
-elk pad, elke parameter, elk antwoordveld.
+Open de OpenAPI-beschrijving van LeefomgevingLab:
+**[`/openapi.json`](https://leefomgevinglab.felixisfelix.com/openapi.json)**.
+
+Dat is de technische beschrijving die de POC zelf publiceert: elk pad, elke parameter, elk
+antwoordveld.
 
 **Kijk naar:** het veld `info.title`, en daarna naar de lijst met paden.
 
