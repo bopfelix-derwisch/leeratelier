@@ -5,14 +5,14 @@
 > **Domein:** dwarsdoorsnede — een leerlaag óver de POC's heen, geen eigen POC.
 > **Start via** `orin3` → window **`0:leeratelier`** (canoniek pad `/mnt/nvme/workspaces/leeratelier`;
 > `~/leeratelier` is een symlink daarheen).
-> **Inventaris:** `docs/inventaris-orin3.md` — de geverifieerde inventaris van alle twaalf projecten.
+> **Inventaris:** `docs/inventaris-orin3.md` — de geverifieerde inventaris van alle dertien projecten.
 > Let op: de zes leerlijnen L1–L6 in §3 daarvan zijn **achterhaald** door de route in
 > `spec/plan-v0.3.md` §6 (basisroute K1–K7 + spoor W + spoor L). Gebruik de inventaris als feitenbron,
 > niet als indeling.
 
 ## Wat dit is
 
-Het **Leeratelier** is een dunne laag naast twaalf bestaande POC's op de machine `orin3`. Bezoekers
+Het **Leeratelier** is een dunne laag naast dertien bestaande POC's op de machine `orin3`. Bezoekers
 loggen in, lopen een route van modules door, stellen vragen aan lokale taalmodellen, en gaan weg met een
 ingevulde **beheerkaart** voor hun eigen toepassing.
 

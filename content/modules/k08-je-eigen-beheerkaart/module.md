@@ -1,8 +1,8 @@
 ---
-id: k07-je-eigen-beheerkaart
+id: k08-je-eigen-beheerkaart
 titel: "Je eigen beheerkaart"
 spoor: basis
-volgorde: 70
+volgorde: 80
 competenties: [B4, B6]
 duur_min: 30
 beurten: 0

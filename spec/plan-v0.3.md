@@ -269,7 +269,7 @@ Besloten: incrementeel, met de sporen Waterlab en LeefomgevingLab als eigen plek
 
 | # | Module | Kern | Beurten |
 |---|---|---|---|
-| **K1** | **Rondgang** | twaalf dingen op één machine: wat draait er, wat kost het, wat is stuk | 0 |
+| **K1** | **Rondgang** | dertien dingen op één machine: wat draait er, wat kost het, wat is stuk | 0 |
 | **K2** | **De motorkap zonder mystiek** | model, embeddings, index, prompt, bron — wat is wat en wat doet wat | 2 |
 | **K3** | **De modellenbank** | dezelfde Nederlandse vraag aan vijf modellen, met tijd en geheugen ernaast | 2 live + conserven |
 | **K4** | **Wanneer klopt het niet** | faalvormen live: verouderde index, verzonnen bron, te streng contract, plausibel maar fout | 3 |
@@ -475,7 +475,7 @@ leeratelier/
   config/     budget.yaml  modellen.yaml
   spec/       00-visie.md 01-competenties.md 02-toegang-en-budget.md
               03-architectuur.md 04-besluitenlog.md 05-open-vragen.md
-  content/    modules/k01…k07/  modules/w01…w03/  modules/l01…l03/
+  content/    modules/k00…k08/  modules/w01…w04/  modules/l01…l03/
               conserven/  beheerkaart-sjabloon.md
   app/        main.py render.py schema.py budget_ui.py melding.py   # :8793
   gateway/    main.py wachtrij.py budget.py cache.py conserven.py logboek.py   # :8794

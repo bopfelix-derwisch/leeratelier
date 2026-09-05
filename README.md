@@ -4,7 +4,7 @@
 > LeefomgevingLab: indicatief, geen operationeel systeem, geen opleidingsinstituut. Die disclaimer
 > moet meeschalen zodra er werkelijk lesgegeven wordt.
 
-Een dunne laag naast twaalf bestaande POC's op `orin3`. Bezoekers loggen in, lopen een route van modules
+Een dunne laag naast dertien bestaande POC's op `orin3`. Bezoekers loggen in, lopen een route van modules
 door, stellen vragen aan lokale taalmodellen, en gaan weg met een **beheerkaart** voor hun eigen toepassing.
 
 **Doelgroep:** functioneel beheerders en technisch geïnteresseerden. Zij bouwen niets. Zij gebruiken de
@@ -66,6 +66,6 @@ gebouwd. De eerste drie taken zijn WP-01, WP-02 en de inspectiehelft van WP-09; 
 
 | Bestand | Wat |
 |---|---|
-| `docs/inventaris-orin3.md` | geverifieerde inventaris van twaalf projecten en de volledige configuratie van orin3 |
+| `docs/inventaris-orin3.md` | geverifieerde inventaris van dertien projecten en de volledige configuratie van orin3 |
 | `~/sysmonitor/BACKLOG.md` | technische randvoorwaarden die leerlijnen blokkeren (secties A en B) |
 | `~/.claude/CLAUDE.md`, `/home/bob/ORIN3_SYSTEEM.md` | machine-brede context en infra-documentatie |

@@ -114,6 +114,19 @@ Dagelijkse timer → 14 diensten, 5 endpoints, schijf/geheugen/temp/load/securit
 ### Transcribe — GEREEDSCHAP
 `~/transcribe` · faster-whisper NL int8, m4a → txt · **geen git**. Voedt Derwisch en Morele Helper.
 
+### Labs-MCP — GEREEDSCHAP
+`~/labs-mcp` · geen dienst, geen poort, niet publiek · **git**, Apache-2.0 nog te controleren.
+Eén `age`-versleutelde kluis (`~/.config/labs-secrets/`, `chmod 600`, buiten elke git-map) plus
+`labsctl` (284 regels, stdlib + `age`): kluis, render naar `EnvironmentFile`/`.auth`, en een audit op
+verval en publieke lekken. Daarbovenop `mcp_server.py` (71 regels) die vijf handelingen aanbiedt aan een
+AI-assistent: `secret_list`, `secret_get`, `secret_set`, `secret_render`, `secret_audit`.
+**Aangesloten: 2 van de 12** — `derwisch-ritueel` (→ `/etc/derwisch/ritueel.env`) en `sysmonitor`
+(→ `~/sysmonitor/.auth`). Vast principe: de kluis is beheer-gemak, **geen draaivereiste** — elk project
+heeft een gecommitte `.env.example` en draait standalone.
+Bekende gebreken: de lekcontrole gaf 403-weigeringen als "in orde" terug (nu met browser-User-Agent) en
+sloeg aan op gebruikersnamen (nu overgeslagen). In juli stonden er echte wachtwoorden in een
+ontwerpdocument en een testfixture; die zijn geredigeerd maar staan nog in de geschiedenis.
+
 ### BluesLab — SLUIMERT
 `~/BluesLab` · 12-maats schema + bluestoonladder + akkoordtonen, getransponeerd naar Bes-klarinet en
 alt-sax; interne representatie altijd concert pitch. `core/theory.py` is pure stdlib-logica.

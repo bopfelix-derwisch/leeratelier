@@ -1,6 +1,6 @@
 ---
 id: k01-rondgang
-titel: "Rondgang — twaalf dingen op één machine"
+titel: "Rondgang — dertien dingen op één machine"
 spoor: basis
 volgorde: 10
 competenties: [B1]
@@ -17,7 +17,7 @@ routes: []
 
 # Rondgang
 
-Je staat in een serverkast ter grootte van een schoenendoos. Daarin draaien twaalf projecten, zeventien
+Je staat in een serverkast ter grootte van een schoenendoos. Daarin draaien dertien projecten, zeventien
 diensten en drie taalmodellen, en het geheel trekt minder stroom dan een waterkoker.
 
 Deze module kost **geen modelbeurten**. Je kijkt alleen.
@@ -33,7 +33,7 @@ Deze module kost **geen modelbeurten**. Je kijkt alleen.
 | Eén machine | NVIDIA Jetson AGX Orin, 61 GB geheugen dat processor en GPU **delen** |
 | Zeventien diensten | van een chatbot tot een knop die een ritueel start |
 | Drie taalmodellen | tegelijk in het geheugen, samen ongeveer 25 GB |
-| Twaalf projecten | waarvan er zes publiek bereikbaar zijn |
+| Dertien projecten | waarvan er zes publiek bereikbaar zijn |
 
 De les van deze module is niet dat het veel is. De les is dat je van elk onderdeel kunt zeggen **waar het
 zit, wat het kost en wat er stukgaat als het wegvalt** — en dat dat bij de meeste AI-toepassingen die je
@@ -111,7 +111,7 @@ bewijsstuk van deze module.
 
 *(Deze sectie staat in elke module. Het zijn echte fouten uit dit lab, niet verzonnen voorbeelden.)*
 
-Het opzetten van dit atelier begon met een inventarisatie van de twaalf projecten. Dat leverde meer op
+Het opzetten van dit atelier begon met een inventarisatie van de projecten. Dat leverde meer op
 over het beheer dan over de techniek.
 
 - **Geen van de tien repositories had een licentie.** Niet negen van de tien — geen enkele. Zonder
