@@ -294,7 +294,26 @@ er is werkt alles vanzelf weer.
 
 ---
 
-## 11. Het portaal bekijken via Tailscale
+## 11. Een nieuwe publieke hostname toevoegen
+
+**Bescherming eerst, route erna.** Maak altijd de Access-applicatie en de policy aan vóórdat het
+DNS-record bestaat. Andersom staat de dienst een tijd onbeschermd op het internet, en als de tweede stap
+mislukt blijft dat zo.
+
+1. Access-applicatie plus policy aanmaken (Zero Trust → Access → Applications).
+2. CNAME naar `ca12e4f6-fa0d-4f39-8868-e729d9369c5c.cfargotunnel.com`, **proxied aan**.
+3. Ingress-regel toevoegen aan de tunnel. Dat is een `PUT` die de héle lijst vervangt: lees eerst de
+   bestaande configuratie uit en voeg toe, anders verdwijnen de andere hostnames.
+
+```bash
+# huidige ingress uitlezen voordat je iets vervangt
+curl -s -H "Authorization: Bearer $CF_TOKEN" \
+  "https://api.cloudflare.com/client/v4/accounts/67284ed7b6c2adc4704afa1fdc1fbc4b/cfd_tunnel/ca12e4f6-fa0d-4f39-8868-e729d9369c5c/configurations"
+```
+
+Controleer daarna dat een onbeveiligd bezoek op de Access-inlog uitkomt en dat er geen inhoud lekt.
+
+## 12. Het portaal bekijken via Tailscale
 
 Zolang Cloudflare Access er niet staat, is het portaal alleen binnen het tailnet te bekijken. De dienst
 zelf blijft op `127.0.0.1`; Tailscale zet er een proxy voor.
@@ -314,7 +333,7 @@ het tailnet komt.
 
 ---
 
-## 12. Wat je nooit doet
+## 13. Wat je nooit doet
 
 - **Een POC-repo aanraken** om een atelier-probleem op te lossen.
 - **Het showmodel op 8080 herstarten.** Dat is van Derwisch. Het atelier kan zonder; Derwisch niet.
@@ -324,7 +343,7 @@ het tailnet komt.
 
 ---
 
-## 13. Wanneer bel je de beheerder
+## 14. Wanneer bel je de beheerder
 
 Bijna nooit. Dit atelier is ontworpen om zonder ingrijpen te blijven werken: alle units herstarten
 zichzelf, een weggevallen model wordt opgevangen, en conserven houden de route overeind als er niets

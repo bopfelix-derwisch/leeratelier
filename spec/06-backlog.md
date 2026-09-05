@@ -22,10 +22,10 @@ Deeltaken, elk apart af te vinken:
       `.gitignore`, daarna committen. Buiten git gehouden: `sysmonitor/.auth` (gebruiker + sha256 van het
       wachtwoord), `history.jsonl` en `public/status.json` (gegenereerd), een `.bak`-bestand, en
       `docuchat/.env` — met een `.env.example` ernaast voor de sleutelnamen.
-- [ ] **TLS-fout oplossen.** `admin.helper.felixisfelix.com` valt buiten Cloudflare Universal SSL (vierde
-      niveau). Voeg in het Zero Trust-dashboard `helper-admin.felixisfelix.com` toe naar `localhost:8788`
-      en werk verwijzingen bij. **Ligt bij de eigenaar: dit is een dashboard-actie, niet vanaf de machine
-      te doen.** Gemeten 2026-09-03: beide hostnames geven geen verbinding, dus de nieuwe bestaat nog niet.
+- [x] **TLS-fout opgelost 2026-09-05.** `helper-admin.felixisfelix.com` toegevoegd (CNAME naar de tunnel
+      plus ingress-regel naar `localhost:8788`) en geeft nu **401** in plaats van een TLS-fout — de
+      beheerpagina vraagt om inloggen, precies zoals bedoeld. De oude `admin.helper` blijft bestaan en
+      geeft nog steeds niets; die kan opgeruimd worden zodra de verwijzingen bijgewerkt zijn.
 - [x] **API-titel corrigeren.** `Geluidsmeter API` → `LeefomgevingLab API` in
       `src/leefomgevinglab/geluidsmeter/api.py` regel 85. Gecommit. **Werkt pas na een herstart van de
       dienst**; niet herstart, want de POC is publiek bereikbaar.
@@ -268,9 +268,15 @@ twintig modelaanroepen en de test doet het in een fractie van de tijd.
 > vaste naam als die ontbreekt; zonder Access ervoor kan iedereen elke identiteit claimen door een header
 > mee te sturen. Blijft op `127.0.0.1` tot WP-07 staat. Waarschuwing staat ook op `/facilitator`.
 
-### [ ] WP-07 🔴 Toegang en privacy
-- [ ] Cloudflare Access met e-mail-OTP op `leeratelier.felixisfelix.com` → `127.0.0.1:8793`
-- [ ] bemiddelaar :8794 is **niet** publiek bereikbaar, alleen via het portaal
+### [x] WP-07 🔴 Toegang en privacy
+**Afgerond 2026-09-05.** Het atelier staat live achter Cloudflare Access.
+
+- [x] Cloudflare Access met e-mail-OTP op `leeratelier.felixisfelix.com` → `127.0.0.1:8793` —
+      applicatie `Leeratelier`, sessieduur 24 uur, één policy: allow, alleen `bop.felix@gmail.com`,
+      via one-time PIN. Geverifieerd: een onbeveiligd bezoek komt uit op
+      `derwisch.cloudflareaccess.com/cdn-cgi/access/login/...` en er lekt geen portaalinhoud
+- [x] bemiddelaar :8794 is **niet** publiek bereikbaar, alleen via het portaal — er is geen hostname
+      voor aangemaakt, en beide diensten binden nog steeds op `127.0.0.1`
 - [x] bezoeker-identiteit uit de Access-header koppelen aan het persoonlijke budget — `bezoeker_van()`
       leest `Cf-Access-Authenticated-User-Email`; budget en logboek staan al op die sleutel
 - [x] privacytekst: wat er gelogd wordt, waarom, en 90 dagen bewaartermijn — staat in de voettekst op
