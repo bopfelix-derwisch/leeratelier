@@ -61,19 +61,51 @@ class Logboek:
         return [{"module_id": r["module_id"], "eerste": r["eerste"], "keer": r["keer"]}
                 for r in rijen]
 
-    def p95_latency_ms(self, laatste: int = 50) -> int:
-        """p95 over de recente geslaagde antwoorden, voor de sysmonitor-drempel.
+    # Onder dit aantal metingen is een p95 geen p95 maar het maximum: bij n <= 20
+    # geeft int(n * 0.95) altijd de laatste index, en bepaalt een enkele uitschieter
+    # dus in zijn eentje de waarde. Zie V35.
+    P95_MINIMUM = 10
+    P95_VENSTER_UREN = 24
+
+    def latency_beeld(self, laatste: int = 50, venster_uren: int = P95_VENSTER_UREN,
+                      minimum: int = P95_MINIMUM) -> dict:
+        """Beeld van de recente antwoordtijden, voor de sysmonitor-drempel.
 
         Plan par. 8 zet warn op 60 s en crit op 120 s. Die drempels zijn in WP-01
         tegen de meting gehouden en bleken goed gekozen.
+
+        Twee dingen die hier eerder misgingen (V35). De selectie had geen
+        tijdvenster, dus een trage meting bleef de waarschuwing voeden tot er
+        vijftig nieuwere antwoorden overheen waren geschoven -- op dit tempo
+        maanden. En bij weinig metingen is de uitkomst het maximum, waardoor één
+        losse aanroep een storing leek. Vandaar het venster en de ondergrens.
+
+        Geeft ook terug welk model de traagste van die antwoorden gaf, zodat het
+        advies niet naar een model hoeft te gokken.
         """
+        grens = (datetime.now(timezone.utc) - timedelta(hours=venster_uren)).isoformat()
         rijen = self.con.execute(
-            "SELECT latency_ms FROM logboek WHERE gelukt=1 AND latency_ms>0 "
-            "ORDER BY id DESC LIMIT ?", (laatste,)).fetchall()
+            "SELECT latency_ms, model FROM logboek "
+            "WHERE gelukt=1 AND latency_ms>0 AND tijdstip >= ? "
+            "ORDER BY id DESC LIMIT ?", (grens, laatste)).fetchall()
+
+        n = len(rijen)
+        beeld = {"p95_ms": 0, "metingen": n, "minimum": minimum,
+                 "venster_uren": venster_uren, "traagste_model": None}
+        if n < minimum:
+            # Te weinig om iets te beweren. Bewust 0: sysmonitor leest dat als
+            # "geen oordeel" en niet als "snel".
+            return beeld
+
         waarden = sorted(r["latency_ms"] for r in rijen)
-        if not waarden:
-            return 0
-        return int(waarden[min(len(waarden) - 1, int(len(waarden) * 0.95))])
+        beeld["p95_ms"] = int(waarden[min(n - 1, int(n * 0.95))])
+        traagste = max(rijen, key=lambda r: r["latency_ms"])
+        beeld["traagste_model"] = traagste["model"] or None
+        return beeld
+
+    def p95_latency_ms(self, laatste: int = 50) -> int:
+        """Alleen de p95 uit `latency_beeld`. Blijft bestaan voor bestaande aanroepers."""
+        return self.latency_beeld(laatste=laatste)["p95_ms"]
 
     def ruim_op(self) -> int:
         """Verwijder logregels ouder dan de bewaartermijn. Draait dagelijks."""

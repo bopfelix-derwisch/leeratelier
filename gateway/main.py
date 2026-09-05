@@ -306,6 +306,7 @@ def maak_app(inst=None) -> FastAPI:
             modellen.leeft(inst.modellen["embed"]["endpoint"]))
         pct = await asyncio.to_thread(budget.dag_verbruikt_pct)
         open_meld = await asyncio.to_thread(logboek.open_meldingen)
+        beeld = await asyncio.to_thread(logboek.latency_beeld)
         return {
             "klasmodel": "actief" if klas else "weg",
             "showmodel": "actief" if show else "weg",
@@ -318,7 +319,13 @@ def maak_app(inst=None) -> FastAPI:
             "storingsmodus": not (klas or show),
             "open_meldingen": open_meld,
             "conserven": conserven.aantal,
-            "p95_latency_ms": await asyncio.to_thread(logboek.p95_latency_ms),
+            # Het hele beeld, niet alleen het getal: sysmonitor moet kunnen zien
+            # of er genoeg gemeten is en welk model de traagste gaf (V35).
+            **{"p95_latency_ms": beeld["p95_ms"],
+               "p95_metingen": beeld["metingen"],
+               "p95_minimum": beeld["minimum"],
+               "p95_venster_uren": beeld["venster_uren"],
+               "p95_traagste_model": beeld["traagste_model"]},
         }
 
     @app.get("/health")

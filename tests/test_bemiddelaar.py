@@ -467,3 +467,59 @@ def test_onbekende_poc_valt_terug_op_het_model(client):
     r = client.post("/v1/vraag", json={"bezoeker_id": "tik", "module_id": "k04",
                                        "vraag": "iets", "poc": "bestaat-niet"})
     assert r.json()["verwachte_bron"] == "klas"
+
+
+# --------------------------------------------------------------- latencybeeld
+# V35: de p95 werd berekend over de laatste vijftig antwoorden zonder tijdvenster
+# en zonder ondergrens. Eén trage aanroep hield daardoor maandenlang een
+# waarschuwing aan, en bij weinig metingen was de "p95" gewoon het maximum.
+
+def _log(lb, latency_ms, model="klas", dagen_terug=0):
+    from datetime import datetime, timedelta, timezone
+    lb.con.execute(
+        "INSERT INTO logboek (tijdstip, bezoeker_id, module_id, vraag, model, "
+        "bron, latency_ms, beurten, gelukt) VALUES (?,?,?,?,?,?,?,?,1)",
+        ((datetime.now(timezone.utc) - timedelta(days=dagen_terug)).isoformat(),
+         "b", "k04-wanneer-klopt-het-niet", "v", model, "model", latency_ms, 1))
+    lb.con.commit()
+
+
+def test_p95_zwijgt_onder_de_ondergrens(inst):
+    from gateway.logboek import Logboek
+    lb = Logboek(verbind(inst.db_pad), inst)
+    for _ in range(9):
+        _log(lb, 71_668)
+    beeld = lb.latency_beeld()
+    assert beeld["p95_ms"] == 0, "negen metingen is te weinig voor een bewering"
+    assert beeld["metingen"] == 9
+    assert beeld["traagste_model"] is None
+
+
+def test_p95_negeert_metingen_buiten_het_venster(inst):
+    from gateway.logboek import Logboek
+    lb = Logboek(verbind(inst.db_pad), inst)
+    _log(lb, 71_668, dagen_terug=2)          # de oude uitschieter
+    for _ in range(12):
+        _log(lb, 3_000)
+    beeld = lb.latency_beeld()
+    assert beeld["metingen"] == 12, "de meting van twee dagen terug telt niet mee"
+    assert beeld["p95_ms"] == 3_000
+
+
+def test_p95_noemt_het_traagste_model(inst):
+    from gateway.logboek import Logboek
+    lb = Logboek(verbind(inst.db_pad), inst)
+    for _ in range(11):
+        _log(lb, 3_000, model="klas")
+    _log(lb, 71_668, model="leefomgevinglab")
+    beeld = lb.latency_beeld()
+    assert beeld["traagste_model"] == "leefomgevinglab", \
+        "het advies mag niet naar het showmodel gokken"
+    assert beeld["p95_ms"] == 71_668
+
+
+def test_gezondheid_geeft_het_hele_latencybeeld(client):
+    g = client.get("/v1/gezondheid").json()
+    for veld in ("p95_latency_ms", "p95_metingen", "p95_minimum",
+                 "p95_venster_uren", "p95_traagste_model"):
+        assert veld in g, f"sysmonitor heeft {veld} nodig"

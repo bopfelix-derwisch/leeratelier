@@ -117,8 +117,17 @@ Dat is ontworpen gedrag, geen storing.
 
 ```bash
 curl -s http://127.0.0.1:8794/v1/gezondheid | python3 -c \
-  'import json,sys; d=json.load(sys.stdin); print("rij:", d["wachtrij_diepte"], "p95:", d["p95_latency_ms"], "ms")'
+  'import json,sys; d=json.load(sys.stdin); print("rij:", d["wachtrij_diepte"], "p95:", d["p95_latency_ms"], \
+   "ms over", d["p95_metingen"], "metingen; traagste model:", d["p95_traagste_model"])'
 ```
+
+**Staat de p95 op 0?** Dan zijn er minder dan tien geslaagde antwoorden in de afgelopen 24 uur en doet de
+bemiddelaar met opzet geen uitspraak — bij zo weinig metingen is de p95 gewoon het maximum. Dat is geen
+storing en de statuspagina meldt het dan ook als OK. Zie besluitenlog V35.
+
+**Kijk naar `p95_traagste_model` voordat je iets verlaagt.** `leefomgevinglab` betekent de POC-route via
+`:8792`, en die is met opzet de trage weg omdat de ophaalstap erin zit — daar helpt geen enkele instelling
+van het atelier aan. Alleen bij `show` of `klas` is de gelijktijdigheid hieronder de juiste knop.
 
 Blijft de rij diep, kijk dan eerst of het klasmodel draait (situatie 1). Vrijwel altijd is dat de oorzaak:
 alles staat dan in de rij voor het trage showmodel.
