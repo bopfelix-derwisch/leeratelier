@@ -5,5 +5,5 @@
 <p>{{ reactietermijn }}</p>
 <p class="uitleg">Meegestuurd: de module, je laatste vraag, waar het antwoord vandaan kwam
 en je budgetstand. Dat scheelt een heen-en-weer.</p>
-<p><a href="/{% if module_id %}module/{{ module_id }}{% endif %}">Terug</a></p>
+<p><a href="{% if module_id %}/module/{{ module_id }}{% else %}/route{% endif %}">Terug</a></p>
 {% endblock %}

@@ -1,0 +1,230 @@
+{% extends "basis.html" %}
+{% block titel %}Leeratelier{% endblock %}
+{% block breed %}breed{% endblock %}
+{% block inhoud %}
+
+<section class="hero">
+  <p class="eyebrow">Leeratelier · orin3</p>
+  <h1>Twaalf werkende vragen,<br>op één machine.</h1>
+  <p class="lead">Dit zijn geen afgeronde producten en geen abstracte concepten. Het zijn
+    <b>werkende vragen</b>: kleine systemen die gebouwd zijn om van de werkelijkheid te leren.
+    Je mag ze hier openmaken.</p>
+  <div class="knoprij">
+    <a class="knop" href="/route">Begin de route</a>
+    <a class="knop stil" href="#demo">Eerst rondkijken</a>
+  </div>
+  <div class="cijfers">
+    <span><b>{{ stats.modules }}</b> modules</span>
+    <span><b>{{ stats.diensten }}</b> diensten</span>
+    <span><b>3</b> taalmodellen</span>
+    <span><b>{{ stats.fragmenten }}</b> zoekfragmenten</span>
+    <span><b>{{ stats.modellen_gb }}</b> aan modellen</span>
+    <span class="stil-cijfer">alles lokaal</span>
+  </div>
+</section>
+
+<section id="demo" class="film" aria-label="Overzicht van de projecten">
+  <div class="film-kop">
+    <span class="lbl">Rondgang</span>
+    <div class="voortgang"><i id="balk"></i></div>
+    <button id="pauze" class="mini" aria-label="Pauzeren">pauze</button>
+  </div>
+
+  <div class="doek">
+    {% for p in pocs %}
+    <article class="dia {% if loop.first %}aan{% endif %}" data-i="{{ loop.index0 }}">
+      <div class="dia-links">
+        <span class="nr">{{ '%02d'|format(loop.index) }}</span>
+        <h2>{{ p.naam }}</h2>
+        <p class="onder">{{ p.onder }}</p>
+        <p class="ds">{{ p.tekst }}</p>
+        <div class="merken">{% for m in p.merken %}<span class="merk">{{ m }}</span>{% endfor %}</div>
+        {% if p.link %}<a class="door" href="{{ p.link }}" target="_blank" rel="noopener">{{ p.linktekst }} &rarr;</a>{% endif %}
+      </div>
+      <div class="dia-rechts">
+        <div class="meter">
+          {% for k, v in p.cijfers %}
+          <div class="kpi"><b>{{ v }}</b><span>{{ k }}</span></div>
+          {% endfor %}
+        </div>
+        <div class="viz viz-{{ p.viz }}" aria-hidden="true">
+          {% for i in range(28) %}<i style="--i:{{ i }}"></i>{% endfor %}
+        </div>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  <div class="stippen">
+    {% for p in pocs %}<button class="stip {% if loop.first %}aan{% endif %}" data-g="{{ loop.index0 }}"
+      aria-label="{{ p.naam }}"></button>{% endfor %}
+  </div>
+</section>
+
+<section class="wat">
+  <h2>Wat je hier doet</h2>
+  <div class="stappen">
+    <div class="stap"><span class="n">01</span><h3>Luisteren</h3>
+      <p>Je kijkt onder de motorkap van systemen die echt draaien, met echte gegevens en echte fouten.</p></div>
+    <div class="stap"><span class="n">02</span><h3>Zichtbaar maken</h3>
+      <p>Je leert de vijf manieren herkennen waarop een AI-antwoord fout gaat — en welk signaal bij elke hoort.</p></div>
+    <div class="stap"><span class="n">03</span><h3>Zelf proberen</h3>
+      <p>Je stelt vragen aan modellen die hier draaien. Onder elk antwoord staat waar het vandaan komt.</p></div>
+    <div class="stap"><span class="n">04</span><h3>Meenemen</h3>
+      <p>Je gaat weg met een beheerkaart van één A4 over je eigen toepassing. Dat is het hele doel.</p></div>
+  </div>
+</section>
+
+<section class="belofte">
+  <div class="kolom">
+    <h3>Wat je hier krijgt</h3>
+    <ul>
+      <li>Je weet wat er in een AI-toepassing gebeurt</li>
+      <li>Je herkent wanneer een antwoord niet deugt</li>
+      <li>Je hebt een ingevulde beheerkaart voor je eigen bron</li>
+    </ul>
+  </div>
+  <div class="kolom stil-kolom">
+    <h3>Wat je hier niet krijgt</h3>
+    <ul>
+      <li>Programmeren, architectuurdocumenten, leverancierskeuze</li>
+      <li>Iets om te installeren — je browser is genoeg</li>
+      <li>Zekerheid. Dit is een proeftuin, geen dienst</li>
+    </ul>
+  </div>
+</section>
+
+<section class="slot">
+  <p>Een nuchter instrument dat je helpt scherper te denken, zonder je verantwoordelijkheid over te nemen.</p>
+  <a class="knop" href="/route">Begin bij: waarom hier, en niet in de cloud</a>
+</section>
+
+<style>
+.hero{padding:44px 0 10px;max-width:none}
+.eyebrow{font-size:.76rem;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.hero h1{font-size:clamp(2.1rem,5.4vw,3.5rem);line-height:1.06;letter-spacing:-.02em;margin:16px 0 0}
+.hero .lead{font-size:1.12rem;color:var(--inkt-zacht);max-width:60ch;margin:20px 0 0}
+.hero .lead b{color:var(--inkt)}
+.knop{display:inline-block;text-decoration:none;font-weight:600;padding:11px 20px;border-radius:7px;
+  background:var(--accent);color:#fff;border:1px solid var(--accent)}
+.knop.stil{background:transparent;color:var(--accent)}
+.knop:hover{opacity:.9}
+.cijfers{display:flex;flex-wrap:wrap;gap:8px 26px;margin-top:30px;padding-top:20px;
+  border-top:1px solid var(--lijn);font-size:.86rem;color:var(--inkt-flauw)}
+.cijfers b{color:var(--inkt);font-size:1.05rem;font-variant-numeric:tabular-nums}
+.stil-cijfer{color:var(--accent)}
+
+/* ---- de rondgang ---- */
+.film{margin-top:56px;border:1px solid var(--lijn);border-radius:12px;background:var(--vlak);overflow:hidden}
+.film-kop{display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--lijn)}
+.film-kop .lbl{font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--inkt-flauw)}
+.voortgang{flex:1;height:2px;background:var(--vlak-2);border-radius:2px;overflow:hidden}
+.voortgang i{display:block;height:100%;width:0;background:var(--accent)}
+.mini{font:inherit;font-size:.76rem;padding:3px 10px;border-radius:20px;border:1px solid var(--lijn);
+  background:transparent;color:var(--inkt-zacht);cursor:pointer}
+.doek{position:relative;min-height:330px}
+.dia{position:absolute;inset:0;display:grid;grid-template-columns:1.25fr .95fr;gap:24px;padding:26px 30px;
+  opacity:0;visibility:hidden;transform:translateY(10px);transition:opacity .5s,transform .5s,visibility .5s}
+.dia.aan{opacity:1;visibility:visible;transform:none}
+.dia .nr{font-size:.76rem;letter-spacing:.12em;color:var(--accent);font-weight:600}
+.dia h2{font-size:1.5rem;margin:6px 0 2px;letter-spacing:-.01em}
+.dia .onder{font-size:.92rem;color:var(--accent);margin:0 0 12px}
+.dia .ds{font-size:.94rem;color:var(--inkt-zacht);line-height:1.55;max-width:48ch}
+.merken{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.merken .merk{font-size:.72rem}
+.door{display:inline-block;margin-top:14px;font-size:.88rem;font-weight:600;text-decoration:none}
+.dia-rechts{display:flex;flex-direction:column;gap:16px;justify-content:space-between}
+.meter{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.kpi{background:var(--vlak-2);border-radius:8px;padding:10px 12px}
+.kpi b{display:block;font-size:1.35rem;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi span{font-size:.74rem;color:var(--inkt-flauw)}
+
+/* kleine generatieve visual per project, puur CSS */
+.viz{display:flex;align-items:flex-end;gap:3px;height:76px;padding:0 2px}
+.viz i{flex:1;border-radius:2px;background:var(--accent);opacity:.24;
+  animation:golf 2.6s ease-in-out infinite;animation-delay:calc(var(--i)*.06s)}
+.viz-golf i{height:calc(18% + (var(--i)*2%))}
+.viz-piek i{height:calc(90% - (var(--i)*2.4%))}
+.viz-blok i{height:calc(30% + (var(--i)*1%));border-radius:1px}
+.viz-punt i{height:calc(12% + (var(--i)*2.8%));opacity:.16}
+@keyframes golf{0%,100%{transform:scaleY(.55);opacity:.18}50%{transform:scaleY(1);opacity:.46}}
+.stippen{display:flex;gap:7px;justify-content:center;padding:0 0 18px}
+.stip{width:7px;height:7px;padding:0;border-radius:50%;border:0;background:var(--lijn);cursor:pointer}
+.stip.aan{background:var(--accent);width:20px;border-radius:4px}
+
+/* ---- overige secties ---- */
+.wat{margin-top:56px}
+.stappen{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin-top:18px}
+.stap{background:var(--vlak);border:1px solid var(--lijn);border-radius:9px;padding:16px 18px}
+.stap .n{font-size:.74rem;letter-spacing:.12em;color:var(--accent);font-weight:600}
+.stap h3{margin:6px 0 6px;font-size:1rem}
+.stap p{font-size:.88rem;color:var(--inkt-zacht);line-height:1.5;margin:0}
+.belofte{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:34px}
+.kolom{background:var(--vlak);border:1px solid var(--lijn);border-radius:9px;padding:18px 20px}
+.kolom h3{margin:0 0 10px;font-size:1rem}
+.kolom ul{margin:0;padding-left:18px}
+.kolom li{font-size:.9rem;color:var(--inkt-zacht);margin:6px 0}
+.stil-kolom{background:var(--vlak-2)}
+.slot{margin-top:44px;padding:30px;border-radius:12px;background:var(--vlak);
+  border:1px solid var(--lijn);text-align:center}
+.slot p{font-size:1.12rem;max-width:52ch;margin:0 auto 20px;text-wrap:balance}
+@media (max-width:760px){
+  .dia{grid-template-columns:1fr}
+  .dia-rechts{display:none}
+  .doek{min-height:390px}
+  .belofte{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  .viz i{animation:none}
+  .dia{transition:none}
+}
+</style>
+
+<script>
+// Kleine zelfdraaiende rondgang. Geen framework: alleen tonen en verbergen.
+(function () {
+  const dias = Array.from(document.querySelectorAll('.dia'));
+  const stippen = Array.from(document.querySelectorAll('.stip'));
+  const balk = document.getElementById('balk');
+  const pauzeKnop = document.getElementById('pauze');
+  if (!dias.length) return;
+
+  const DUUR = 6000;
+  const rustig = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let i = 0, t0 = null, loopId = null, staat = rustig ? 'uit' : 'aan';
+
+  function toon(n) {
+    i = (n + dias.length) % dias.length;
+    dias.forEach((d, k) => d.classList.toggle('aan', k === i));
+    stippen.forEach((s, k) => s.classList.toggle('aan', k === i));
+    t0 = performance.now();
+  }
+
+  function tik(nu) {
+    if (staat === 'aan') {
+      if (t0 === null) t0 = nu;
+      const p = (nu - t0) / DUUR;
+      balk.style.width = Math.min(p, 1) * 100 + '%';
+      if (p >= 1) toon(i + 1);
+    }
+    loopId = requestAnimationFrame(tik);
+  }
+
+  stippen.forEach(s => s.addEventListener('click', () => {
+    toon(Number(s.dataset.g));
+    if (staat === 'aan') t0 = performance.now();
+  }));
+
+  pauzeKnop.addEventListener('click', () => {
+    staat = staat === 'aan' ? 'uit' : 'aan';
+    pauzeKnop.textContent = staat === 'aan' ? 'pauze' : 'afspelen';
+    t0 = performance.now();
+    if (staat === 'uit') balk.style.width = '0%';
+  });
+
+  if (rustig) pauzeKnop.textContent = 'afspelen';
+  toon(0);
+  loopId = requestAnimationFrame(tik);
+})();
+</script>
+{% endblock %}

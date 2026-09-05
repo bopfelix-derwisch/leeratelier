@@ -143,9 +143,18 @@ def keten(tmp_path, monkeypatch):
             yield portaal, inst
 
 
-def test_route_toont_alleen_gepubliceerde_modules(keten):
+def test_landing_toont_de_rondgang(keten):
+    """De voorkant: visie, cijfers en de zelfdraaiende rondgang."""
     portaal, _ = keten
     html = portaal.get("/").text
+    assert "werkende vragen" in html
+    assert 'class="dia' in html          # de rondgang staat er
+    assert "/route" in html              # en verwijst door naar de route
+
+
+def test_route_toont_alleen_gepubliceerde_modules(keten):
+    portaal, _ = keten
+    html = portaal.get("/route").text
     assert "k00-proefmodule" in html
     assert "k99-nogniet" not in html                     # concept: onzichtbaar
 

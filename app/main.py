@@ -74,6 +74,54 @@ def lees_storingsbanner(pad: Path = None):
         return None
 
 
+# De rondgang op de landingspagina. Kort, met cijfers die van deze machine komen.
+POCS = (
+    {"naam": "LeefomgevingLab", "onder": "Leefomgeving als deelbare geo-informatie",
+     "tekst": "Geluid, luchtkwaliteit, externe veiligheid en afval als herbruikbaar "
+              "informatieproduct. Met een kwaliteitspagina die per bron opschrijft wat er "
+              "niet aan klopt — en een scan die dat natelt.",
+     "merken": ("PDOK", "WFS", "GeoParquet", "privacy by design"), "viz": "golf",
+     "cijfers": (("fragmenten in de index", "924"), ("IPLO-bronnen", "170")),
+     "link": "https://leefomgevinglab.felixisfelix.com/kwaliteit",
+     "linktekst": "Kwaliteit per POC"},
+    {"naam": "Waterlab IJssel", "onder": "Live hydrologie voor een Nederlandse rivier",
+     "tekst": "Een wflow-model speelt het hoogwater van 1995 en 2021 na. Daarnaast loopt "
+              "een verwachting van veertien dagen op live metingen van Rijkswaterstaat en "
+              "neerslag van Open-Meteo — met alarm boven 1500 kubieke meter per seconde.",
+     "merken": ("Wflow SBM", "Julia", "RWS Waterinfo", "deck.gl"), "viz": "piek",
+     "cijfers": (("dagen vooruit", "14"), ("casussen", "3")),
+     "link": "https://waterlab.felixisfelix.com/", "linktekst": "Naar het dashboard"},
+    {"naam": "Morele Helper", "onder": "Een nuchter instrument voor beroepsmatige twijfel",
+     "tekst": "Eenentwintig werkdagen, elke dag kort inspreken over één beleidsdilemma. "
+              "Twee vragen terug: een spiegelvraag en een vraag uit een ethisch "
+              "reflectiepad. Op dag eenentwintig een leerverslag.",
+     "merken": ("lokale AI", "reTerminal", "beroepsethiek"), "viz": "blok",
+     "cijfers": (("werkdagen", "21"), ("vragen per dag", "2")),
+     "link": "", "linktekst": ""},
+    {"naam": "Derwisch", "onder": "Techniek als spiegel voor aandacht",
+     "tekst": "Waar de Morele Helper nuchter is, is dit experimenteel: stem, vraag, "
+              "klanklandschap. De vraag eronder is of techniek je ook kan vertragen in "
+              "plaats van versnellen.",
+     "merken": ("spraak naar tekst", "lokaal model", "ePaper-kiosk"), "viz": "punt",
+     "cijfers": (("promptlagen", "3"), ("inferentie", "lokaal")),
+     "link": "https://felixisfelix.com/", "linktekst": "Meer over het werk"},
+    {"naam": "Sysmonitor", "onder": "Weten of het nog draait",
+     "tekst": "Bewaakt schijf, geheugen, temperatuur, diensten en publieke endpoints — en "
+              "sinds kort ook dit atelier. Elke waarschuwing komt met een commando dat je "
+              "echt kunt uitvoeren, niet met \"onderzoek dit nader\".",
+     "merken": ("systemd", "drempels met actie", "90 dagen historie"), "viz": "blok",
+     "cijfers": (("bewaakte diensten", "20"), ("drempels voor dit atelier", "6")),
+     "link": "https://status.felixisfelix.com/", "linktekst": "Bekijk de status"},
+    {"naam": "Dit atelier", "onder": "De leerlaag over alles heen",
+     "tekst": "Vijftien modules over vijf faalvormen, een zoekindex die stilstond, een "
+              "verwachting die op een opvulwaarde draait, en een model dat verzint waar "
+              "het zijn antwoord vandaan haalt. Allemaal echt gebeurd op deze machine.",
+     "merken": ("FastAPI", "sqlite", "geen framework", "Nederlands"), "viz": "golf",
+     "cijfers": (("modules", "15"), ("voorberekende antwoorden", "33")),
+     "link": "/route", "linktekst": "Begin de route"},
+)
+
+
 class VraagIn(BaseModel):
     vraag: str
 
@@ -130,8 +178,23 @@ def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI
         except schema.ModuleFout as fout:
             return None, str(fout)
 
-    # ------------------------------------------------------------- route
+    # --------------------------------------------------------- landing
     @app.get("/", response_class=HTMLResponse)
+    async def landing(request: Request):
+        modules, _ = schema.lees_alle(modules_dir)
+        gez = await mid.gezondheid()
+        ctx = await omhulsel(request)
+        ctx.update(pocs=POCS, stats={
+            "modules": sum(1 for m in modules if m.gepubliceerd),
+            "diensten": 20,
+            "fragmenten": "924",
+            "modellen_gb": "77 GB",
+            "conserven": gez.get("conserven", 0),
+        })
+        return sjablonen.html("landing.html", ctx)
+
+    # ------------------------------------------------------------- route
+    @app.get("/route", response_class=HTMLResponse)
     async def route(request: Request):
         modules, _ = schema.lees_alle(modules_dir)
         zichtbaar = [m for m in modules if m.gepubliceerd]
