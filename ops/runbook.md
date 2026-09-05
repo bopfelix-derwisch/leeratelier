@@ -368,3 +368,50 @@ Bel wel bij:
 
 Voor de rest geldt wat op de inlogpagina staat: dit is een privé-lab van één persoon, en storingen kunnen
 dagen duren. Dat is geen zwaktebod maar een afspraak.
+
+---
+
+## 15. Een bezoeker heeft zich gemeld
+
+De "ik kom er niet uit"-knop schrijft naar de tabel `meldingen`. Openstaande meldingen zie je zo:
+
+```bash
+python3 - <<'EOF'
+import sqlite3
+con = sqlite3.connect("file:/mnt/nvme/leeratelier/atelier.db?mode=ro", uri=True)
+con.row_factory = sqlite3.Row
+for r in con.execute("SELECT id, tijdstip, module_id, tekst FROM meldingen "
+                     "WHERE afgehandeld IS NULL OR afgehandeld=0 ORDER BY id"):
+    print(f"#{r['id']} {r['tijdstip'][:16]} {r['module_id']}: {r['tekst']}")
+EOF
+```
+
+**Laat er een voorstel bij maken:**
+
+```bash
+cd /mnt/nvme/workspaces/leeratelier
+python3 ops/meldingen-verwerken.py              # voorstellen, niets wordt gewijzigd
+python3 ops/meldingen-verwerken.py --groot      # zelfde, met het 32B-showmodel
+```
+
+Het verslag komt in `ops/meldingen/verwerkt-<datum>.md`.
+
+**Lees het voorstel altijd voordat je het doorvoert.** De vier grendels (regelaanwijzing binnen
+de module, contract, `valideer.py`, git-commit) vangen verzonnen wijzigingen af, maar niet slechte
+redactie: bij een lezersvraag over een link stelde het model voor die link te verwijderen. Zie V38.
+
+**Doorvoeren, als het voorstel deugt:**
+
+```bash
+python3 ops/meldingen-verwerken.py --toepassen --melding 7
+sudo systemctl restart atelier-portaal
+```
+
+Elke wijziging is een aparte commit. Terugdraaien is `git revert <commit>`.
+
+**Melding afvinken** als je hem met de hand hebt opgelost:
+
+```bash
+python3 -c "import sqlite3; c=sqlite3.connect('/mnt/nvme/leeratelier/atelier.db'); \
+c.execute('UPDATE meldingen SET afgehandeld=1 WHERE id=?', (7,)); c.commit()"
+```

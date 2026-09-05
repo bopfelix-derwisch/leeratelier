@@ -9,7 +9,7 @@ beurten: 0
 modellen: []
 conserven: null
 status: gepubliceerd
-wat_ging_mis: true
+wat_ging_mis: false
 bewijs: "benoemd welk besluit over AI op je bord ligt en wat je er nu niet van weet"
 poc: null
 routes: []
@@ -62,28 +62,6 @@ je browser is genoeg.
 waarin lokale AI, open source, een cloudmodel en een agentische stap samenkomen. Daar zie je wat dit
 werkelijk kan opleveren. Daarna gaat S4 over waarom een antwoord kan kloppen en toch fout zijn, S5 over
 wat het later kost, en S6 over wie er dan aan de lat staat. S7 is de kaart die je meeneemt.
-
----
-
-## Wat hier misging
-
-*(Deze sectie staat in elke module. Het zijn echte fouten uit dit lab, niet verzonnen voorbeelden.)*
-
-Dit atelier hanteert een dagbudget: driehonderd modelvragen per dag, twintig per bezoeker. Dat getal
-was **gemeten** — er ligt een meetrapport onder, met doorzetcijfers bij vier niveaus van
-gelijktijdigheid. Zo hoort het.
-
-Alleen: die meting is gedaan op het grote model dat er toen antwoordde. Kort daarna is de route
-overgezet op een kleiner en bijna vijf keer sneller model, en het budget is nooit opnieuw afgeleid.
-Dezelfde berekening zou nu op ongeveer 1800 uitkomen. Het getal 300 is dus geen meting meer maar een
-overblijfsel, en dekt ongeveer twee procent van wat de machine aankan.
-
-Het staat er nog steeds. Niet uit slordigheid, maar omdat conservatief zijn hier weinig kost. Wel is
-in de configuratie opgeschreven dát het achterhaald is, met de nieuwe afleiding erbij.
-
-Dit is het patroon om te onthouden, want je zult het vaker zien: **een getal dat ooit gemeten is, blijft
-overtuigend klinken lang nadat de meting niet meer geldt.** Als iemand je een onderbouwd cijfer voorlegt,
-is de vraag zelden of het gemeten is. De vraag is wanneer, waarop, en wat er sindsdien is veranderd.
 
 ---
 
