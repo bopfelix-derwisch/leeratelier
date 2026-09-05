@@ -1,0 +1,118 @@
+{# Zes visuals, één per act. Inline SVG, kleur via currentColor zodat ze in beide
+   thema's kloppen. Elk beeld toont het mechanisme van dat project, geen versiering. #}
+
+{% macro puls() %}
+{# Derwisch: spraak die uitdooft naar stilte -- de omkering van versnellen. #}
+<svg viewBox="0 0 240 96" role="img" aria-label="Spraak die tot rust komt">
+  <g stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+    {% for i in range(26) %}
+    {% set h = [34,28,22,17,12,8,5][i//4] if i//4 < 7 else 4 %}
+    <line x1="{{ 8 + i*9 }}" y1="{{ 48 - h }}" x2="{{ 8 + i*9 }}" y2="{{ 48 + h }}"
+          class="staaf" style="--i:{{ i }}"/>
+    {% endfor %}
+  </g>
+  <circle cx="232" cy="48" r="3" fill="currentColor" opacity=".5"/>
+</svg>
+{% endmacro %}
+
+{% macro ritme() %}
+{# Morele Helper: 21 werkdagen, elke dag twee vragen terug, dan een verslag. #}
+<svg viewBox="0 0 240 96" role="img" aria-label="Eenentwintig dagen, twee vragen per dag">
+  <g fill="currentColor">
+    {% for i in range(21) %}
+    <rect x="{{ 6 + i*10 }}" y="40" width="5" height="16" rx="1.5"
+          class="dag" style="--i:{{ i }}" opacity=".35"/>
+    {% endfor %}
+  </g>
+  <g stroke="currentColor" stroke-width="1.4" opacity=".45" fill="none">
+    <path d="M8 38 Q 120 8 218 34"/>
+    <path d="M8 58 Q 120 88 218 62"/>
+  </g>
+  <rect x="216" y="34" width="18" height="28" rx="3" fill="currentColor" opacity=".8"/>
+</svg>
+{% endmacro %}
+
+{% macro raster() %}
+{# LeefomgevingLab: een kaartraster waarin niet elke cel gevuld is. #}
+<svg viewBox="0 0 240 96" role="img" aria-label="Geodata in een raster, met gaten">
+  <g fill="currentColor">
+    {% set gevuld = [0,1,2,4,5,7,8,9,10,12,13,15,16,18,19,20,22,23,25,26,27,29,30,32,33,35,37,38,40,41,43,44,46,47] %}
+    {% for r in range(4) %}{% for c in range(12) %}
+    {% set n = r*12 + c %}
+    <rect x="{{ 8 + c*19 }}" y="{{ 12 + r*20 }}" width="15" height="16" rx="2"
+          class="cel" style="--i:{{ n }}"
+          opacity="{{ '0.55' if n in gevuld else '0.12' }}"/>
+    {% endfor %}{% endfor %}
+  </g>
+</svg>
+{% endmacro %}
+
+{% macro hydro() %}
+{# Waterlab: gemeten verleden, dan een verwachting met een band die breder wordt. #}
+<svg viewBox="0 0 240 96" role="img" aria-label="Afvoer met een verwachting en onzekerheidsband">
+  <path d="M132 46 L182 40 L232 44 L232 70 L182 76 L132 50 Z"
+        fill="currentColor" opacity=".16"/>
+  <path d="M8 62 L28 58 L48 66 L68 52 L88 57 L108 44 L132 48"
+        fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M132 48 L182 58 L232 57" fill="none" stroke="currentColor" stroke-width="2.4"
+        stroke-dasharray="5 4" stroke-linecap="round" opacity=".75"/>
+  <line x1="132" y1="14" x2="132" y2="84" stroke="currentColor" stroke-width="1"
+        opacity=".3" stroke-dasharray="2 3"/>
+  <line x1="8" y1="30" x2="232" y2="30" stroke="currentColor" stroke-width="1" opacity=".3"/>
+  <text x="10" y="26" font-size="8" fill="currentColor" opacity=".55">alarmdrempel</text>
+</svg>
+{% endmacro %}
+
+{% macro hartslag() %}
+{# Sysmonitor: een reeks die doorloopt, met één uitschieter die opvalt. #}
+<svg viewBox="0 0 240 96" role="img" aria-label="Statusreeks met een uitschieter">
+  <g fill="currentColor">
+    {% for i in range(30) %}
+    <rect x="{{ 6 + i*8 }}" y="{{ 44 if i != 19 else 26 }}" width="5"
+          height="{{ 10 if i != 19 else 44 }}" rx="1.5"
+          class="tik" style="--i:{{ i }}"
+          opacity="{{ '0.9' if i == 19 else '0.3' }}"/>
+    {% endfor %}
+  </g>
+  <line x1="6" y1="78" x2="234" y2="78" stroke="currentColor" stroke-width="1" opacity=".25"/>
+</svg>
+{% endmacro %}
+
+{% macro lagen() %}
+{# Leeratelier: een dunne laag bovenop wat er al stond. #}
+<svg viewBox="0 0 240 96" role="img" aria-label="Een leerlaag boven de bestaande projecten">
+  <g fill="currentColor">
+    {% for i in range(5) %}
+    <rect x="{{ 16 + i*44 }}" y="56" width="34" height="26" rx="4" opacity=".22"/>
+    {% endfor %}
+  </g>
+  <rect x="16" y="20" width="208" height="22" rx="6" fill="currentColor" opacity=".72"/>
+  <g stroke="currentColor" stroke-width="1.2" opacity=".38">
+    {% for i in range(5) %}
+    <line x1="{{ 33 + i*44 }}" y1="56" x2="{{ 33 + i*44 }}" y2="42"/>
+    {% endfor %}
+  </g>
+</svg>
+{% endmacro %}
+
+{% macro sleutels() %}
+{# labs-mcp: een kluis, twaalf projecten, twee aangesloten. De rest is de latere fase. #}
+<svg viewBox="0 0 240 96" role="img"
+     aria-label="Een kluis verbonden met twee van de twaalf projecten">
+  <rect x="8" y="34" width="30" height="28" rx="5" fill="currentColor" opacity=".85"/>
+  <circle cx="23" cy="48" r="4.5" fill="var(--vlak-2)"/>
+  <rect x="21" y="48" width="4" height="7" fill="var(--vlak-2)"/>
+  {% set aan = [0, 7] %}
+  {% for i in range(12) %}
+  {% set kx = 74 + (i % 4) * 42 %}
+  {% set ky = 18 + (i // 4) * 27 %}
+  {% if i in aan %}
+  <path d="M40 48 C 56 48, 58 {{ ky + 8 }}, {{ kx - 2 }} {{ ky + 8 }}"
+        fill="none" stroke="currentColor" stroke-width="1.6" opacity=".7"/>
+  {% endif %}
+  <rect x="{{ kx }}" y="{{ ky }}" width="34" height="17" rx="3"
+        fill="currentColor" class="cel" style="--i:{{ i }}"
+        opacity="{{ '0.8' if i in aan else '0.16' }}"/>
+  {% endfor %}
+</svg>
+{% endmacro %}

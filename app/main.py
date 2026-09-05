@@ -74,50 +74,102 @@ def lees_storingsbanner(pad: Path = None):
         return None
 
 
-# De rondgang op de landingspagina. Kort, met cijfers die van deze machine komen.
-POCS = (
-    {"naam": "LeefomgevingLab", "onder": "Leefomgeving als deelbare geo-informatie",
-     "tekst": "Geluid, luchtkwaliteit, externe veiligheid en afval als herbruikbaar "
-              "informatieproduct. Met een kwaliteitspagina die per bron opschrijft wat er "
-              "niet aan klopt — en een scan die dat natelt.",
-     "merken": ("PDOK", "WFS", "GeoParquet", "privacy by design"), "viz": "golf",
-     "cijfers": (("fragmenten in de index", "924"), ("IPLO-bronnen", "170")),
+# Het verhaal op de landingspagina, in de volgorde waarin het gebeurde. De maanden
+# komen uit de git-historie van de repo's, niet uit het geheugen: Derwisch begon op
+# 27 februari, LeefomgevingLab op 13 mei, dit atelier op 2 september.
+#
+# `rijpheid` is met opzet zichtbaar. Niet alles is even af, en dat door elkaar laten
+# lopen zou het verhaal platslaan tot een productcatalogus.
+ACTEN = (
+    {"maand": "februari", "fase": "uit nieuwsgierigheid",
+     "naam": "Derwisch", "onder": "Kan techniek je ook vertragen?",
+     "tekst": "Het begon klein en persoonlijk: inspreken, en iets terugkrijgen dat je "
+              "aan het denken zet. Geen assistent die sneller werkt, maar een spiegel "
+              "die je even stil laat staan. Draaide eerst op een klein apparaat, met "
+              "een model dat ergens anders stond.",
+     "keer": "Wat hier bleek: het interessante zat niet in het antwoord maar in de vraag "
+             "die het model terugstelde.",
+     "merken": ("spraak naar tekst", "ePaper-kiosk", "ritueel"),
+     "cijfers": (("promptlagen", "3"), ("eerste commit", "27 feb")),
+     "rijpheid": "draait", "viz": "puls",
+     "link": "https://felixisfelix.com/", "linktekst": "Het bredere werk"},
+
+    {"maand": "april", "fase": "de stap naar het werk",
+     "naam": "Morele Helper", "onder": "Dezelfde vraag, nu voor een ambtenaar",
+     "tekst": "Hetzelfde idee, maar nuchter en beroepsmatig. Eenentwintig werkdagen, elke "
+              "dag kort inspreken over één beleidsdilemma. Twee vragen terug: een "
+              "spiegelvraag en een vraag uit een ethisch reflectiepad. Op dag "
+              "eenentwintig een leerverslag.",
+     "keer": "Hier werd het persoonlijke experiment een instrument: met een ritme, een "
+             "eindproduct en een beroepsgroep in gedachten.",
+     "merken": ("lokale AI", "beroepsethiek", "21 werkdagen"),
+     "cijfers": (("werkdagen", "21"), ("vragen per dag", "2")),
+     "rijpheid": "draait, publiek nog stuk", "viz": "ritme", "link": "", "linktekst": ""},
+
+    {"maand": "mei", "fase": "werk, met echte data",
+     "naam": "LeefomgevingLab", "onder": "Leefomgeving als deelbare geo-informatie",
+     "tekst": "Van reflectie naar publieke data. Geluid, lucht, externe veiligheid en "
+              "afval als herbruikbaar informatieproduct — met open standaarden en een "
+              "kwaliteitspagina die per bron opschrijft wat er niet aan klopt.",
+     "keer": "De grootste ontdekking staat op die kwaliteitspagina: coördinaatstelsels "
+             "zijn keer op keer de valkuil, en gegokte endpoints kloppen zelden.",
+     "merken": ("PDOK", "WFS", "GeoParquet", "RAG"),
+     "cijfers": (("commits", "243"), ("fragmenten in de index", "924")),
+     "rijpheid": "volwassen", "viz": "raster",
      "link": "https://leefomgevinglab.felixisfelix.com/kwaliteit",
      "linktekst": "Kwaliteit per POC"},
-    {"naam": "Waterlab IJssel", "onder": "Live hydrologie voor een Nederlandse rivier",
-     "tekst": "Een wflow-model speelt het hoogwater van 1995 en 2021 na. Daarnaast loopt "
-              "een verwachting van veertien dagen op live metingen van Rijkswaterstaat en "
-              "neerslag van Open-Meteo — met alarm boven 1500 kubieke meter per seconde.",
-     "merken": ("Wflow SBM", "Julia", "RWS Waterinfo", "deck.gl"), "viz": "piek",
-     "cijfers": (("dagen vooruit", "14"), ("casussen", "3")),
+
+    {"maand": "mei", "fase": "en toen echt zwaar",
+     "naam": "Waterlab IJssel", "onder": "Een rivier, nagerekend en vooruitgekeken",
+     "tekst": "Een volwaardig hydrologisch model op dezelfde machine. Het hoogwater van "
+              "1995 en 2021 nagespeeld, plus een verwachting van veertien dagen op live "
+              "metingen van Rijkswaterstaat en neerslag van Open-Meteo.",
+     "keer": "Dit was het bewijs dat één machine in een woonkamer een echte modelketen "
+             "aankan — én waar de grenzen daarvan liggen.",
+     "merken": ("Wflow SBM", "Julia", "RWS Waterinfo", "deck.gl"),
+     "cijfers": (("commits", "160"), ("dagen vooruit", "14")),
+     "rijpheid": "volwassen", "viz": "hydro",
      "link": "https://waterlab.felixisfelix.com/", "linktekst": "Naar het dashboard"},
-    {"naam": "Morele Helper", "onder": "Een nuchter instrument voor beroepsmatige twijfel",
-     "tekst": "Eenentwintig werkdagen, elke dag kort inspreken over één beleidsdilemma. "
-              "Twee vragen terug: een spiegelvraag en een vraag uit een ethisch "
-              "reflectiepad. Op dag eenentwintig een leerverslag.",
-     "merken": ("lokale AI", "reTerminal", "beroepsethiek"), "viz": "blok",
-     "cijfers": (("werkdagen", "21"), ("vragen per dag", "2")),
-     "link": "", "linktekst": ""},
-    {"naam": "Derwisch", "onder": "Techniek als spiegel voor aandacht",
-     "tekst": "Waar de Morele Helper nuchter is, is dit experimenteel: stem, vraag, "
-              "klanklandschap. De vraag eronder is of techniek je ook kan vertragen in "
-              "plaats van versnellen.",
-     "merken": ("spraak naar tekst", "lokaal model", "ePaper-kiosk"), "viz": "punt",
-     "cijfers": (("promptlagen", "3"), ("inferentie", "lokaal")),
-     "link": "https://felixisfelix.com/", "linktekst": "Meer over het werk"},
-    {"naam": "Sysmonitor", "onder": "Weten of het nog draait",
-     "tekst": "Bewaakt schijf, geheugen, temperatuur, diensten en publieke endpoints — en "
-              "sinds kort ook dit atelier. Elke waarschuwing komt met een commando dat je "
-              "echt kunt uitvoeren, niet met \"onderzoek dit nader\".",
-     "merken": ("systemd", "drempels met actie", "90 dagen historie"), "viz": "blok",
-     "cijfers": (("bewaakte diensten", "20"), ("drempels voor dit atelier", "6")),
+
+    {"maand": "juli", "fase": "toen het er te veel werden",
+     "naam": "Labs-MCP", "onder": "Een sleutelbos voor twaalf proefopstellingen",
+     "tekst": "Twaalf opstellingen betekent twaalf sets sleutels, en die stonden overal "
+              "en nergens. Dus kwam er een versleutelde kluis met een programma dat ze "
+              "naar de juiste plek schrijft, en een dun laagje waardoor een AI-assistent "
+              "dezelfde vijf handelingen mag doen. Twee projecten zijn aangesloten, tien "
+              "nog niet.",
+     "keer": "Hier verschoof de vraag van bouwen naar beheersbaar houden: een "
+             "proefopstelling maak je op een middag, twaalf ervan onderhouden is een "
+             "apart project.",
+     "merken": ("MCP", "age-kluis", "stdlib-only kern", "2 van de 12"),
+     "cijfers": (("kern", "284 regels"), ("MCP-schil", "71 regels")),
+     "rijpheid": "eerste stap", "viz": "sleutels",
+     "link": "/module/k07-de-sleutelbos", "linktekst": "De module met het open-source-dilemma"},
+
+    {"maand": "september", "fase": "want het moest blijven draaien",
+     "naam": "Sysmonitor", "onder": "Dertien dingen tegelijk, en niemand die kijkt",
+     "tekst": "Op een gegeven moment draaien er zoveel dingen tegelijk dat je niet meer "
+              "weet wat er stuk is. Deze dienst bewaakt schijf, geheugen, temperatuur en "
+              "twintig andere diensten — en geeft bij elke waarschuwing een commando dat "
+              "je echt kunt uitvoeren.",
+     "keer": "Niet bedacht maar ontstaan: uit de ervaring dat een systeem dat stilstaat "
+             "er precies hetzelfde uitziet als een systeem dat werkt.",
+     "merken": ("systemd", "drempels met actie", "90 dagen historie"),
+     "cijfers": (("bewaakte diensten", "20"), ("drempels", "6")),
+     "rijpheid": "nieuw", "viz": "hartslag",
      "link": "https://status.felixisfelix.com/", "linktekst": "Bekijk de status"},
-    {"naam": "Dit atelier", "onder": "De leerlaag over alles heen",
-     "tekst": "Vijftien modules over vijf faalvormen, een zoekindex die stilstond, een "
-              "verwachting die op een opvulwaarde draait, en een model dat verzint waar "
-              "het zijn antwoord vandaan haalt. Allemaal echt gebeurd op deze machine.",
-     "merken": ("FastAPI", "sqlite", "geen framework", "Nederlands"), "viz": "golf",
+
+    {"maand": "september", "fase": "en dit is de laag eroverheen",
+     "naam": "Het Leeratelier", "onder": "Waar je nu bent",
+     "tekst": "Alle bovenstaande projecten hebben één ding gemeen: er is meer van geleerd "
+              "dan er in een eindrapport past. Dit atelier maakt dat bruikbaar voor "
+              "iemand anders — vijftien modules over wat er misging en waaraan je het "
+              "had kunnen zien.",
+     "keer": "Het bouwt niets nieuws. Het maakt zichtbaar wat er al stond, inclusief de "
+             "fouten die niemand had opgeschreven.",
+     "merken": ("FastAPI", "sqlite", "geen framework", "Nederlands"),
      "cijfers": (("modules", "15"), ("voorberekende antwoorden", "33")),
+     "rijpheid": "in aanbouw", "viz": "lagen",
      "link": "/route", "linktekst": "Begin de route"},
 )
 
@@ -184,7 +236,7 @@ def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI
         modules, _ = schema.lees_alle(modules_dir)
         gez = await mid.gezondheid()
         ctx = await omhulsel(request)
-        ctx.update(pocs=POCS, stats={
+        ctx.update(acten=ACTEN, stats={
             "modules": sum(1 for m in modules if m.gepubliceerd),
             "diensten": 20,
             "fragmenten": "924",
