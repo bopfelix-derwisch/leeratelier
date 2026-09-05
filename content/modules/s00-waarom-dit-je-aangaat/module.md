@@ -57,11 +57,15 @@ wie het merkt.
 De route duurt ongeveer twee en een half uur en kost twee modelbeurten. Je hoeft niets te installeren;
 je browser is genoeg.
 
-**De volgorde is niet vrijblijvend.** S1 laat zien wat er staat en S2 waaruit zo'n toepassing bestaat.
-**S3 is het hart van deze route:** één werkende case — de veertiendaagse verwachting voor de IJssel —
-waarin lokale AI, open source, een cloudmodel en een agentische stap samenkomen. Daar zie je wat dit
-werkelijk kan opleveren. Daarna gaat S4 over waarom een antwoord kan kloppen en toch fout zijn, S5 over
-wat het later kost, en S6 over wie er dan aan de lat staat. S7 is de kaart die je meeneemt.
+**De volgorde is niet vrijblijvend.** Je begint met een rondgang langs wat er op de machine staat,
+en daarna met de zes onderdelen waaruit zo'n toepassing bestaat.
+
+Dan volgt het hart van deze route: **de verwachting van Waterlab**. Eén werkende case waarin lokale
+AI, open source, een cloudmodel en een agentische stap samenkomen — daar zie je wat dit werkelijk kan
+opleveren.
+
+De rest bouwt daarop voort. Waarom een antwoord kan kloppen en toch fout zijn. Wat het later kost. Wie
+er dan aan de lat staat. En als laatste de besluitkaart die je meeneemt.
 
 ---
 

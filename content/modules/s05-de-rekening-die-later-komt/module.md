@@ -50,7 +50,7 @@ temperatuur en beveiliging nakijkt. Die is er niet voor de storing; die is er vo
 geen storing is.
 
 **5. Iemand moet het kunnen uitleggen, over een jaar.**
-Dit is de duurste en de minst zichtbare. Zie S6.
+Dit is de duurste en de minst zichtbare. Zie de volgende module, over eigenaarschap.
 
 ---
 

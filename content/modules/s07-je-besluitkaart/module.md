@@ -35,27 +35,31 @@ Bouwen, kopen, doorgaan of stoppen. Schrijf het op als een keuze met alternatiev
 aan systeem X, of we doen het niet" is er wel een.
 
 **1a. En als het bouwen is: hoe verdeel je het?**
-Uit S3: lokaal waar het vaak gebeurt en de gegevens niet weg mogen, cloud waar het antwoord gevolgen
+Uit de Waterlab-case: lokaal waar het vaak gebeurt en de gegevens niet weg mogen, cloud waar het
 heeft. En de nieuwe vraag die daarbij hoort — waar mag een model **kiezen wat er vervolgens gebeurt**,
 en wordt die keuze vastgelegd?
 
 **2. Wat wordt er beloofd, en wie kan dat controleren?**
 Neem de belofte letterlijk over uit de offerte of het projectvoorstel. Zet er daarna bij wie kan
-vaststellen of ze waar is — en of die persoon dat gedaan heeft. In S2 zag je dat "hij draait" en "hij
+vaststellen of ze waar is — en of die persoon dat gedaan heeft. Bij de zes onderdelen zag je dat
+"hij draait" en "hij
 werkt" verschillende beweringen zijn.
 
 **3. Wat gaat er het eerst mis, en wie merkt dat als eerste?**
-Niet de ergste denkbare storing, maar de waarschijnlijkste. Uit S4: een verouderde index, een vraag
+Niet de ergste denkbare storing, maar de waarschijnlijkste. Uit de module over foute antwoorden:
+een verouderde index, een vraag
 buiten het bereik van de bron, of een term uit een ander vakgebied. En noem de functie die het als
 eerste voor de kiezen krijgt. Dat is bijna nooit je functie, en dat is precies waarom het opgeschreven
 moet worden.
 
 **4. Wat kost dit als het eenmaal draait?**
-Niet de aanschaf. Uit S5: wie verwerkt bronwijzigingen, wie ververst de index, wie kijkt of het nog
+Niet de aanschaf. Uit de module over de rekening: wie verwerkt bronwijzigingen, wie ververst de
+index, wie kijkt of het nog
 klopt, en hoeveel van hun tijd is dat per maand. In uren en in namen, niet in euro's.
 
 **5. Wie is eigenaar als het misgaat?**
-Uit S6: een naam of een rol, geen afdeling. En wat er gebeurt als die persoon vertrekt.
+Uit de module over eigenaarschap: een naam of een rol, geen afdeling. En wat er gebeurt als die
+persoon vertrekt.
 
 **6. Waaraan zou je zien dat je hiermee moet stoppen?**
 De lastigste, en de enige die je écht vooraf moet opschrijven.

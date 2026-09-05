@@ -35,6 +35,14 @@ Deze module kost **geen modelbeurten**.
 | Drie taalmodellen | tegelijk in het geheugen, samen ongeveer 25 GB |
 | Dertien projecten | waarvan er zes publiek bereikbaar zijn |
 
+Die twee getallen staan los van elkaar, en dat is geen slordigheid. **Eén project kan meerdere diensten
+hebben:** Derwisch heeft er vier, het Leeratelier drie, Morele Helper en LeefomgevingLab elk twee. En
+twee diensten horen bij geen enkel project — die regelen de netwerktoegang voor alle andere.
+
+Dat onderscheid is meteen de eerste beheervraag van deze route. Een project is wat je bespreekt in een
+overleg; een dienst is wat 's nachts omvalt. De tweede lijst is bijna altijd langer dan de eerste, en
+bijna nooit degene die iemand kan opnoemen.
+
 Kijk zelf op **[de statuspagina](https://status.felixisfelix.com)**. Die is openbaar en toont wat er
 draait, hoe vol de schijf zit en wat er misgaat.
 

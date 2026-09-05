@@ -162,7 +162,7 @@ dat werk staat zelden in de offerte.
 
 *(Een tweede, kleinere: de README van dit project zegt "geen licentie van toepassing", terwijl er een
 Apache-2.0-licentiebestand naast ligt. Twee bronnen die elkaar tegenspreken over de vraag wat u met de
-code mag. Zie ook S6.)*
+code mag. Zie ook de module over eigenaarschap.)*
 
 ---
 

@@ -225,7 +225,7 @@ sterk didactisch punt: het ontmythologiseert de stack.
 | 8799 | (python, ritueel) | 127.0.0.1 |
 | — | 8081 is **leeg**: derwisch_local-nemo is disabled | |
 
-### Diensten (14 bewaakt, alle enabled + active)
+### Diensten (17 bewaakt, alle enabled + active)
 `cloudflared` · `tailscaled` · `sysmonitor-web` · `waterlab-dashboard` · `leefomgevinglab-api` ·
 `leefomgevinglab-embed` · `derwisch_local-backend` · `derwisch_local-llm` · `derwisch_local-ritueel` ·
 `derwisch-transcribe` · `morele-helper-admin` · `morele-helper-button` · `felix-upload` · `prive-tts`
