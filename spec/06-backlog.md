@@ -388,6 +388,7 @@ door een echte route. Ze blijft voor de facilitator zichtbaar als snelle ketenco
 ## Fase 4 · Incrementeel uitbreiden
 
 **Alle zes afgerond op 2026-09-03.** Dertien modules, drie sporen, alles op `gepubliceerd`.
+Op 2026-09-05 kwam daar K7 bij (zie WP-20), waarmee het er veertien zijn en de beheerkaart K8 werd.
 
 - [x] **WP-12** K6 Draaiend houden (0 beurten) — de zes sysmonitor-drempels als lesmateriaal, inclusief
       de vraag waar een drempelwaarde vandaan komt
@@ -411,6 +412,45 @@ Elke module die een model gebruikt, werkt dus ook als er geen model draait.
 > `:8000` en waarop een echte FEWS-client zou aansluiten. De waarschuwing staat boven de eerste proef in
 > een eigen blok, niet in een voetnoot — conform het plan. De module noteert ook wat er *niet* is opgelost:
 > de emulatie draagt zijn status niet in de data zelf, alleen in de omringende tekst.
+
+---
+
+### [x] WP-20 K7 De sleutelbos — beheersbaarheid en het open-source-dilemma
+
+Op verzoek van de eigenaar. `~/labs-mcp` stond niet in de inventaris terwijl het het antwoord is op de
+vraag die K6 openlaat: één toepassing draaiend houden is iets anders dan er dertien beheersbaar houden.
+
+- [x] Inventaris aangevuld met Labs-MCP (dertiende project, categorie GEREEDSCHAP)
+- [x] Projecttelling twaalf → dertien in K1, README, CLAUDE.md, plan en de landingspagina
+- [x] Module `k07-de-sleutelbos` (basis, volgorde 70, **0 beurten**) — wat een MCP-server is zonder
+      mystiek, de eerste stap (2 van de 12 aangesloten), de latere fase, en het dilemma
+- [x] Bestaande beheerkaart-module hernoemd naar `k08-je-eigen-beheerkaart` (volgorde 80)
+- [x] Zevende act op de landingspagina (juli, "toen het er te veel werden") met eigen visual
+- [x] Besluitenlog B33, V33, V34
+
+**Verificatie:** `python3 ops/valideer.py` en `python3 -m pytest tests/ -q` (51 groen); de basisroute
+kost nog steeds 7 van de 20 beurten.
+
+**Het dilemma is niet opgelost, en dat is het punt.** De module geeft geen aanbeveling maar een vraag:
+*wat ben ik kwijt op de dag dat dit verdwijnt?* De laagdikte hier is het antwoord — 284 regels stdlib-kern
+onder een schil van 71 regels, en elk project draait door zonder kluis.
+
+---
+
+### [ ] WP-21 De latere fase: de overige tien projecten aansluiten
+
+Volgt uit WP-20. Nu zijn `derwisch-ritueel` en `sysmonitor` aangesloten op de kluis; de andere tien
+hebben hun sleutels nog op de oude plek. Dit is **beheerwerk aan andere repo's** en valt daarmee buiten
+de grenzen van dit project — het staat hier omdat K7 het als "de latere fase" aan bezoekers belooft en
+de module oncontroleerbaar wordt als dat getal jaren op 2 blijft staan.
+
+- [ ] Per project een renderprofiel (`.env` / `EnvironmentFile` / `.auth`) en een `.env.example`
+- [ ] Voorrang voor het project met vier levende sleutels in een `.env` dat lang niet genegeerd werd
+- [ ] De tunneltoken uit deze sessie vervangen; die is in een gesprek geplakt
+- [ ] `secret_audit` over alles laten lopen zodra er meer dan twee profielen zijn
+- [ ] Daarna het getal in K7 en in `docs/inventaris-orin3.md` bijwerken
+
+**Eigenaarsbesluit nodig:** dit raakt draaiende POC's en vraagt herstarts. Niet zelf doen.
 
 ---
 
