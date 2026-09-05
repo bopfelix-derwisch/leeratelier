@@ -38,9 +38,8 @@ Drie dingen, alle drie gecommit op `master`.
 
 **`~/sysmonitor` staat niet onder versiebeheer.** De bijbehorende helft van reparatie 3 zit
 daar (`check_leeratelier` en `advise`) en is dus niet gecommit. Back-up van de vorige versie:
-`/home/bob/.claude/jobs/f00c2e0c/tmp/sysmonitor.py.bak` — die map verdwijnt als de job wordt
-opgeruimd. Wil je die reparatie behouden, zet `sysmonitor` onder git; dat staat al als los eind
-in K1 en de backlog.
+`/home/bob/sysmonitor/sysmonitor.py.bak-2026-09-05`. Wil je die reparatie behouden, zet
+`sysmonitor` onder git; dat staat al als los eind in K1 en de backlog.
 
 **De GitHub-remote bestaat nog niet.** De SSH-sleutel werkt (`ssh -T git@github.com` groet
 `bopfelix-derwisch`), maar de `gh`-token is verlopen, en zonder API kan de repo niet worden
