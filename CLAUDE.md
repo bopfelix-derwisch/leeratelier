@@ -16,8 +16,16 @@ Het **Leeratelier** is een dunne laag naast dertien bestaande POC's op de machin
 loggen in, lopen een route van modules door, stellen vragen aan lokale taalmodellen, en gaan weg met een
 ingevulde **beheerkaart** voor hun eigen toepassing.
 
-Doelgroep: **functioneel beheerders en technisch geïnteresseerden**. Zij bouwen niets. Ze gebruiken de
-POC's om te begrijpen wat er onder de motorkap gebeurt en wanneer een AI-antwoord niet deugt.
+Twee doelgroepen sinds besluit B34, met een keuzemenu op `/start`:
+
+| route | voor wie | eindproduct |
+|---|---|---|
+| **Beheer en techniek** (`basis` + `waterlab` + `leefomgeving`) | functioneel beheerders en technisch geïnteresseerden | beheerkaart |
+| **Sturing** (spoor `sturing`, S0–S6) | informatiemanagers, programmamanagers, algemeen managers | besluitkaart |
+
+Geen van beide bouwt iets. De eerste groep gebruikt de POC's om te begrijpen wat er onder de motorkap
+gebeurt en wanneer een AI-antwoord niet deugt; de tweede om te weten waar ze voor tekent. **Alle modules
+spreken de bezoeker met `je` aan**, ook de sturingsroute — dat is één register voor de hele site.
 
 `spec/plan-v0.3.md` is het leidende document. Lees het voordat je aan een werkpakket begint.
 `spec/06-backlog.md` bevat de werkpakketten in volgorde.

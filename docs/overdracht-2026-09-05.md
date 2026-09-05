@@ -18,8 +18,15 @@ Het atelier draait en is publiek bereikbaar achter Cloudflare Access.
 
 Alle vier de diensten stonden bij het schrijven op `active`.
 
-**Route:** veertien modules. Basis K0-K8 (negen), spoor W (vier), spoor L (drie), plus een
-proefmodule op `concept`. De basisroute kost 7 van de 20 modelbeurten per bezoeker.
+**Twee routes**, met een keuzemenu op `/start` (besluit B34):
+
+| route | sporen | modules | duur | beurten | eindproduct |
+|---|---|---|---:|---:|---|
+| Beheer en techniek | basis, waterlab, leefomgeving | 16 | 470 min | 7 | `/beheerkaart` |
+| Sturing | sturing (S0-S6) | 7 | 160 min | 2 | `/besluitkaart` |
+
+Drieëntwintig gepubliceerde modules (basis 9, sturing 7, waterlab 4, leefomgeving 3) plus een
+proefmodule op `concept`. Alle modules spreken de bezoeker met **je** aan, ook de sturingsroute.
 
 ## Wat deze sessie is veranderd
 

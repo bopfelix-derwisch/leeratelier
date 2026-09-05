@@ -1,0 +1,52 @@
+{% extends "basis.html" %}
+{% block titel %}Leeratelier &middot; waar begin je{% endblock %}
+{% block inhoud %}
+<p class="uitleg"><a href="/">&larr; voorkant</a></p>
+<h1>Waar begin je?</h1>
+<p>Twee routes over dezelfde dertien proefopstellingen. Ze delen de machine en de
+principes, maar niet de vraag die ze beantwoorden. Kies degene die het dichtst bij
+je werk staat; wisselen kan altijd, en je mag de andere ook gewoon doorlopen.</p>
+
+<div class="keuzes">
+  {% for k in keuzes %}
+  <a class="keuze" href="/route?voor={{ k.id }}">
+    <span class="voor">Voor {{ k.voor }}</span>
+    <h2>{{ k.naam }}</h2>
+    <p class="zin">{{ k.zin }}</p>
+    <p class="eind"><b>Je gaat weg met een {{ k.kaart_naam }}:</b> {{ k.kaart_zin }}.</p>
+    <span class="vt">
+      {{ k.aantal }} modules &middot; ongeveer {{ k.minuten }} minuten &middot;
+      {% if k.beurten == 0 %}<span class="merk gratis">kost geen modelbeurten</span>
+      {% else %}<span class="merk">{{ k.beurten }} modelbeurten</span>{% endif %}
+    </span>
+    <span class="door">Begin hier &rarr;</span>
+  </a>
+  {% endfor %}
+</div>
+
+<h2>Wat beide routes doen</h2>
+<p>Je kijkt onder de motorkap van systemen die echt draaien, met echte gegevens en echte
+fouten. Elke module heeft een sectie <b>Wat hier misging</b>, en daar staan geen bedachte
+voorbeelden in maar wat er op deze machine werkelijk fout is gegaan. Dat is het hele idee:
+een proefopstelling waarvan de gebreken zijn opgeschreven is leerzamer dan een demo die het
+altijd doet.</p>
+
+<p class="uitleg">Twijfel je? Neem de route Sturing als je beslist over AI-toepassingen maar
+er niet mee werkt, en Beheer en techniek als je er wel mee werkt of gaat werken. De routes
+verwijzen naar elkaar waar dat nuttig is.</p>
+
+<style>
+.keuzes{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin:22px 0 34px}
+.keuze{display:flex;flex-direction:column;gap:8px;text-decoration:none;color:inherit;
+  background:var(--vlak);border:1px solid var(--lijn);border-radius:10px;padding:20px 22px}
+.keuze:hover{border-color:var(--accent)}
+.keuze .voor{font-size:.74rem;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--accent);font-weight:600}
+.keuze h2{margin:0;font-size:1.3rem;letter-spacing:-.015em}
+.keuze .zin{margin:0;font-size:.93rem;color:var(--inkt-zacht);line-height:1.55}
+.keuze .eind{margin:6px 0 0;padding:10px 12px;background:var(--vlak-2);border-radius:7px;
+  font-size:.88rem;line-height:1.5}
+.keuze .vt{font-size:.8rem;color:var(--inkt-flauw);margin-top:auto;padding-top:10px}
+.keuze .door{font-weight:600;color:var(--accent);font-size:.92rem}
+</style>
+{% endblock %}

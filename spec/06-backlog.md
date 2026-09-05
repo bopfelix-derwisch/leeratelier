@@ -437,6 +437,28 @@ onder een schil van 71 regels, en elk project draait door zonder kluis.
 
 ---
 
+### [x] WP-22 Tweede route: Sturing, voor managers
+
+Op verzoek van de eigenaar. Dezelfde opbouw en principes als de bestaande route, andere vraag.
+
+- [x] Spoor `sturing` toegevoegd aan `app/schema.py`
+- [x] Zeven modules S0-S6: waarom dit u aangaat, de rondgang, wat u koopt, een antwoord dat klopt
+      en toch fout is, de rekening die later komt, wie is eigenaar, uw besluitkaart
+- [x] Keuzemenu op `/start`; `/route?voor=` filtert, een onbekende waarde toont alles
+- [x] Besluitkaart (`/besluitkaart` + export) met zes vragen vanuit degene die tekent
+- [x] Acht conserven voor S3, uit de bestaande ijkset-run van Qwen3-8B
+- [x] Landingspagina verwijst naar het keuzemenu en noemt beide eindproducten
+- [x] Vier tests erbij (59 groen)
+
+**Verificatie:** `python3 ops/valideer.py` en `python3 -m pytest tests/ -q`; alle tien pagina's van
+beide routes geven 200.
+
+**160 minuten en 2 modelbeurten** voor de hele route. Dat is met opzet: deze doelgroep heeft minder
+tijd, en de enige module die een model gebruikt is de module waarin u zelf moet zien dat een stellig
+antwoord fout kan zijn.
+
+---
+
 ### [ ] WP-21 De latere fase: de overige tien projecten aansluiten
 
 Volgt uit WP-20. Nu zijn `derwisch-ritueel` en `sysmonitor` aangesloten op de kluis; de andere tien

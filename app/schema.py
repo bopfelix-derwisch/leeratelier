@@ -22,7 +22,7 @@ import yaml
 VERPLICHT = ("id", "titel", "spoor", "volgorde", "competenties", "duur_min",
              "beurten", "modellen", "status", "wat_ging_mis", "bewijs")
 
-SPOREN = ("basis", "waterlab", "leefomgeving")
+SPOREN = ("basis", "waterlab", "leefomgeving", "sturing")
 STATUSSEN = ("concept", "gepubliceerd")
 
 _FRONTMATTER = re.compile(r"^---\n(.*?)\n---\n(.*)$", re.S)

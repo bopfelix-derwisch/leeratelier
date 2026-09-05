@@ -138,6 +138,8 @@ def keten(tmp_path, monkeypatch):
         schrijf_module(mods / "k00-proefmodule", titel="Proefmodule", beurten=1)
         schrijf_module(mods / "k99-nogniet", titel="Nog niet af", status="concept",
                        beurten=0, tekst="# Kop\n\nNog niets.\n")
+        schrijf_module(mods / "s00-sturing", titel="Voor wie beslist", spoor="sturing",
+                       volgorde=5, beurten=0, modellen="[]")
         with TestClient(maak_portaal(bemiddelaar_basis="http://bem",
                                      modules_dir=mods)) as portaal:
             yield portaal, inst
@@ -317,3 +319,50 @@ def test_ontbrekend_bannerbestand_is_geen_fout(keten, tmp_path, monkeypatch):
     monkeypatch.setattr(main_mod, "STORING_BESTAND", tmp_path / "bestaat-niet.json")
     portaal, _ = keten
     assert portaal.get("/").status_code == 200
+
+
+# ------------------------------------------------------- twee routes, een keuze
+# B34: informatiemanagers en programmamanagers krijgen een eigen route met een eigen
+# eindproduct. Het keuzemenu op /start staat ervoor; /route filtert op de keuze.
+
+def test_start_toont_beide_routes_met_hun_eindproduct(keten):
+    portaal, _ = keten
+    html = portaal.get("/start").text
+    assert "Beheer en techniek" in html
+    assert "Sturing en besluit" in html
+    assert "informatiemanagers" in html
+    assert "beheerkaart" in html and "besluitkaart" in html
+
+
+def test_route_filtert_op_de_gekozen_doelgroep(keten):
+    portaal, _ = keten
+    sturing = portaal.get("/route?voor=sturing").text
+    assert "s00-sturing" in sturing
+    assert "k00-proefmodule" not in sturing, "de beheerroute hoort hier niet te staan"
+    assert "/besluitkaart" in sturing
+
+    beheer = portaal.get("/route?voor=beheer").text
+    assert "k00-proefmodule" in beheer
+    assert "s00-sturing" not in beheer
+    assert "/beheerkaart" in beheer
+
+
+def test_onbekende_route_breekt_niet_maar_toont_alles(keten):
+    """Nette degradatie: een verkeerd overgetypte link is geen foutpagina."""
+    portaal, _ = keten
+    r = portaal.get("/route?voor=onzin")
+    assert r.status_code == 200
+    assert "k00-proefmodule" in r.text and "s00-sturing" in r.text
+
+
+def test_besluitkaart_exporteert_alle_zes_vragen(keten):
+    portaal, _ = keten
+    r = portaal.post("/besluitkaart/export", data={
+        "toepassing": "Chatbot klantvragen", "besluit": "Kopen of niet",
+        "stoppen": "Als de afdeling alles blijft natrekken."})
+    assert r.status_code == 200
+    assert "besluitkaart-chatbot-klantvragen.md" in r.headers["content-disposition"]
+    for n in range(1, 7):
+        assert f"## {n}." in r.text
+    assert "Kopen of niet" in r.text
+    assert "&middot;" not in r.text, "geen HTML-entiteiten in een markdown-bestand"

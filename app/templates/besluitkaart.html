@@ -1,0 +1,33 @@
+{% extends "basis.html" %}
+{% block titel %}Besluitkaart{% endblock %}
+{% block inhoud %}
+<p class="uitleg"><a href="/route?voor=sturing">&larr; terug naar de route</a></p>
+<h1>Je besluitkaart</h1>
+<p>Een A4 over het besluit dat voorligt. Dit is wat je meeneemt. Vul in wat je kunt;
+half ingevuld en meegenomen is meer waard dan volledig en blijven liggen.</p>
+<p class="uitleg">Er wordt niets bewaard. Bij versturen krijg je het bestand terug en
+daarna is het weg bij ons.</p>
+
+<form method="post" action="/besluitkaart/export">
+  <div class="vraagblok">
+    <h2>Waarover gaat deze kaart</h2>
+    <p><input type="text" name="toepassing" placeholder="Naam van de toepassing of het programma" required></p>
+    <p><input type="text" name="ingevuld_door" placeholder="Ingevuld door"></p>
+    <p><input type="text" name="organisatie" placeholder="Organisatie"></p>
+  </div>
+  {% for veld, kop, hulp in velden %}
+  <div class="vraagblok">
+    <h2>{{ loop.index }}. {{ kop }}</h2>
+    <p class="uitleg">{{ hulp }}</p>
+    <textarea name="{{ veld }}"></textarea>
+  </div>
+  {% endfor %}
+  <div class="knoprij">
+    <button type="submit">Kaart downloaden</button>
+    <span class="uitleg">Je krijgt een markdown-bestand.</span>
+  </div>
+</form>
+
+<p class="uitleg">Vraag 6 is de lastigste en de belangrijkste. Een stopcriterium dat je
+vooraf opschrijft is een besluit; hetzelfde criterium achteraf bedacht is een excuus.</p>
+{% endblock %}

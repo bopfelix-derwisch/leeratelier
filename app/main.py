@@ -31,7 +31,50 @@ WORTEL = Path(__file__).resolve().parent.parent
 HIER = Path(__file__).resolve().parent
 
 SPOREN = (("basis", "Basisroute"), ("waterlab", "Spoor W - Waterlab"),
-          ("leefomgeving", "Spoor L - LeefomgevingLab"))
+          ("leefomgeving", "Spoor L - LeefomgevingLab"),
+          ("sturing", "Route Sturing"))
+
+# Twee routes voor twee doelgroepen. Ze delen de machine, de POC's en de principes,
+# maar niet het eindproduct: wie beheert wil weten wat er stukgaat, wie beslist wil
+# weten wat hij tekent. Het keuzemenu staat op /start (besluit B34).
+ROUTES = (
+    {"id": "beheer", "naam": "Beheer en techniek",
+     "voor": "functioneel beheerders en technisch geinteresseerden",
+     "zin": "Je werkt met een AI-toepassing, of gaat dat doen, en wilt weten wat er "
+            "onder de motorkap gebeurt en wanneer een antwoord niet deugt.",
+     "sporen": ("basis", "waterlab", "leefomgeving"),
+     "kaart_url": "/beheerkaart", "kaart_naam": "beheerkaart",
+     "kaart_zin": "een A4 over je eigen toepassing: wat gaat er mis, en wat check je dan"},
+    {"id": "sturing", "naam": "Sturing en besluit",
+     "voor": "informatiemanagers, programmamanagers en algemeen managers",
+     "zin": "Je beslist over AI-toepassingen zonder ze zelf te bouwen of te beheren, "
+            "en wilt weten wat je koopt, wat het later kost en waar je voor tekent.",
+     "sporen": ("sturing",),
+     "kaart_url": "/besluitkaart", "kaart_naam": "besluitkaart",
+     "kaart_zin": "een A4 over het besluit dat voorligt: wat is beloofd, wie merkt het "
+                  "eerst als het misgaat, en waaraan zie je dat je moet stoppen"},
+)
+
+
+# De zes vragen van de besluitkaart. Spiegelbeeld van KAARTVELDEN: dezelfde opzet,
+# maar gesteld vanuit degene die tekent in plaats van degene die het draaiend houdt.
+BESLUITVELDEN = (
+    ("besluit", "Welk besluit ligt er werkelijk voor?",
+     "Bouwen, kopen, doorgaan of stoppen. Schrijf het op als een keuze, niet als een wens."),
+    ("belofte", "Wat wordt er beloofd, en wie kan dat controleren?",
+     "De belofte in de woorden van de leverancier of de bouwer. Daarachter: wie kan "
+     "onafhankelijk vaststellen of het waar is, en heeft die persoon dat gedaan?"),
+    ("mis", "Wat gaat er het eerst mis, en wie merkt dat als eerste?",
+     "Niet de ergste denkbare storing, maar de waarschijnlijkste. En de naam van de "
+     "functie die het als eerste voor de kiezen krijgt -- meestal niet de uwe."),
+    ("rekening", "Wat kost dit als het eenmaal draait?",
+     "Niet de aanschaf. Het onderhoud: wie verwerkt bronwijzigingen, wie ververst de "
+     "index, wie kijkt of het nog klopt, en hoeveel van hun tijd is dat per maand?"),
+    ("eigenaar", "Wie is eigenaar als het misgaat?",
+     "Een naam of een rol, geen afdeling. En wat er gebeurt als die persoon vertrekt."),
+    ("stoppen", "Waaraan zou je zien dat je hiermee moet stoppen?",
+     "Een alinea. Formuleer dit voordat je begint; achteraf is het bijna niet meer te doen."),
+)
 
 # De zes vragen van de beheerkaart, uit spec/01-competenties.md.
 KAARTVELDEN = (
@@ -246,15 +289,42 @@ def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI
         return sjablonen.html("landing.html", ctx)
 
     # ------------------------------------------------------------- route
-    @app.get("/route", response_class=HTMLResponse)
-    async def route(request: Request):
+    @app.get("/start", response_class=HTMLResponse)
+    async def start(request: Request):
+        """Het keuzemenu. Twee doelgroepen, twee routes, twee eindproducten."""
         modules, _ = schema.lees_alle(modules_dir)
         zichtbaar = [m for m in modules if m.gepubliceerd]
+        keuzes = []
+        for r in ROUTES:
+            hoort_erbij = [m for m in zichtbaar if m.spoor in r["sporen"]]
+            keuzes.append({**r, "aantal": len(hoort_erbij),
+                           "minuten": sum(m.duur_min for m in hoort_erbij),
+                           "beurten": sum(m.beurten for m in hoort_erbij)})
+        ctx = await omhulsel(request)
+        ctx.update(keuzes=keuzes)
+        return sjablonen.html("start.html", ctx)
+
+    @app.get("/route", response_class=HTMLResponse)
+    async def route(request: Request, voor: str = ""):
+        modules, _ = schema.lees_alle(modules_dir)
+        zichtbaar = [m for m in modules if m.gepubliceerd]
+
+        # Zonder geldige keuze tonen we alles, met een verwijzing naar het keuzemenu.
+        # Een onbekende waarde is geen fout: de route hoort niet te breken op een
+        # verkeerd overgetypte link.
+        gekozen = next((r for r in ROUTES if r["id"] == voor), None)
+        if gekozen:
+            zichtbaar = [m for m in zichtbaar if m.spoor in gekozen["sporen"]]
+            sporen = tuple((s, t) for s, t in SPOREN if s in gekozen["sporen"])
+        else:
+            sporen = SPOREN
+
         per_spoor = {}
         for m in zichtbaar:
             per_spoor.setdefault(m.spoor, []).append(m)
         ctx = await omhulsel(request)
-        ctx.update(per_spoor=per_spoor, sporen=SPOREN, zichtbaar=zichtbaar)
+        ctx.update(per_spoor=per_spoor, sporen=sporen, zichtbaar=zichtbaar,
+                   gekozen=gekozen, routes=ROUTES)
         return sjablonen.html("route.html", ctx)
 
     # ------------------------------------------------------------ module
@@ -347,7 +417,7 @@ def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI
         waarden = {"mis": mis, "signaal": signaal, "check": check,
                    "escalatie": escalatie, "leverancier": leverancier, "oordeel": oordeel}
         regels = [f"# Beheerkaart - {toepassing}", "",
-                  f"Ingevuld door: {ingevuld_door} &middot; Organisatie: {organisatie}", ""]
+                  f"Ingevuld door: {ingevuld_door} - Organisatie: {organisatie}", ""]
         for i, (veld, kop, hulp) in enumerate(KAARTVELDEN, 1):
             regels += [f"## {i}. {kop}", hulp, "", (waarden[veld] or "").strip(), ""]
         regels += ["---", "",
@@ -356,6 +426,33 @@ def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI
         return PlainTextResponse(
             "\n".join(regels), media_type="text/markdown; charset=utf-8",
             headers={"Content-Disposition": f'attachment; filename="beheerkaart-{naam}.md"'})
+
+    # ------------------------------------------------------ besluitkaart
+    @app.get("/besluitkaart", response_class=HTMLResponse)
+    async def besluitkaart(request: Request):
+        ctx = await omhulsel(request)
+        ctx.update(velden=BESLUITVELDEN)
+        return sjablonen.html("besluitkaart.html", ctx)
+
+    @app.post("/besluitkaart/export")
+    async def besluitkaart_export(
+        toepassing: str = Form(...), ingevuld_door: str = Form(""),
+        organisatie: str = Form(""), besluit: str = Form(""), belofte: str = Form(""),
+        mis: str = Form(""), rekening: str = Form(""), eigenaar: str = Form(""),
+        stoppen: str = Form(""),
+    ):
+        waarden = {"besluit": besluit, "belofte": belofte, "mis": mis,
+                   "rekening": rekening, "eigenaar": eigenaar, "stoppen": stoppen}
+        regels = [f"# Besluitkaart - {toepassing}", "",
+                  f"Ingevuld door: {ingevuld_door} - Organisatie: {organisatie}", ""]
+        for i, (veld, kop, hulp) in enumerate(BESLUITVELDEN, 1):
+            regels += [f"## {i}. {kop}", hulp, "", (waarden[veld] or "").strip(), ""]
+        regels += ["---", "",
+                   "Ingevuld in het Leeratelier op orin3. Indicatief, geen operationeel advies."]
+        naam = "".join(c if c.isalnum() or c in "-_" else "-" for c in toepassing.lower())[:60]
+        return PlainTextResponse(
+            "\n".join(regels), media_type="text/markdown; charset=utf-8",
+            headers={"Content-Disposition": f'attachment; filename="besluitkaart-{naam}.md"'})
 
     # ------------------------------------------------------- vastgelopen
     @app.post("/vastgelopen", response_class=HTMLResponse)

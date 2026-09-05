@@ -1,11 +1,18 @@
 {% extends "basis.html" %}
-{% block titel %}Leeratelier &middot; de route{% endblock %}
+{% block titel %}Leeratelier &middot; {% if gekozen %}{{ gekozen.naam|lower }}{% else %}de route{% endif %}{% endblock %}
 {% block inhoud %}
-<p class="uitleg"><a href="/">&larr; voorkant</a></p>
+<p class="uitleg"><a href="/start">&larr; andere route kiezen</a></p>
+
+{% if gekozen %}
+<h1>{{ gekozen.naam }}</h1>
+<p class="uitleg">Voor {{ gekozen.voor }}.</p>
+<p>{{ gekozen.zin }} Je gaat weg met een <b>{{ gekozen.kaart_naam }}</b>:
+{{ gekozen.kaart_zin }}. Modules die nul beurten kosten kun je zo vaak doen als je wilt.</p>
+{% else %}
 <h1>De route</h1>
-<p>Je loopt een aantal modules door, stelt vragen aan lokale taalmodellen, en gaat weg
-met een ingevulde beheerkaart voor je eigen toepassing. Modules die nul beurten kosten
-kun je zo vaak doen als je wilt.</p>
+<p>Alle modules van beide routes bij elkaar. Weet je niet welke bij je past, kijk dan eerst
+op <a href="/start">de keuzepagina</a>.</p>
+{% endif %}
 
 {% for spoor, titel in sporen %}
   {% set lijst = per_spoor.get(spoor, []) %}
@@ -34,7 +41,25 @@ kun je zo vaak doen als je wilt.</p>
   concepten op <a href="/facilitator">de facilitatorpagina</a>.</div>
 {% endif %}
 
-<h2>Je beheerkaart</h2>
-<p>Het eindproduct: <a href="/beheerkaart">een A4 over je eigen toepassing of bron</a>.
+{% if gekozen %}
+<h2>Je {{ gekozen.kaart_naam }}</h2>
+<p>Het eindproduct: <a href="{{ gekozen.kaart_url }}">{{ gekozen.kaart_zin }}</a>.
 Invullen kan op elk moment, ook voordat je de route af hebt.</p>
+
+<h2>De andere route</h2>
+<div class="kaartjes">
+  {% for r in routes %}{% if r.id != gekozen.id %}
+  <a class="kaart" href="/route?voor={{ r.id }}">
+    <span class="id">{{ r.id|upper }}</span>
+    <span class="tt">{{ r.naam }}</span>
+    <span class="ds">{{ r.zin }}</span>
+    <span class="vt">voor {{ r.voor }}</span>
+  </a>
+  {% endif %}{% endfor %}
+</div>
+{% else %}
+<h2>De twee eindproducten</h2>
+<p>De <a href="/beheerkaart">beheerkaart</a> hoort bij de route Beheer en techniek, de
+<a href="/besluitkaart">besluitkaart</a> bij de route Sturing.</p>
+{% endif %}
 {% endblock %}
