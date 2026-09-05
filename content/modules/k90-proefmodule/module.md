@@ -1,13 +1,13 @@
 ---
-id: k00-proefmodule
+id: k90-proefmodule
 titel: "Proefmodule - werkt de keten?"
 spoor: basis
-volgorde: 0
+volgorde: 90
 competenties: []
 duur_min: 5
 beurten: 1
 modellen: [klas]
-conserven: conserven/k00-proefmodule.json
+conserven: conserven/k90-proefmodule.json
 status: concept
 wat_ging_mis: true
 bewijs: "een antwoord met een zichtbaar bronlabel"
