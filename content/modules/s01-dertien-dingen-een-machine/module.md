@@ -26,6 +26,38 @@ Deze module kost **geen modelbeurten**.
 
 ---
 
+## Wat hier in zeven maanden is gebouwd
+
+Dertien werkende toepassingen, door één persoon naast ander werk. Een hydrologische verwachting voor
+de IJssel. Een vergunningenchatbot op echte wetteksten. Geluid, lucht en externe veiligheid als
+deelbaar informatieproduct. Een reflectie-instrument voor beroepsethiek. Een bewakingsdienst die de
+rest in de gaten houdt.
+
+Dat is het cijfer dat je moet onthouden, en niet omdat het indrukwekkend is. **De kosten van
+uitproberen zijn ingestort.** Een idee dat vijf jaar geleden een project van maanden was met een
+offerte eraan vast, is nu een middag werk. Dat verandert wat een verkenning waard is: je kunt naast
+een vraag een werkend antwoord leggen in plaats van een business case.
+
+En daar zit meteen de valkuil van deze fase. Dertien geslaagde proeven zeggen iets over de
+haalbaarheid van het idee, en vrijwel niets over de haalbaarheid van de **invoering**. Dat is de
+scheidslijn waar het in organisaties werkelijk misgaat, en zeker bij de overheid:
+
+| | een proef | in productie |
+|---|---|---|
+| **Beheer** | de bouwer weet het | een organisatie moet het weten |
+| **Beschikbaarheid** | het draait als je kijkt | het draait ook 's nachts, en iemand wordt gebeld |
+| **Inkoop** | niets | aanbesteding, contract, exit-afspraken |
+| **Gegevens** | een map met testdata | verwerkersovereenkomst, bewaartermijn, FG |
+| **Kosten** | een apparaat | hardware, licenties, en uren die niemand had begroot |
+
+Geen van deze vijf is een technisch probleem, en geen van vijf wordt opgelost door een betere proef.
+Ze zijn ook niet de reden om niet te beginnen -- ze zijn de reden om **vooraf te weten waarvoor je
+tekent**, en dat is precies wat deze route je wil geven.
+
+Houd die rechterkolom erbij bij alles wat hierna komt.
+
+---
+
 ## De schaal is het probleem niet
 
 | | |

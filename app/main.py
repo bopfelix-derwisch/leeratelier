@@ -39,9 +39,11 @@ SPOREN = (("basis", "Basisroute"), ("waterlab", "Spoor W - Waterlab"),
 # weten wat hij tekent. Het keuzemenu staat op /start (besluit B34).
 ROUTES = (
     {"id": "beheer", "naam": "Beheer en techniek",
-     "voor": "functioneel beheerders en technisch geinteresseerden",
+     "voor": "functioneel beheerders, product owners en technisch geinteresseerden",
      "zin": "Je werkt met een AI-toepassing, of gaat dat doen, en wilt weten wat er "
-            "onder de motorkap gebeurt en wanneer een antwoord niet deugt.",
+            "onder de motorkap gebeurt en wanneer een antwoord niet deugt. Met de "
+            "businesswaarde erbij: wat het oplevert, en waarom opschalen het lastige "
+            "deel is.",
      "sporen": ("basis", "waterlab", "leefomgeving"),
      "kaart_url": "/beheerkaart", "kaart_naam": "beheerkaart",
      "kaart_zin": "een A4 over je eigen toepassing: wat gaat er mis, en wat check je dan"},

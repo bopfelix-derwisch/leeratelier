@@ -20,8 +20,12 @@ Twee doelgroepen sinds besluit B34, met een keuzemenu op `/start`:
 
 | route | voor wie | eindproduct |
 |---|---|---|
-| **Beheer en techniek** (`basis` + `waterlab` + `leefomgeving`) | functioneel beheerders en technisch geïnteresseerden | beheerkaart |
+| **Beheer en techniek** (`basis` + `waterlab` + `leefomgeving`) | functioneel beheerders, **product owners** en technisch geïnteresseerden | beheerkaart |
 | **Sturing** (spoor `sturing`, S0–S7, met de Waterlab-verwachting als centrale case in S3) | informatiemanagers, programmamanagers, algemeen managers | besluitkaart |
+
+**Businesswaarde raakt beide routes** (besluit B38): functioneel beheerders zijn in deze organisaties
+vaak ook de product owner, en kijken dus net zo sterk naar opbrengst en opschaling als de
+sturingsdoelgroep. K1 en S1 behandelen dat allebei, elk in hun eigen register.
 
 Geen van beide bouwt iets. De eerste groep gebruikt de POC's om te begrijpen wat er onder de motorkap
 gebeurt en wanneer een AI-antwoord niet deugt; de tweede om te weten waar ze voor tekent. **Alle modules

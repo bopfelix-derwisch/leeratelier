@@ -28,6 +28,52 @@ Deze module kost **geen modelbeurten**. Je leest en kijkt alleen.
 
 ---
 
+## Waar we het over hebben als we "AI" zeggen
+
+Eén begrip dekt hier drie heel verschillende dingen, en de verwarring daartussen kost in vergaderingen
+meer tijd dan wat ook.
+
+**Een taalmodel** is een programma dat voorspelt welk woord er waarschijnlijk volgt. Meer niet. Het is
+getraind op enorme hoeveelheden tekst en heeft daaruit patronen opgepikt: over taal, over feiten, over
+hoe een antwoord eruitziet. Het heeft geen database die het raadpleegt en geen besef van waar of niet
+waar. Het produceert wat plausibel is. Dat het zo vaak klopt, komt doordat plausibel en waar in tekst
+meestal samenvallen — en waar ze uit elkaar lopen, zit het probleem van deze hele route.
+
+**Een AI-toepassing** is dat model plus alles eromheen: jouw documenten, een zoekstap die de juiste
+stukken erbij haalt, een instructie, en regels over wat het systeem mag beweren. Dat "eromheen" is waar
+het werk zit en waar het misgaat. De module hierna hakt het in zes onderdelen.
+
+**Agentische AI** is de nieuwste laag: een model dat niet alleen antwoordt maar ook **beslist wat er
+vervolgens gebeurt** — welk gereedschap het aanroept, wat het nog opzoekt, welke berekening er volgt.
+Dat is een wezenlijk andere risicocategorie, en je ziet er verderop in deze route een werkend voorbeeld
+van.
+
+---
+
+## Hoe dit gebouwd is, en waarom dat ertoe doet
+
+De dertien toepassingen op deze machine zijn niet gemaakt door een ontwikkelteam. Ze zijn gebouwd door
+één persoon die geen programmeur van beroep is, in gesprek met een AI-assistent. Je beschrijft wat je
+wilt, het model schrijft de code, jij kijkt of het klopt en stuurt bij. Dat heet inmiddels
+**vibe coding**, en het is de belangrijkste verandering die je in je eigen organisatie gaat merken.
+
+Waarom dat jou aangaat, in drie punten:
+
+- **De drempel om iets te maken is weg.** Wie een probleem kent, kan er nu zelf een werkend antwoord
+  naast leggen. De vraag "kan dit?" is bijna nooit meer de blokkade.
+- **De drempel om iets te onderhouden is niet weg.** Je hebt sneller iets dat werkt dan iets dat je
+  over een jaar nog kunt uitleggen. Wat je bespaart aan bouwtijd, komt terug als beheerlast — de
+  module over de rekening gaat daarover.
+- **Er ontstaan dus toepassingen buiten jouw blikveld.** Iemand in je organisatie bouwt dit weekend
+  iets dat maandag in gebruik is. Dat is geen dreiging maar een gegeven, en het maakt de vraag
+  *waaraan zie ik dat dit deugt* dringender dan de vraag *mag dit wel*.
+
+Dit atelier is er zelf een voorbeeld van, inclusief de keerzijde: in de foutensecties van deze route
+lees je wat er misging bij systemen die op deze manier zijn gebouwd, opgeschreven door degene die het
+overkwam.
+
+---
+
 ## De asymmetrie waar het om draait
 
 Een AI-toepassing die het goede antwoord geeft en een die het verkeerde antwoord geeft, zien er voor jou

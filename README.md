@@ -8,7 +8,7 @@ Een dunne laag naast dertien bestaande POC's op `orin3`. Bezoekers loggen in, lo
 door, stellen vragen aan lokale taalmodellen, en gaan weg met een **beheerkaart** voor hun eigen toepassing.
 
 **Twee doelgroepen, twee routes** (besluit B34, 5 september 2026). De route **Beheer en techniek** is
-voor functioneel beheerders en technisch geïnteresseerden; de route **Sturing** is voor
+voor functioneel beheerders, product owners en technisch geïnteresseerden; de route **Sturing** is voor
 informatiemanagers, programmamanagers en algemeen managers, en eindigt in een *besluitkaart* in
 plaats van een beheerkaart. Het keuzemenu staat op `/start`.
 

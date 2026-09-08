@@ -41,6 +41,47 @@ in je werk tegenkomt niet lukt.
 
 ---
 
+## Eerst: waarom dit er staat
+
+Voordat je onder de motorkap kijkt, de vraag die daaraan voorafgaat. Waarom zou je dit willen?
+
+Dit zijn dertien werkende toepassingen, gebouwd in zeven maanden door één persoon naast ander werk.
+Een hydrologische verwachting voor de IJssel. Een vergunningenchatbot op echte wetteksten. Geluid, lucht
+en externe veiligheid als deelbaar informatieproduct. Een reflectie-instrument voor beroepsethiek. Een
+bewakingsdienst die zichzelf en de rest in de gaten houdt.
+
+Dat is de eerste helft van het verhaal, en het is de helft die verkoopt: **de kosten van uitproberen
+zijn ingestort.** Een idee dat vijf jaar geleden een project van maanden was met een offerte eraan vast,
+is nu een middag. Wie een vraag heeft, kan er nu een werkend antwoord naast leggen in plaats van een
+business case.
+
+Er hoort bij hoe dit gebouwd is: niet door een ontwikkelteam, maar door één persoon die geen
+programmeur van beroep is, in gesprek met een AI-assistent. Dat heet **vibe coding**, en het verklaart
+het tempo. Het verklaart ook de keerzijde die je in elke foutensectie van deze route terugziet: je hebt
+sneller iets dat werkt dan iets dat je over een jaar nog kunt uitleggen.
+
+De tweede helft is waar het in organisaties werkelijk vastloopt, en zeker bij de overheid: **opschalen.**
+Dertien proefopstellingen op één machine is iets heel anders dan drie toepassingen in productie met
+duizend gebruikers, een beheerorganisatie, een aanbesteding en een functionaris gegevensbescherming.
+De eerste is een middag. De tweede is een programma.
+
+Wat er tussen die twee in zit, is precies wat je hieronder gaat bekijken. **De drie proeven zijn geen
+technische rondleiding maar drie opschaalvragen:**
+
+| proef | de vraag hier | dezelfde vraag bij opschalen |
+|---|---|---|
+| **1. Wat draait er?** | wat staat er, wat valt om | wie beheert er vijftig, met welke eigenarenlijst? |
+| **2. Wat kost het?** | tijd en geheugen per antwoord | wat bij honderd gebruikers, wie betaalt dat? |
+| **3. Waar zit de kennis?** | welke bron, hoe oud | wie houdt vijftig indexen actueel? |
+
+De linkerkolom kun je vanmiddag beantwoorden. De rechterkolom is waarom een geslaagde proef nog geen
+geslaagde invoering is — en waarom de vraag "kan het?" allang niet meer de interessante vraag is. Die is
+"kunnen wij het dragen?", en dat is een beheervraag, geen technische.
+
+Houd die rechterkolom erbij terwijl je de drie proeven doet. Aan het eind van de module kom je erop terug.
+
+---
+
 ## Proef 1 · Wat draait er eigenlijk?
 
 Open **[de statuspagina van deze machine](https://status.felixisfelix.com/)**. Je ziet de bewaakte systemd-diensten, elk met een
@@ -146,6 +187,18 @@ Voor de beheerkaart:
 | Wat kost één antwoord aan tijd en geheugen? | dat bepaalt wat er gebeurt bij groei |
 | Wie werkt elk onderdeel bij, en hoe vaak? | het antwoord "niemand" komt vaker voor dan je denkt |
 | Wat gaat er stuk als dit onderdeel wegvalt? | per onderdeel, niet voor het geheel |
+
+**En de rechterkolom van hierboven.** Je hebt nu drie keer de kleine versie van een opschaalvraag
+beantwoord. Neem ze mee in de grote vorm, want dit is waar een geslaagde proef alsnog strandt:
+
+- Bij vijftig toepassingen is de vraag niet of ze werken, maar of er een lijst bestaat met per
+  onderdeel een eigenaar. Die lijst is er hier ook pas sinds kort.
+- Bij honderd gelijktijdige gebruikers is de vraag niet of het model goed genoeg is, maar of er
+  hardware en budget zijn, en of iemand weet wat één antwoord kost.
+- Bij vijftig bronnen is de vraag niet of de zoekindex klopt, maar wie merkt dat hij dat niet meer doet.
+
+Als je in je eigen organisatie één ding uit deze module meeneemt: **de proef bewijst dat het kan, niet
+dat je het kunt dragen.** Dat zijn twee besluiten, en ze worden vaak als één behandeld.
 
 **Volgende:** module K4 laat zien hoe een antwoord uit deze keten fout kan gaan — op vijf verschillende
 manieren.
