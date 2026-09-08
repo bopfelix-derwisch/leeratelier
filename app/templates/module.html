@@ -44,13 +44,13 @@
   <p class="uitleg">Kijk eerst of het aan de bron ligt: staat er een voorberekend antwoord,
     is de zoekindex oud, is het model weg? De banner bovenaan zegt het. Helpt dat niet,
     laat dan een melding achter. Die neemt automatisch mee waar je was en wat er misging.</p>
-  <form method="post" action="/vastgelopen">
+  <form method="post" action="/vastgelopen" onsubmit="this.melden.disabled=true;this.melden.textContent='Versturen...'">
     <input type="hidden" name="module_id" value="{{ module.id }}">
     <input type="hidden" name="laatste_vraag" id="laatste_vraag" value="">
     <input type="hidden" name="laatste_bron" id="laatste_bron" value="">
     <textarea name="tekst" placeholder="Waar loop je vast?" required></textarea>
     <div class="knoprij">
-      <button class="stil" type="submit">Melding versturen</button>
+      <button class="stil" type="submit" name="melden">Melding versturen</button>
       <span class="uitleg">Dit is een prive-lab van een persoon; een reactie kan dagen duren.</span>
     </div>
   </form>

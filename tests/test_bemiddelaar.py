@@ -523,3 +523,27 @@ def test_gezondheid_geeft_het_hele_latencybeeld(client):
     for veld in ("p95_latency_ms", "p95_metingen", "p95_minimum",
                  "p95_venster_uren", "p95_traagste_model"):
         assert veld in g, f"sysmonitor heeft {veld} nodig"
+
+
+# ------------------------------------------------------------ dubbele meldingen
+# V41: twee keer tikken op een trage telefoon leverde twee meldingen op, en een
+# verversing na het versturen nog een. In de praktijk kwamen er drie identieke.
+
+def test_dezelfde_melding_binnen_het_venster_telt_een_keer(inst):
+    from gateway.logboek import Logboek
+    lb = Logboek(verbind(inst.db_pad), inst)
+    eerste = lb.melding("b@x", "k01-rondgang", "ik loop vast", {})
+    tweede = lb.melding("b@x", "k01-rondgang", "ik loop vast", {})
+    assert eerste == tweede, "een dubbele tik mag geen tweede melding maken"
+    n = lb.con.execute("SELECT COUNT(*) FROM meldingen").fetchone()[0]
+    assert n == 1
+
+
+def test_andere_tekst_of_module_is_wel_een_nieuwe_melding(inst):
+    from gateway.logboek import Logboek
+    lb = Logboek(verbind(inst.db_pad), inst)
+    a = lb.melding("b@x", "k01-rondgang", "ik loop vast", {})
+    b = lb.melding("b@x", "k01-rondgang", "iets anders", {})
+    c = lb.melding("b@x", "k02-de-motorkap-zonder-mystiek", "ik loop vast", {})
+    d = lb.melding("ander@x", "k01-rondgang", "ik loop vast", {})
+    assert len({a, b, c, d}) == 4, "alleen exacte herhalingen worden samengevoegd"

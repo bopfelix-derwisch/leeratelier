@@ -38,7 +38,23 @@ class Logboek:
                 (datetime.now(timezone.utc).isoformat(), bezoeker_id, module_id, vraag,
                  model, bron, int(latency_ms), int(beurten), 1 if gelukt else 0))
 
+    # Twee keer tikken op een trage telefoon is twee POST's, en een verversing na
+    # het versturen is er nog een. Dat leverde in de praktijk drie identieke
+    # meldingen op. Binnen dit venster geldt dezelfde tekst van dezelfde bezoeker
+    # op dezelfde module als dezelfde melding. Zie V41.
+    DUBBEL_VENSTER_MIN = 10
+
     def melding(self, bezoeker_id: str, module_id: str, tekst: str, context: dict) -> int:
+        grens = (datetime.now(timezone.utc)
+                 - timedelta(minutes=self.DUBBEL_VENSTER_MIN)).isoformat()
+        bestaat = self.con.execute(
+            "SELECT id FROM meldingen WHERE bezoeker_id=? AND module_id=? AND tekst=? "
+            "AND tijdstip >= ? ORDER BY id DESC LIMIT 1",
+            (bezoeker_id, module_id, tekst, grens)).fetchone()
+        if bestaat:
+            # Geen fout voor de bezoeker: die krijgt gewoon de bevestiging te zien.
+            return int(bestaat["id"])
+
         with transactie(self.con):
             cur = self.con.execute(
                 "INSERT INTO meldingen (tijdstip, bezoeker_id, module_id, tekst, context) "
