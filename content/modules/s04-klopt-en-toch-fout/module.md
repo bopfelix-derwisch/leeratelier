@@ -10,7 +10,7 @@ modellen: [klas, poc]
 conserven: s04-klopt-en-toch-fout
 status: gepubliceerd
 wat_ging_mis: true
-bewijs: "drie manieren benoemd waarop een antwoord fout kan zijn zonder dat je het ziet"
+bewijs: "vier manieren benoemd waarop een antwoord fout kan zijn zonder dat je het ziet"
 poc: leefomgevinglab
 routes: []
 ---
@@ -25,9 +25,10 @@ fout antwoord eruitziet, zodat je weet wat je níét kunt zien.
 
 ---
 
-## Drie manieren waarop het misgaat
+## Vier manieren waarop het misgaat
 
-Er zijn er meer, maar deze drie komen op deze machine werkelijk voor en zijn genoeg om mee te beginnen.
+Er zijn er meer, maar deze vier komen op deze machine werkelijk voor en zijn genoeg om mee te beginnen.
+De eerste drie gaan over taalmodellen, de vierde over een rekenmodel — de faalvorm is dezelfde.
 
 **1. Het model kent het woord uit een ander vakgebied.**
 Iemand vroeg dit lab wat "plaatsgebonden risico" is — een term uit de externe veiligheid, over de kans
@@ -46,6 +47,24 @@ verandert het antwoord niet mee. Het systeem meldt dat niet, want het weet het n
 Dit is de verraderlijkste. Een vraag over geluidbelasting in Lden liet zich hier niet beantwoorden — niet
 omdat de index te klein was, maar omdat de gebruikte bron dat onderwerp simpelweg niet dekt. Het systeem
 gaf toch antwoord. Een systeem dat zwijgt over wat het niet dekt, is niet stil; het is stellig.
+
+**4. Het cijfer is van iets anders.**
+Dit gaat niet over taalmodellen maar over een rekenmodel, en het is de duurste van de vier. In het
+Waterlab staat een meetpunt dat `Q_kampen` heet: de hoeveelheid water die de IJssel bij Kampen afvoert.
+Het leverde ruim een jaar lang een keurig getal, rond de 34 kubieke meter per seconde. Een normaal
+riviergetal. Er is in die tijd op gevalideerd en over gerapporteerd.
+
+Alleen kwam het water er nooit langs. Het meetpunt bleek op een aftakking te liggen die van de rivier is
+afgesneden — het mat de regen die toevallig in zijn eigen hoekje viel. De oorzaak lag in een correctie die
+maanden eerder in het waternetwerk was aangebracht, waarbij de daarvan afgeleide gegevens niet opnieuw
+berekend zijn.
+
+Het is op 9 september 2026 ontdekt, en niet door een storing: alles draaide, niets meldde iets. Het viel op
+omdat er in het bouwplan een zin stond die zei *dit getal hoort tussen de 100 en 200 te liggen, want vlak
+stroomopwaarts meet Rijkswaterstaat 138*. Er kwam 34 uit.
+
+Die ene zin — een verwachte bandbreedte, vooraf opgeschreven, onderbouwd met vakkennis — was het enige wat
+tussen dit lab en een jaar aan verkeerde cijfers stond.
 
 ---
 
