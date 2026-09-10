@@ -4,13 +4,13 @@ titel: "De bron veranderde — en niemand zei iets"
 spoor: basis
 volgorde: 50
 competenties: [B3]
-duur_min: 30
+duur_min: 40
 beurten: 0
 modellen: []
 conserven: null
 status: gepubliceerd
 wat_ging_mis: true
-bewijs: "signaallijst voor de eigen bron"
+bewijs: "signaallijst voor de eigen bron, inclusief één versie die je niet had vastgezet"
 poc: leefomgevinglab
 routes: ["/wfs-kwaliteit", "/api/wfs-kwaliteit", "/openapi.json"]
 ---
@@ -35,8 +35,12 @@ Deze module kost **geen modelbeurten**. Je kijkt naar echte data uit een landeli
 | 2 | De asvolgorde binnen dat stelsel | niets — noord en oost wisselen stilletjes |
 | 3 | Velden die de specificatie voorschrijft | niets — ze zijn er gewoon niet |
 | 4 | De inhoud zelf | niets — de laag is leeg of vol ongeldige vormen |
+| 5 | De versie van software die je van buiten haalt | niets — er blijft een leeg vlak achter |
 
-Vier keer "niets". Dat is de hele module.
+Vijf keer "niets". Dat is de hele module.
+
+De eerste vier gaan over een bron die onder je verandert. De vijfde gaat over een bron die verandert omdat
+je zelf hebt gevraagd om "de nieuwste".
 
 ---
 
@@ -159,9 +163,55 @@ het verschil met vorige maand is het signaal.
 
 ---
 
+## Proef 5 · De bron die je zelf liet meebewegen
+
+*Gevonden op 10 september 2026 in het Waterlab.*
+
+De vier proeven hierboven gaan over een bron die verandert zonder dat iemand het zegt. Deze gaat over iets
+ongemakkelijkers: een bron die verandert omdat je er zelf om hebt gevraagd.
+
+Het Waterlab toont kaarten. Die worden getekend door software die van een externe bibliotheek wordt
+opgehaald, en het adres daarvan zag er zo uit:
+
+```
+https://unpkg.com/maplibre-gl/dist/maplibre-gl.js
+```
+
+Er staat geen versienummer in. Dat betekent niet "de versie die wij getest hebben", maar **"wat er vandaag
+ook maar het nieuwst is"**. Dat gaat lang goed. Tot de makers een nieuwe hoofdversie uitbrengen waarin dat
+bestand ergens anders staat. Het adres geeft dan niets meer terug, de kaartsoftware wordt nooit geladen, en
+de kaart is weg — op elk tabblad, op elke computer, tegelijk.
+
+**Niemand merkte het.** Er kwam geen storingsmelding, want er ging aan onze kant niets stuk. Er stond
+alleen een leeg vlak waar een kaart hoorde. Het is bij toeval gevonden, maanden later.
+
+**Twee ontwerpkeuzes hielden het verborgen**, en die zijn leerzamer dan de fout zelf.
+
+De code ving de storing netjes op en schreef hem naar een technisch logboek dat niemand leest. Op het
+scherm bleef een zwart vlak achter. Een storing die je alleen ziet als je er expliciet naar zoekt, is geen
+storing die je vindt.
+
+En de gegevens van die tabbladen — de cijfers, de grafieken — werden pas opgehaald *nadat de kaart klaar
+was met laden*. Kwam de kaart niet, dan kwam de rest ook niet. Twee dingen die niets met elkaar te maken
+hebben, waren aan elkaar geknoopt omdat dat bij het bouwen even handig was.
+
+**Signaal in je eigen werk.** Neem één onderdeel van je keten en vraag waar het vandaan komt, en of er een
+versienummer bij staat. Bij software van derden staat er verrassend vaak "de nieuwste" — in een
+browserverwijzing, in een installatiescript, in een containerimage met de aanduiding `latest`. Comfortabel,
+tot de dag dat het dat niet is: dan verandert er iets zonder dat iemand iets deed.
+
+**Wat je checkt:** kun je van je belangrijkste toepassing zeggen wélke versie er draait van de dingen die
+hij van buiten haalt? En als die morgen verandert — merkt iemand dat, of ziet een gebruiker het als eerste?
+
+---
+
 ## Wat hier misging
 
 *(Deze sectie staat in elke module. Het zijn echte fouten uit dit lab, niet verzonnen voorbeelden.)*
+
+- **De kaartbibliotheek was niet vastgezet op een versie.** Zie proef 5. De verwijzing vroeg om "de
+  nieuwste", kreeg die ook, en die paste niet meer. Wat het pijnlijk maakt: het lab besteedt elders veel
+  moeite aan het zichtbaar maken van onzekerheid, en liet dit maandenlang stil falen in een leeg vlak.
 
 - **De eerst gekozen collection was bijna leeg.** Bij het bouwen van een use-case werd een collection
   gekozen die logisch klonk. Pas veel later bleek dat de gegevens over zes collections verdeeld zijn en dat
@@ -177,14 +227,14 @@ het verschil met vorige maand is het signaal.
   staat nu als terugkerend patroon op de kwaliteitspagina, en dat is de enige reden dat het de vierde keer
   sneller ging.
 
-Wat deze vier gemeen hebben: geen van alle veroorzaakte een storing. Alles bleef draaien, alles bleef
+Wat deze vijf gemeen hebben: geen van alle veroorzaakte een storing. Alles bleef draaien, alles bleef
 antwoorden, en de antwoorden waren fout.
 
 ---
 
 ## Wat je hiervan meeneemt
 
-Het bewijsstuk van deze module is een **signaallijst voor je eigen bron**. Vier regels volstaan:
+Het bewijsstuk van deze module is een **signaallijst voor je eigen bron**. Vijf regels volstaan:
 
 | Wat kan er veranderen | Waaraan zou ik het merken | Wat check ik dan |
 |---|---|---|
@@ -192,6 +242,7 @@ Het bewijsstuk van deze module is een **signaallijst voor je eigen bron**. Vier 
 | veldnamen of ontbrekende velden | een schermveld blijft leeg | data vergelijken met de specificatie |
 | aantal objecten in een laag | minder resultaten dan vorige maand | het aantal opvragen en vergelijken |
 | endpoint of notatie | een aanroep die het altijd deed, doet het niet meer | de OpenAPI-spec naast de eigen aanroep |
+| de versie van iets dat je van buiten haalt | een scherm blijft leeg, zonder foutmelding | staat er een versienummer, of "de nieuwste"? |
 
 De vraag die je uiteindelijk aan je leverancier stelt is deze: **wat gebeurt er in jullie systeem als de
 bron verandert zonder dat iemand het meldt?** Als het antwoord "dan zien we dat vanzelf" is, vraag door
