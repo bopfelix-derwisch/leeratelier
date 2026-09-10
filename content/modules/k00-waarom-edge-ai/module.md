@@ -26,6 +26,37 @@ Deze module kost **geen modelbeurten**. Ze is de inleiding op de rest.
 
 ---
 
+## Kijk eerst wat er op zo'n kastje past
+
+Voordat je de afweging leest, is het nuttig om te zien waar het over gaat.
+
+**Open [de verwachting van Waterlab](https://waterlab.felixisfelix.com/#forecast)** en laat hem even
+staan. Je ziet een veertiendaagse afvoer- en peilverwachting voor de IJssel: gemeten waarden uit de
+live meetnetten van Rijkswaterstaat, een weersverwachting erbij, een band die breder wordt naarmate je
+verder vooruitkijkt, en eronder een advies over wat dit peil betekent voor scheepvaart, drinkwater,
+landbouw en natuur.
+
+Dat draait op dezelfde machine als waar je nu op leest.
+
+**Vijf vragen om bij je te houden terwijl je kijkt.** Ze komen verderop in deze module allemaal terug,
+en op je beheerkaart nog een keer.
+
+1. **Wat hiervan moet lokaal?** De meetreeksen zijn openbaar. De modellen zijn openbaar. Is er iets in
+   dit scherm dat de deur niet uit mag — en zo niet, waarom staat het dan toch hier?
+2. **Wat hiervan kán niet lokaal?** Ergens in deze keten wordt een taalmodel in de cloud aangeroepen.
+   Kun je raden welk onderdeel dat is, en waarom juist dat?
+3. **Wat kost dit?** Er zit geen abonnement op en geen prijs per vraag. Wat is dan de rekening, en aan
+   wie wordt die gestuurd?
+4. **Wat gebeurt er als de verbinding wegvalt?** Welke helft van dit scherm blijft werken, en welke
+   helft is dan leeg?
+5. **Wie merkt het als dit niet meer klopt?** Niet: wie repareert het. Wie **merkt** het.
+
+Vraag vijf is de lastigste, en niet toevallig. Er staat op dit moment iets in dat scherm dat níét klopt,
+al maanden, en het valt niet op omdat het er plausibel uitziet. Wat het is, staat onderaan deze module
+bij *Wat hier misging* — kijk eerst zelf of je het vindt.
+
+---
+
 ## Wat "edge AI" is
 
 Geen productcategorie en geen technologie. Het is één keuze: **waar staat de rekenkracht ten opzichte van
@@ -184,6 +215,15 @@ rekenen om nuttig te zijn.
 - **De eerste kostenraming zat er een factor twintig naast.** Een script berekende dat de machine 3225
   antwoorden per dag aankon. Dat klopte alleen als hij dag en nacht op volle kracht draait, alleen voor
   het atelier, terwijl hij gedeeld wordt met andere toepassingen. Het werkelijke budget staat op 300.
+- **En het antwoord op vraag vijf hierboven.** De verwachting van Waterlab die je aan het begin hebt
+  opengeklikt, vertrekt vanaf een verzonnen getal. De laatste echte meting bij Westervoort dateert van
+  30 augustus: 71,4 m³/s. De dagen daarna staan op exact **400,0** — een opvulwaarde die de code
+  invult als er gaten in de meetreeks zitten. De verwachting begint daardoor op 443,9 m³/s, ruim zes
+  keer de laatste werkelijke meting. Het veld dat zegt of er data beschikbaar is, staat gewoon op
+  *waar*: het telt of er vijf metingen in vijfendertig dagen zitten, niet of de **recente** dagen er
+  zijn. En 400 is een geloofwaardig getal voor de IJssel — was de opvulwaarde 9999 geweest, dan had
+  iedereen het binnen een dag gezien. Niemand merkte het, en dat is precies waarom vraag vijf niet gaat
+  over wie het repareert.
 - **De oorspronkelijke opzet noemde andere hardware.** In een eerdere overdracht stond een Raspberry Pi
   met een Hailo-versneller als richting. Dat is verlaten toen bleek dat taalmodellen van deze omvang daar
   niet op passen. Zulke koerswijzigingen staan zelden in een eindrapport, en ze zijn juist het leerzaamst.
