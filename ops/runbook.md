@@ -444,3 +444,40 @@ dagen). Afgehandelde meldingen blijven staan als dossier; dat is bewust.
 python3 -c "import sqlite3; c=sqlite3.connect('/mnt/nvme/leeratelier/atelier.db'); \
 c.execute('UPDATE meldingen SET afgehandeld=1 WHERE id=?', (7,)); c.commit()"
 ```
+
+---
+
+## 16. Iemand toegang geven tot het atelier
+
+Het atelier zit achter Cloudflare Access met een policy die **losse e-mailadressen** toelaat
+(besluit B39). Iemand toevoegen is een handeling in het dashboard, niet in deze repo.
+
+1. Zero Trust -> **Access** -> **Applications** -> `leeratelier` -> tabblad **Policies**
+2. Open de bestaande Allow-policy
+3. Bij **Include**, selector **Emails**, het adres erbij zetten (een per regel)
+4. **Save**
+
+De bezoeker gaat naar `https://leeratelier.felixisfelix.com`, vult zijn adres in en krijgt een
+eenmalige code per mail. Er is geen account en geen wachtwoord.
+
+**Controleer daarna twee dingen.**
+
+De nieuwe bezoeker mag de facilitatorpagina *niet* zien -- die toont concepten en contractfouten:
+
+```bash
+curl -s -o /dev/null -w '%{http_code}\n' \
+  -H 'Cf-Access-Authenticated-User-Email: nieuwe@bezoeker.nl' \
+  http://127.0.0.1:8793/facilitator      # hoort 404 te zijn
+```
+
+Wie dat wel mag, staat in `ATELIER_FACILITATORS` in `.env` (komma-gescheiden). Na wijzigen:
+`sudo systemctl restart atelier-portaal`.
+
+**Budget.** Elke bezoeker krijgt zijn eigen dagbudget van 20 beurten; samen delen ze er 300 per
+dag. De sturingsroute kost er 2 en de basisroute 7, dus dat is ruimte voor tientallen bezoekers
+per dag. Loopt het toch vol, dan is `dagbudget_modelbeurten` in `config/budget.yaml` een regel --
+maar lees eerst besluit B37 over waar dat getal vandaan komt.
+
+**Wat een nieuwe bezoeker als eerste ziet:** de voettekst zegt dat dit een prive-lab is, dat
+storingen dagen kunnen duren en dat vragen 90 dagen worden bewaard. Dat is de enige
+verwachtingsafspraak die er is; er is geen aparte welkomstmail.

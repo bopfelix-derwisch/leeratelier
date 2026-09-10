@@ -100,6 +100,13 @@ KAARTVELDEN = (
 # Sysmonitor schrijft hier wat het portaal als banner moet tonen. Het portaal leidt
 # zelf al iets af uit /v1/gezondheid, maar sysmonitor ziet meer: een volgelopen schijf,
 # een unit die niet draait, een machine die te heet wordt. Zie WP-08.
+# Wie de facilitatorpagina mag zien. Die toont concepten en contractfouten, en dat
+# is niets voor een bezoeker. Leeg betekent: alleen wie niet achter Access zit, dus
+# lokaal bouwen blijft werken en een ingelogde vreemde komt er niet in. Zie B39.
+FACILITATORS = frozenset(
+    e.strip().lower() for e in os.environ.get("ATELIER_FACILITATORS", "").split(",")
+    if e.strip())
+
 STORING_BESTAND = Path(os.environ.get("ATELIER_STORING",
                                       "/mnt/nvme/leeratelier/storing.json"))
 # Ouder dan dit en de melding wordt genegeerd: een sysmonitor die zelf stilvalt, mag
@@ -236,6 +243,20 @@ def bezoeker_van(request: Request) -> str:
     """
     email = request.headers.get("cf-access-authenticated-user-email")
     return email or os.environ.get("ATELIER_BEZOEKER", "lokaal@orin3")
+
+
+def mag_facilitator(request: Request) -> bool:
+    """Mag deze bezoeker de facilitatorpagina zien?
+
+    Twee wegen erheen. Zonder Access-header zit je lokaal op de machine -- het
+    portaal luistert alleen op 127.0.0.1 en de tunnel gaat altijd langs Access, dus
+    dat is de bouwsituatie. Kom je wel via Access binnen, dan moet je adres in
+    `ATELIER_FACILITATORS` staan. Zolang die lijst leeg is, komt niemand via Access
+    er dus in, en dat is het veilige verzuim.
+    """
+    if not is_afgeschermd(request):
+        return True
+    return bezoeker_van(request).strip().lower() in FACILITATORS
 
 
 def is_afgeschermd(request: Request) -> bool:
@@ -485,6 +506,12 @@ def maak_app(bemiddelaar_basis: str = None, modules_dir: Path = None) -> FastAPI
     # ------------------------------------------------------- facilitator
     @app.get("/facilitator", response_class=HTMLResponse)
     async def facilitator(request: Request):
+        # 404 en geen 403: een bezoeker hoeft niet te weten dat deze pagina bestaat.
+        if not mag_facilitator(request):
+            ctx = await omhulsel(request)
+            ctx.update(kop="Deze pagina bestaat niet",
+                       melding="Kijk op de route of je de module zoekt die je bedoelde.")
+            return sjablonen.html("fout.html", ctx, status_code=404)
         modules, fouten = schema.lees_alle(modules_dir)
         ctx = await omhulsel(request)
         ctx.update(modules=modules, fouten=fouten)

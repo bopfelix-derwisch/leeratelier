@@ -366,3 +366,42 @@ def test_besluitkaart_exporteert_alle_zes_vragen(keten):
         assert f"## {n}." in r.text
     assert "Kopen of niet" in r.text
     assert "&middot;" not in r.text, "geen HTML-entiteiten in een markdown-bestand"
+
+
+# ------------------------------------------------------ facilitator afgeschermd
+# B39: zodra er meer dan een adres kan inloggen, is /facilitator niet meer iets
+# voor elke bezoeker -- die pagina toont concepten en contractfouten.
+
+def test_facilitator_is_open_zonder_access(keten):
+    """Geen Access-header betekent lokaal op de machine; dat is de bouwsituatie."""
+    portaal, _ = keten
+    assert portaal.get("/facilitator").status_code == 200
+
+
+def test_facilitator_weert_een_ingelogde_vreemde(keten, monkeypatch):
+    import app.main as main_mod
+    monkeypatch.setattr(main_mod, "FACILITATORS", frozenset({"baas@atelier.nl"}))
+    portaal, _ = keten
+    r = portaal.get("/facilitator",
+                    headers={"Cf-Access-Authenticated-User-Email": "iemand@gemeente.nl"})
+    assert r.status_code == 404, "een bezoeker hoeft niet te weten dat de pagina bestaat"
+    assert "k99-nogniet" not in r.text, "geen concepten lekken in de foutpagina"
+
+
+def test_facilitator_laat_de_facilitator_wel_binnen(keten, monkeypatch):
+    import app.main as main_mod
+    monkeypatch.setattr(main_mod, "FACILITATORS", frozenset({"baas@atelier.nl"}))
+    portaal, _ = keten
+    for adres in ("baas@atelier.nl", "Baas@Atelier.NL"):
+        r = portaal.get("/facilitator",
+                        headers={"Cf-Access-Authenticated-User-Email": adres})
+        assert r.status_code == 200, f"{adres} hoort erin te mogen"
+
+
+def test_route_blijft_open_voor_elke_ingelogde_bezoeker(keten, monkeypatch):
+    import app.main as main_mod
+    monkeypatch.setattr(main_mod, "FACILITATORS", frozenset({"baas@atelier.nl"}))
+    portaal, _ = keten
+    r = portaal.get("/route?voor=sturing",
+                    headers={"Cf-Access-Authenticated-User-Email": "iemand@gemeente.nl"})
+    assert r.status_code == 200
