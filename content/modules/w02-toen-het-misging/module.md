@@ -4,7 +4,7 @@ titel: "Toen het misging — randvoorwaarden en ontbrekende data"
 spoor: waterlab
 volgorde: 20
 competenties: [B3]
-duur_min: 40
+duur_min: 50
 beurten: 0
 modellen: []
 conserven: null
@@ -130,8 +130,9 @@ hoogtereferentie. Dat verklaarde de verschuiving, maar niet de factor. Nu wel: h
 heel ander, veel kleiner systeem.
 
 **Wat eraan gedaan is.** Het operationele meetpunt is verplaatst naar de put waar het water werkelijk
-uitkomt. Daar geeft het model 252–380 m³/s bij een instroom van 120–257 — meer dan wat erin gaat, wat
-klopt, want de IJssel wint onderweg stroomgebied. De historische proeven zijn bewust níét aangepast: die
+uitkomt. Daar geeft het model 252–380 m³/s bij een instroom van 120–257. Meer dan wat erin gaat, en dat
+leek te kloppen — de IJssel wint onderweg immers stroomgebied. Of dat ook klópte is de vraag van proef 5,
+en het antwoord viel tegen. De historische proeven zijn bewust níét aangepast: die
 blijven reproduceerbaar tegen hun eerdere uitkomsten, met een aantekening erbij over wat hun `Q_kampen`
 werkelijk is. Het onderliggende waternetwerk is nog steeds kapot; dat repareren is eigen werk.
 
@@ -142,6 +143,56 @@ opgeschreven waaraan je ze zou herkennen.
 **Wat je checkt:** neem een meetpunt of een indicator uit jouw organisatie. Weet je van wélk object het de
 waarde is — niet hoe het heet, maar waar het fysiek aan hangt? En staat ergens vastgelegd tussen welke
 waarden het hoort te liggen, en waarom juist die?
+
+---
+
+## Proef 5 · Toen er niets was om tegen te meten
+
+*Vervolg op proef 4, een dag later.*
+
+Het meetpunt was verplaatst naar de plek waar het water werkelijk uitkomt. Er kwam een net getal uit. En
+toen kwam de vraag die deze proef interessant maakt: **is dat getal ook goed?**
+
+Bij het punt stroomopwaarts was dat makkelijk. Daar meet Rijkswaterstaat, dus je legt het model naast de
+meting: 139 tegen 138. Klaar.
+
+Bij het benedenstroomse punt kan dat niet. **Daar wordt niet gemeten.** Geen meting, geen officiële
+verwachting, niets om tegen te houden. En dat is niet uitzonderlijk — de meeste plekken waarover een model
+iets zegt, zijn plekken waar niemand meet. Anders had je het model niet nodig.
+
+**Wat je dan wel kunt doen: het model tegen zichzelf houden.**
+
+Het model zegt hoeveel water er bij drie punten langskomt, en het zegt ook hoe groot het gebied is dat op
+elk punt afwatert. Daaruit volgt hoeveel water er per vierkante kilometer bij komt. Dat getal reken je op
+het ene traject uit, en je kijkt of het op het volgende traject nog steeds klopt:
+
+| traject | gebied erbij | water erbij |
+|---|---:|---:|
+| Westervoort → Olst | 903 km² | 15 m³/s |
+| Olst → Kampen | ? | **145 m³/s** |
+
+Met de verhouding van de eerste regel zou je voor die 145 m³/s bijna **8.700 km²** nodig hebben. Het hele
+stroomgebied is er 10.231. Dus zou vrijwel al het land op dat ene laatste stuk moeten afwateren, en dat kan
+niet.
+
+Geen enkele meting nodig. Alleen de vraag of het model met zichzelf in overeenstemming is.
+
+**Wat er toen bleek.** Het spoor liep naar dezelfde correctie in het waternetwerk als in proef 4. Op het
+laatste stuk naar Kampen zakt het geregistreerde stroomgebied van 2.077 km² naar 1, en op de laatste veertig
+rekencellen ontbreekt het helemaal. Eén ingreep, twee heel verschillende symptomen: eerst een meetpunt dat
+niets meet, nu een getal dat te hoog is.
+
+**Wat er níét mee is gedaan.** Het getal is niet weggehaald en niet stilletjes vervangen door het
+betrouwbare punt stroomopwaarts. Het staat er nog, met de waarschuwing en de berekening ernaast. Een lab
+dat zijn eigen zwakke plekken wegpoetst, leert je niets over hoe je ze bij een leverancier herkent.
+
+**Signaal in je eigen werk.** Je hebt vrijwel nooit een meting op de plek waar het antwoord vandaan komt.
+De vraag is dan niet "klopt het" maar "is het consistent met wat hetzelfde systeem elders zegt". Twee
+kengetallen uit één bron die elkaar tegenspreken, zijn een even hard signaal als een afwijkende meting.
+
+**Wat je checkt:** neem twee cijfers uit dezelfde bron die iets met elkaar te maken hóren te hebben —
+aantallen en bedragen, oppervlaktes en volumes, instroom en uitstroom. Deel ze op elkaar. Kun je uitleggen
+waarom die verhouding is wat hij is? En zou je het merken als hij volgende maand verdubbelt?
 
 ---
 
@@ -157,6 +208,9 @@ waarden het hoort te liggen, en waarom juist die?
   afhangt opnieuw berekend moest worden.
 - **Ruim een jaar onopgemerkt.** Het lab heeft in die tijd validaties gedraaid, cijfers gepubliceerd en een
   demonstratie ingericht rond een grootheid die iets anders was dan het label suggereerde.
+- **Eén ingreep, twee symptomen, ruim een dag uit elkaar gevonden.** Dezelfde correctie in het waternetwerk
+  leverde eerst een meetpunt op dat niets meet (proef 4) en daarna een getal dat te hoog is (proef 5). Wie
+  na de eerste vondst dacht klaar te zijn, had de tweede gemist.
 
 - **Een symlink om een controle te passeren.** Het model controleert of een toestandsbestand bestaat, maar
   leest het bij een koude start niet. De oplossing was een verwijzing naar het bestand van een ander jaar.
@@ -178,6 +232,7 @@ waarden het hoort te liggen, en waarom juist die?
 | Staat dat gemarkeerd waar de uitkomst gelezen wordt? | |
 | Welke invoer bepaalt de uitkomst het sterkst? | |
 | Zijn er constructies die alleen bestaan om een controle te passeren? | |
+| Welke twee cijfers uit dezelfde bron horen in verhouding tot elkaar te staan? | |
 | Van welk fysiek object is jouw belangrijkste meetwaarde eigenlijk de waarde? | |
 | Tussen welke grenzen hoort die te liggen, en staat dat ergens opgeschreven? | |
 
